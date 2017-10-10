@@ -38,6 +38,18 @@ bld/
 TestResult.xml
 
 # Build Results of an ATL Project
+
+# Created by https://www.gitignore.io/api/visualstudiocode
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history
+
+# End of https://www.gitignore.io/api/visualstudiocode
 [Dd]ebugPS/
 [Rr]eleasePS/
 dlldata.c
