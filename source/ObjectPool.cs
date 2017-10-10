@@ -1,4 +1,4 @@
-﻿using Open.Collections;
+using Open.Collections;
 using Open.Disposable;
 using Open.Threading;
 using System;
@@ -41,7 +41,7 @@ namespace Open.Disposable
 			_generator = generator;
 			_recycler = recycler;
 
-            _pool = new ConcurrentBag<T>();
+			_pool = new ConcurrentBag<T>();
 			_trimmer = new ActionRunner(TrimInternal);
 			_flusher = new ActionRunner(ClearInternal);
 			_autoFlusher = new ActionRunner(ClearInternal);
