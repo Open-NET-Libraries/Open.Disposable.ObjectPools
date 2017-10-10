@@ -82,7 +82,7 @@ namespace Open.Disposable
 		}
 
 		/// <summary>
-		/// Attempts to extract an item from the pool but if none are availalbe returns false.
+		/// Attempts to extract an item from the pool but if none are available returns false.
 		/// </summary>
 		/// <param name="value">The item taken.</param>
 		/// <returns>If one was available.</returns>
@@ -104,7 +104,7 @@ namespace Open.Disposable
 		}
 
 		/// <summary>
-		/// Attempts to extract an item from the pool but if non are availalbe it creates a new one from the factory provided or the underlying generator.
+		/// Attempts to extract an item from the pool but if non are available it creates a new one from the factory provided or the underlying generator.
 		/// </summary>
 		/// <param name="factory">An optional custom factory to use if no items are in the pool.</param>
 		/// <returns></returns>
@@ -218,7 +218,7 @@ namespace Open.Disposable
 		}
 
 		/// <summary>
-		/// Recieves an item and adds it to the pool.  Clears the source reference.  The item is considered 'dead' but resurrectable.
+		/// Receives an item and adds it to the pool.  Clears the source reference.  The item is considered 'dead' but resurrectable.
 		/// </summary>
 		/// <param name="item">The item to give up to the pool.</param>
 		public void Give(ref T item)
@@ -243,7 +243,7 @@ namespace Open.Disposable
 		}
 
 		/// <summary>
-		/// Recieves an item and adds it to the pool.  WARNING: The item is considered 'dead' but resurrectable so be sure not to hold on to the item's reference.
+		/// Receives an item and adds it to the pool.  WARNING: The item is considered 'dead' but resurrectable so be sure not to hold on to the item's reference.
 		/// </summary>
 		/// <param name="item">The item to give up to the pool.</param>
 		public void Give(T item)
