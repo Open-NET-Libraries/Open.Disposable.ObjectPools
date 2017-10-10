@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Open.DisposableX
+namespace Open.Disposable
 {
 	[DebuggerDisplay("Count = {count}")]
 	public class ObjectPool<T> : DisposableBase

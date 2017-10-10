@@ -32,7 +32,12 @@ class Program
 
             Console.WriteLine("After  {0}: {1}, {2}",count, pool.Count, tank.Count);
 
-            if (count % 40 == 0)
+			if (count % 30 == 0)
+			{
+				pool.Trim().Wait();
+			}
+
+			if (count % 40 == 0)
 			{
 				Console.WriteLine("-----------------");
 				Thread.Sleep(11000);
