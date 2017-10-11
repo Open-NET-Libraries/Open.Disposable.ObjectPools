@@ -13,7 +13,7 @@ namespace Open.Disposable
 		where T : class
 	{
 
-		ConcurrentBag<T> _pool;
+		ConcurrentBag<T> _pool; // Not readonly because pools can be 'dumped' or swapped out.
 		Func<T> _generator;
 		Action<T> _recycler;
 
@@ -28,17 +28,19 @@ namespace Open.Disposable
 		 */
 		uint _localAbsMaxSize;
 
-
 		public ObjectPool(
 			ushort maxSize,
 			Func<T> generator = null,
-			Action<T> recycler = null)
+			Action<T> recycler = null,
+			TimeSpan? autoClearTimeout = null)
 		{
-			MaxSize = maxSize;
+			_maxSize = maxSize;
 			_localAbsMaxSize = Math.Min((uint)maxSize * 2, ushort.MaxValue);
 
 			_generator = generator;
 			_recycler = recycler;
+
+			_autoClearTimeout = autoClearTimeout ?? TimeSpan.FromSeconds(5);
 
 			_pool = new ConcurrentBag<T>();
 			_trimmer = new ActionRunner(TrimInternal);
@@ -46,19 +48,17 @@ namespace Open.Disposable
 			_autoFlusher = new ActionRunner(ClearInternal);
 		}
 
+		TimeSpan _autoClearTimeout;
 		/// <summary>
 		/// By default will clear after 5 seconds of non-use.
 		/// </summary>
-		public TimeSpan AutoClearTimeout = TimeSpan.FromSeconds(5);
+		public TimeSpan AutoClearTimeout => _autoClearTimeout;
 
+		ushort _maxSize;
 		/// <summary>
 		/// Defines the maximum at which trimming should allow.
 		/// </summary>
-		public ushort MaxSize
-		{
-			get;
-			private set;
-		}
+		public ushort MaxSize => _maxSize;
 
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace Open.Disposable
 		private void _onTaken()
 		{
 			var len = _pool.Count;
-			if(len<=MaxSize)
+			if(len<=_maxSize)
 				_trimmer.Cancel();
 			if(len!=0)
 				ExtendAutoClear();
@@ -90,16 +90,8 @@ namespace Open.Disposable
 		{
 			AssertIsAlive();
 
-			bool taken = false;
-			try
-			{
-				taken = _pool.TryTake(out value);
-			}
-			finally
-			{
-				if (taken)
-					_onTaken();
-			}
+			bool taken = _pool.TryTake(out value);
+			if (taken) _onTaken();
 			return taken;
 		}
 
@@ -129,7 +121,7 @@ namespace Open.Disposable
 			{
 				try
 				{
-					foreach (var e in _pool.TryTakeWhile(b => b.Count > MaxSize))
+					foreach (var e in _pool.TryTakeWhile(b => b.Count > _maxSize))
 						(e as IDisposable)?.Dispose();
 				}
 				finally
@@ -148,10 +140,10 @@ namespace Open.Disposable
 		/// </summary>
 		/// <param name="defer">Optional millisecond value to wait until trimming starts.</param>
 		/// <returns></returns>
-		public async Task Trim(int defer = 0)
+		public Task Trim(int defer = 0)
 		{
 			AssertIsAlive();
-			await _trimmer.Defer(defer);
+			return _trimmer.Defer(defer);
 		}
 
 		protected void ClearInternal()
@@ -177,10 +169,10 @@ namespace Open.Disposable
 		/// </summary>
 		/// <param name="defer">A delay before clearing.  Will be overridden by later calls.</param>
 		/// <returns></returns>
-		public async Task Clear(int defer = 0)
+		public Task Clear(int defer = 0)
 		{
 			AssertIsAlive();
-			await _flusher.Defer(defer);
+			return _flusher.Defer(defer);
 		}
 
 		/// <summary>
@@ -196,15 +188,15 @@ namespace Open.Disposable
 			return Interlocked.Exchange(ref _pool, new ConcurrentBag<T>());
 		}
 
-
 		protected override void OnDispose(bool calledExplicitly)
 		{
-			Interlocked.Exchange(ref _generator, null);
-			Interlocked.Exchange(ref _recycler, null);
+			_generator = null;
+			_recycler = null;
 
-			Interlocked.Exchange(ref _trimmer, null)?.Dispose();
-			Interlocked.Exchange(ref _flusher, null)?.Dispose();
-			Interlocked.Exchange(ref _autoFlusher, null)?.Dispose();
+			DisposeOf(ref _trimmer);
+			DisposeOf(ref _flusher);
+			DisposeOf(ref _autoFlusher);
+
 			Clear(ref _pool);
 		}
 
@@ -214,7 +206,7 @@ namespace Open.Disposable
 		public void ExtendAutoClear()
 		{
 			AssertIsAlive();
-			_autoFlusher?.Defer(AutoClearTimeout);
+			_autoFlusher?.Defer(_autoClearTimeout);
 		}
 
 		/// <summary>
@@ -236,7 +228,7 @@ namespace Open.Disposable
 			{
 				_recycler?.Invoke(i);
 				p.Add(i);
-				if (p.Count > MaxSize)
+				if (p.Count > _maxSize)
 					_trimmer.Defer(500);
 			}
 			ExtendAutoClear();
