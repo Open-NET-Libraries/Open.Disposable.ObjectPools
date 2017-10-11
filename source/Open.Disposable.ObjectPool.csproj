@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <RootNamespace>Open.Disposable</RootNamespace>
-    <Description>A self trimming and auto-cleaning ObjectPool&lt;T&gt; using ConcurrentBag&lt;T&gt; as the underlying collection.</Description>
+    <Description>SimpleObjectPool&lt;T&gt; and a self trimming and auto-cleaning ObjectPool&lt;T&gt; both with ConcurrentBag&lt;T&gt; as the underlying collection.
+
+Part of the "Open" set of libraries.</Description>
     <Authors>electricessence</Authors>
     <Company>electricessence</Company>
     <Product />
