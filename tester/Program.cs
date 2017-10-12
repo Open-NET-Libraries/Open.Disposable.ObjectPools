@@ -13,7 +13,7 @@ class Program
 		var task = Task.FromResult(ts.Token);
 
 
-        var pool = new Open.Disposable.ObjectPool<object>(20, () => new object());
+        var pool = new Open.Disposable.ObjectPool<object>(20, () => new object(), null, TimeSpan.FromSeconds(5) );
         var tank = new ConcurrentBag<object>();
 
         int count = 0;
@@ -34,13 +34,13 @@ class Program
 
 			if (count % 30 == 0)
 			{
-				pool.Trim().Wait();
+				Console.WriteLine("Trimmed: {0}", pool.Trim().Result);
 			}
 
 			if (count % 40 == 0)
 			{
-				Console.WriteLine("-----------------");
 				Thread.Sleep(11000);
+				Console.WriteLine("-----------------");
 			}
 
 			Console.WriteLine();

@@ -1,54 +1,68 @@
-using Open.Collections;
 using Open.Threading;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace Open.Disposable
 {
-	[DebuggerDisplay("Count = {count}")]
-	public class ObjectPool<T> : SimpleObjectPool<T>
+	/// <summary>
+	/// An auto-trimming and optionally auto-clearing ObjectPool.
+	/// When .Take() is called, it will return the first possible item even if one is returned to the pool before the generator function completes.
+	/// Also does not block when .Give(T item) is called and items are recycled asynchronously.
+	/// </summary>
+	[DebuggerDisplay("Count = {Count}")]
+	public class ObjectPool<T> : RecyclableObjectPool<T>
 		where T : class
 	{
 		ActionRunner _trimmer;
 		ActionRunner _flusher;
 		ActionRunner _autoFlusher;
 
-		/**
-		 * A transient amount of object to exist over MaxSize until trim() is called.
-		 * But any added objects over _localAbsMaxSize will be disposed immediately.
-		 */
-		uint _localAbsMaxSize;
+		// micro-optimization for retrieving this value as read-only is slightly slower.
+		ushort _trimmedSize;
+		TimeSpan _autoClearTimeout;
 
+		/// <summary>
+		/// Constructs an auto-trimming and optionally auto-clearing ObjectPool.
+		/// </summary>
+		/// <param name="trimmedSize">The target size to limit to after a half second timeout.  Allowing the pool to still grow to the max size until the trim occurs.</param>
+		/// <param name="generator">The generator function that creates the items.</param>
+		/// <param name="recycler">An optional recycler function that will process items before making them available.</param>
+		/// <param name="autoClearTimeout">An inactivity timeout for when to clear then entire pool.</param>
+		/// <param name="maxSize">The maximum size of the object pool.  Default is ushort.MaxValue (65535).</param>
 		public ObjectPool(
-			ushort maxSize,
+			ushort trimmedSize,
 			Func<T> generator,
 			Action<T> recycler = null,
-			TimeSpan? autoClearTimeout = null) : base(maxSize, generator, recycler)
+			TimeSpan? autoClearTimeout = null,
+			ushort maxSize = ushort.MaxValue) : base(generator, recycler, maxSize)
 		{
-			_localAbsMaxSize = Math.Min((uint)maxSize * 2, ushort.MaxValue);
-			_autoClearTimeout = autoClearTimeout ?? TimeSpan.FromSeconds(5);
+			TrimmedSize = _trimmedSize = trimmedSize;
+			AutoClearTimeout = _autoClearTimeout = autoClearTimeout ?? TimeSpan.Zero; // Delay to wait before clearing. None?  Then don't ever auto-clear (default).
 
 			_trimmer = new ActionRunner(TrimInternal);
-			_flusher = new ActionRunner(ClearInternal);
-			_autoFlusher = new ActionRunner(ClearInternal);
+			_flusher = new ActionRunner(Clear);
+			if (_autoClearTimeout > TimeSpan.Zero)
+				_autoFlusher = new ActionRunner(Clear);
 		}
 
-		TimeSpan _autoClearTimeout;
 		/// <summary>
-		/// By default will clear after 5 seconds of non-use.
+		/// If value is not zero then the pool will clear after this inactivity timeout.
 		/// </summary>
-		public TimeSpan AutoClearTimeout => _autoClearTimeout;
+		public readonly TimeSpan AutoClearTimeout;
+
+		/// <summary>
+		///  Max size that trimming will allow.
+		/// </summary>
+		public readonly ushort TrimmedSize;
 
 		protected override void _onTaken()
 		{
-			var len = _pool.Count;
-			if(len<=_maxSize)
+			var len = Count;
+			if (len <= _trimmedSize)
 				_trimmer?.Cancel();
-			if(len!=0)
+			if (len != 0)
 				ExtendAutoClearInternal();
 		}
 
@@ -57,18 +71,29 @@ namespace Open.Disposable
 			_trimmer?.Cancel();
 			_autoFlusher?.Cancel();
 
-			var p = _pool;
-			if (p!=null && p.Count > 0)
+			if (Count > 0)
 			{
-				try
+
+				while (Count > _trimmedSize)
 				{
-					foreach (var e in p.TryTakeWhile(b => b.Count > _maxSize))
-						(e as IDisposable)?.Dispose();
+					// First try to get any to be recycled items over the trim amount to avoid unnecessary recycling.
+					var r = _recycleQueue;
+					if (r != null && r.TryReceive(out T rItem))
+					{
+						QueueDisposal(rItem);
+						continue;
+					}
+
+					var p = _pool;
+					if (p == null) return;
+					if (p.TryReceive(out T pItem))
+					{
+						QueueDisposal(pItem);
+					}
 				}
-				finally
-				{
-					ExtendAutoClearInternal();
-				}
+
+				ExtendAutoClearInternal();
+
 			}
 			else
 			{
@@ -81,16 +106,10 @@ namespace Open.Disposable
 		/// </summary>
 		/// <param name="defer">Optional millisecond value to wait until trimming starts.</param>
 		/// <returns></returns>
-		public Task Trim(int defer = 0)
+		public Task<bool> Trim(int defer = 0)
 		{
 			AssertIsAlive();
-			return _trimmer?.Defer(defer);
-		}
-
-		protected void ClearInternal()
-		{
-			//Debug.WriteLine("ObjectPool cleared.");
-			ClearAndDisposeContents(Dump());
+			return _trimmer?.Defer(defer).ContinueWith(t => t.Status == TaskStatus.RanToCompletion);
 		}
 
 		/// <summary>
@@ -99,10 +118,10 @@ namespace Open.Disposable
 		/// </summary>
 		/// <param name="defer">A delay before clearing.  Will be overridden by later calls.</param>
 		/// <returns></returns>
-		public Task Clear(int defer)
+		public Task<bool> Clear(int defer)
 		{
 			AssertIsAlive();
-			return _flusher?.Defer(defer);
+			return _flusher?.Defer(defer).ContinueWith(t => t.Status == TaskStatus.RanToCompletion);
 		}
 
 		protected override void OnDumping()
@@ -132,35 +151,22 @@ namespace Open.Disposable
 
 		void ExtendAutoClearInternal()
 		{
-			if(!IsDisposed) // IsDisposed can happen much earlier so look for it before continuing...
+			if (!IsDisposed) // IsDisposed can happen much earlier so look for it before continuing...
 				_autoFlusher?.Defer(_autoClearTimeout);
 		}
 
-		/// <summary>
-		/// Receives an item and adds it to the pool. Ignores null references.
-		/// WARNING: The item is considered 'dead' but resurrectable so be sure not to hold on to the item's reference.
-		/// </summary>
-		/// <param name="item">The item to give up to the pool.</param>
-		public override void Give(T item)
+		protected override bool GiveInternal(T item)
 		{
-			if (item == null) return;
-
-			var p = _pool;
-			if (p==null || p.Count >= _localAbsMaxSize)
+			var wasGiven = base.GiveInternal(item);
+			if (wasGiven)
 			{
-				// Getting too big, dispose immediately...
-				(item as IDisposable)?.Dispose();
-			}
-			else
-			{
-				_recycler?.Invoke(item);
-				p.Add(item);
-				if (p.Count > _maxSize)
+				if (Count > _trimmedSize)
 					_trimmer?.Defer(500);
-			}
 
-			ExtendAutoClearInternal();
+				ExtendAutoClearInternal();
+			}
+			return wasGiven;
 		}
-		
+
 	}
 }
