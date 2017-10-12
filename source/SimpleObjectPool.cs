@@ -88,32 +88,28 @@ namespace Open.Disposable
 			var taken = _pool?.ReceiveAsync((ts = new CancellationTokenSource()).Token);
 			if (taken != null)
 			{
-				Task winner = null;
 				while (taken.Status != TaskStatus.RanToCompletion)
 				{
 					// Ok we need to push into the pool...
 					var generated = Generate(out Task<T> actual);
 
-					// Allow for re-entrance here.
-					winner = await Task.WhenAny(taken, generated);
-					if (winner == taken || generated.Result) continue; // ^^^ Check the status...  Are we done?  May need to generate another.
-
-					// NOTE: Most of the time, only the above code is run.  Below is the edge case that can occur when not able to add to the pool (full or disposed).
-
-					// Was not added to pool? Uh-oh...
-					ts.Cancel(); // Since the generator failed or was unable to be added, then cancel waiting to recieve it.
-
-					// Was it actually cancelled?  If not then we skip this and 
-					if (await taken.ContinueWith(t => t.IsCanceled)) // || t.IsFaulted ... .ReceiveAsync should never fault.
+					if (await Task.WhenAny(taken, generated) == generated && !generated.Result)
 					{
-						if (actual.IsFaulted)
-							throw actual.Exception; // Possible generator failure.
-						if (actual.Status == TaskStatus.RanToCompletion)
-							return actual.Result; // Don't let it go to waste.
+						// ^^^ Not received yet and was not added to pool? Uh-oh...
+						ts.Cancel(); // Since the generator failed or was unable to be added, then cancel waiting to recieve it.
 
-						// This is a rare edge case where there's no fault but did not complete.  Effectively erroneous.
-						Debug.Fail("Somehow the generate task did not complete and had no fault.");
-						return _generator();
+						// Was it actually cancelled? 
+						if (await taken.ContinueWith(t => t.IsCanceled)) // || t.IsFaulted ... .ReceiveAsync should never fault.
+						{
+							if (actual.IsFaulted)
+								throw actual.Exception; // Possible generator failure.
+							if (actual.Status == TaskStatus.RanToCompletion)
+								return actual.Result; // Don't let it go to waste.
+
+							// This is a rare edge case where there's no fault but did not complete.  Effectively erroneous.
+							Debug.Fail("Somehow the generate task did not complete and had no fault.");
+							return _generator();
+						}
 					}
 				}
 
