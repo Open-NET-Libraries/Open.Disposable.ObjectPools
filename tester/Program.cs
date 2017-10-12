@@ -39,7 +39,6 @@ class Program
 
 			if (count % 40 == 0)
 			{
-				Thread.Sleep(11000);
 				Console.WriteLine("-----------------");
 			}
 

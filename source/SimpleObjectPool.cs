@@ -80,38 +80,44 @@ namespace Open.Disposable
 		/// <returns>An item removed from the pool or generated.</returns>
 		public async Task<T> TakeAsync()
 		{
-			while (true)
+			// See if there's one available already.
+			if (TryTake(out T firstTry))
+				return firstTry;
+
+			CancellationTokenSource ts = null; // If something goes wrong we need a way to cancel.
+			var taken = _pool?.ReceiveAsync((ts = new CancellationTokenSource()).Token);
+			if (taken != null)
 			{
-				// See if there's one available already.
-				if (TryTake(out T firstTry))
-					return firstTry;
-
-				// Setup the tasks.  One will win the race.
-				var p = _pool;
-				if (p == null) break; // Disposed pool, no need to do anything fancy.  Just (break=>) generate and return the result.
-				var isAvailable = p.OutputAvailableAsync();
-				var generated = Generate(out Task<T> actual);
-
-				// Allow for re-entrance here.
-				await Task.WhenAny(isAvailable, generated);
-
-				// Did something get added and is waiting for us? Check...
-				if (TryTake(out T secondTry))
-					return secondTry;
-
-				// Ok so now wait for the generated task to be complete and check its result.
-				// If one was added, retry the loop.
-				if (!await generated) // Was not added to pool? Uh-oh...
+				Task winner = null;
+				while (taken.Status != TaskStatus.RanToCompletion)
 				{
-					if (actual.IsFaulted)
-						throw actual.Exception;
-					if (actual.Status == TaskStatus.RanToCompletion)
-						return actual.Result; // Don't let it go to waste.
+					// Ok we need to push into the pool...
+					var generated = Generate(out Task<T> actual);
 
-					// This is a rare edge case where there's no fault but did not complete.  Effectively erroneous.
-					Debug.Fail("Somehow the generate task did not complete and had no fault.");
-					break; // No more can be generated? Then time to go...
+					// Allow for re-entrance here.
+					winner = await Task.WhenAny(taken, generated);
+					if (winner == taken || generated.Result) continue; // ^^^ Check the status...  Are we done?  May need to generate another.
+
+					// NOTE: Most of the time, only the above code is run.  Below is the edge case that can occur when not able to add to the pool (full or disposed).
+
+					// Was not added to pool? Uh-oh...
+					ts.Cancel(); // Since the generator failed or was unable to be added, then cancel waiting to recieve it.
+
+					// Was it actually cancelled?  If not then we skip this and 
+					if (await taken.ContinueWith(t => t.IsCanceled)) // || t.IsFaulted ... .ReceiveAsync should never fault.
+					{
+						if (actual.IsFaulted)
+							throw actual.Exception; // Possible generator failure.
+						if (actual.Status == TaskStatus.RanToCompletion)
+							return actual.Result; // Don't let it go to waste.
+
+						// This is a rare edge case where there's no fault but did not complete.  Effectively erroneous.
+						Debug.Fail("Somehow the generate task did not complete and had no fault.");
+						return _generator();
+					}
 				}
+
+				return taken.Result;
 			}
 
 			return _generator(); // Pool is closed/completed.  Just do this here without queueing.
