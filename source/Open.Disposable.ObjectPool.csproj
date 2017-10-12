@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <RootNamespace>Open.Disposable</RootNamespace>
-    <Description>SimpleObjectPool&lt;T&gt; and a self trimming and auto-cleaning ObjectPool&lt;T&gt; both with ConcurrentBag&lt;T&gt; as the underlying collection.
+    <Description>A set of ObjectPools using Dataflow BufferBlocks to optimize throughput.
 
 Part of the "Open" set of libraries.</Description>
     <Authors>electricessence</Authors>
