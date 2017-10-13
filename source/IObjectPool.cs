@@ -14,6 +14,11 @@ namespace Open.Disposable
 		int Capacity { get; }
 
 		/// <summary>
+		/// Directly calls the underlying factory that generates the items.  (No pool interaction.)
+		/// </summary>
+		T Generate();
+
+		/// <summary>
 		/// Receives an item and adds it to the pool. Ignores null references.
 		/// WARNING: The item is considered 'dead' but resurrectable so be sure not to hold on to the item's reference.
 		/// </summary>

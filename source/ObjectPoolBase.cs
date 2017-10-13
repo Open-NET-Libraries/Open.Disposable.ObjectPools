@@ -26,6 +26,11 @@ namespace Open.Disposable
 		// Allow the GC to do the final cleanup after dispose.
 		protected readonly Func<T> Factory;
 
+		public T Generate()
+		{
+			return Factory();
+		}
+
 		protected abstract bool GiveInternal(T item);
 
 		public virtual void Give(T item)
