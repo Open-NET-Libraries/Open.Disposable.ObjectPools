@@ -1,2 +1,2 @@
 # Open.Disposable.ObjectPool
-A set of ObjectPools using Dataflow BufferBlocks to optimize throughput.
+A set of variations on ObjectPool implementations with differing underlying collections.
