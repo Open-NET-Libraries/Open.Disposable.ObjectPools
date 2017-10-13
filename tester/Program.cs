@@ -1,4 +1,5 @@
 ﻿using Open.Collections;
+using Open.Disposable;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -13,8 +14,10 @@ class Program
 		var task = Task.FromResult(ts.Token);
 
 
-        var pool = new Open.Disposable.ObjectPool<object>(20, () => new object(), null, TimeSpan.FromSeconds(5) );
-        var tank = new ConcurrentBag<object>();
+        var pool = BufferBlockObjectPool.Create(() => new object(),1024);
+		var trimmer = new ObjectPoolAutoTrimmer(20, pool);
+		var clearer = new ObjectPoolAutoTrimmer(0, pool, TimeSpan.FromSeconds(5));
+		var tank = new ConcurrentBag<object>();
 
         int count = 0;
         while (true)
@@ -34,12 +37,13 @@ class Program
 
 			if (count % 30 == 0)
 			{
-				Console.WriteLine("Trimmed: {0}", pool.Trim().Result);
+				Thread.Sleep(1000);
 			}
 
 			if (count % 40 == 0)
 			{
 				Console.WriteLine("-----------------");
+				Thread.Sleep(11000);
 			}
 
 			Console.WriteLine();
