@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,14 +23,7 @@ class Program
 		Console.WriteLine();
 	}
 
-	const int COUNT = 200;
-	const int REPEAT = 5000;
-
-	static TimedResult[] BenchmarkResults<T>(Func<IObjectPool<T>> poolFactory)
-		where T : class
-	{
-		return Benchmark<T>.Results(COUNT, REPEAT, poolFactory);
-	}
+	const int ITERATIONS = 100000;
 
 	static TimedResult[] BenchmarkResults<T>(uint count, uint repeat, Func<IObjectPool<T>> poolFactory)
 	where T : class
@@ -37,19 +31,106 @@ class Program
 		return Benchmark<T>.Results(count, repeat, poolFactory);
 	}
 
-	static TimedResult[] BenchmarkResults<T>(uint repeat, Func<IObjectPool<T>> poolFactory)
-	where T : class
+	static readonly Regex TimeSpanRegex = new Regex(@"((?:00:)+ (?:0\B)?) ([0.]*) (\S*)", RegexOptions.IgnorePatternWhitespace);
+
+	static void OutputResult(TimeSpan result)
 	{
-		return Benchmark<T>.Results(COUNT, repeat, poolFactory);
+		var match = TimeSpanRegex.Match(result.ToString());
+		Console.ForegroundColor = ConsoleColor.Black;
+		Console.Write(match.Groups[1].Value);
+		Console.ForegroundColor = ConsoleColor.DarkGray;
+		Console.Write(match.Groups[2].Value);
+		Console.ResetColor();
+		Console.Write(match.Groups[3].Value);
 	}
 
-	static void OutputResults<T>(Func<IObjectPool<T>> poolFactory)
+	static void OutputResult(TimedResult result, ConsoleColor? labelColor = null)
+	{
+		OutputResult(result.Duration);
+		Console.Write(' ');
+		if (labelColor.HasValue) Console.ForegroundColor = labelColor.Value;
+		Console.WriteLine(result.Label.Substring(4));
+		Console.ResetColor();
+	}
+
+	static void OutputResult(TimedResult result, TimedResult[] all)
+	{
+		var duration = result.Duration;
+		OutputResult(duration);
+		Console.Write(' ');
+		var these = all.Where(r => r.Label == result.Label).Select(r=>r.Duration).OrderBy(d=>d).ToArray();
+		var min = these.First();
+		var max = these.Last();
+		if(min!=max)
+		{
+			if (duration == min)
+				Console.ForegroundColor = ConsoleColor.Green;
+			else if (duration == max)
+				Console.ForegroundColor = ConsoleColor.Red;
+		}
+		Console.WriteLine(result.Label.Substring(4));
+		Console.ResetColor();
+	}
+
+	static void OutputResults(IEnumerable<TimedResult> results)
+	{
+		foreach (var e in results)
+			OutputResult(e);
+
+		ConsoleNewLine();
+	}
+
+	static void OutputResults(IEnumerable<TimedResult> results, TimedResult[] all)
+	{
+		foreach (var e in results)
+			OutputResult(e, all);
+
+		ConsoleNewLine();
+	}
+
+	static TimedResult[] OutputResults<T>(uint count, uint repeat, Func<IObjectPool<T>> poolFactory)
 		where T : class
 	{
-		var results = BenchmarkResults(poolFactory);
-		foreach (var e in BenchmarkResults(poolFactory))
-			Console.WriteLine(e);
-		Console.WriteLine("{0} Total", results.Select(r => r.Duration).Aggregate((r1, r2) => r1 + r2));
+		var results = BenchmarkResults(count, repeat, poolFactory);
+		OutputResults(results);
+		return results;
+	}
+
+	static void Test(uint count, uint multiple = 1)
+	{
+		var repeat = multiple * ITERATIONS / count;
+		Console.ForegroundColor = ConsoleColor.Cyan;
+		Console.WriteLine("Repeat {1:g} for size {0:g}", count, repeat);
+		ConsoleSeparator();
+		Console.ResetColor();
+		ConsoleNewLine();
+
+		var cursor = Console.CursorTop;
+		var results = new List<Tuple<string,TimedResult[]>>(3);
+
+		string header;
+
+		Console.WriteLine(header = "ConcurrentBagObjectPool.................................");
+		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => ConcurrentBagObjectPool.Create<object>((int)count * 2))));
+
+		Console.WriteLine(header = "LinkedListObjectPool....................................");
+		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => LinkedListObjectPool.Create<object>((int)count * 2))));
+
+		Console.WriteLine(header = "OptimisticArrayObjectPool...............................");
+		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => OptimisticArrayObjectPool.Create<object>((int)count * 2))));
+
+		//Console.WriteLine(header = "BufferBlockObjectPool...................................");
+		//results.Add(Tuple.Create(header, OutputResults(count, repeat, () => BufferBlockObjectPool.Create<object>((int)count * 2))));
+
+		var all = results.SelectMany(r => r.Item2).ToArray();
+
+		Console.SetCursorPosition(0, cursor);
+
+		foreach(var r in results)
+		{
+			Console.WriteLine(r.Item1);
+			OutputResults(r.Item2, all);
+		}
 
 		ConsoleNewLine();
 	}
@@ -58,25 +139,22 @@ class Program
 	{
 		Console.Write("Initializing...");
 
-		// Run once through first to scramble initial conditions.
-		BenchmarkResults(100, () => ConcurrentBagObjectPool.Create<object>());
-		BenchmarkResults(100, () => LinkedListObjectPool.Create<object>());
-		BenchmarkResults(100, () => OptimisticArrayObjectPool.Create<object>());
-		// BenchmarkResults(100, () => BufferBlockObjectPool.Create<object>());
+		// Run once through first to scramble/warm-up initial conditions.
+		BenchmarkResults(100, 100, () => ConcurrentBagObjectPool.Create<object>(200));
+		BenchmarkResults(100, 100, () => LinkedListObjectPool.Create<object>(200));
+		BenchmarkResults(100, 100, () => OptimisticArrayObjectPool.Create<object>(200));
+		// BenchmarkResults(100, 100, () => BufferBlockObjectPool.Create<object>());
 
 		Console.SetCursorPosition(0, Console.CursorTop);
 
-		Console.WriteLine("ConcurrentBagObjectPool.................................");
-		OutputResults(() => ConcurrentBagObjectPool.Create<object>());
+		Test(4);
+		Test(10, 2);
+		Test(100, 8);
+		Test(250, 16);
+		Test(1000, 24);
+		Test(2000, 32);
+		Test(4000, 48);
 
-		Console.WriteLine("LinkedListObjectPool....................................");
-		OutputResults(() => LinkedListObjectPool.Create<object>());
-
-		Console.WriteLine("OptimisticArrayObjectPool...............................");
-		OutputResults(() => OptimisticArrayObjectPool.Create<object>());
-
-		//Console.WriteLine("BufferBlockObjectPool...................................");
-		//OutputResults(() => BufferBlockObjectPool.Create<object>());
 
 		Console.WriteLine("(press any key when finished)");
 		Console.ReadKey();

@@ -25,6 +25,18 @@ namespace Open.Disposable.ObjectPools
 
 		public IEnumerable<TimedResult> TestOnce()
 		{
+			var total = TimeSpan.Zero;
+			foreach(var r in TestOnceInternal())
+			{
+				total += r.Duration;
+				yield return r;
+			}
+
+			yield return new TimedResult("99) TOTAL", total);
+		}
+
+		IEnumerable<TimedResult> TestOnceInternal()
+		{
 			var disposeTimer = new Stopwatch();
 			using (var pool = TimedResult.Measure(out TimedResult constructionTime, "01) Pool Construction", PoolFactory))
 			{
@@ -37,7 +49,7 @@ namespace Open.Disposable.ObjectPools
 				});
 
 				var tank = new ConcurrentBag<T>(); // This will have an effect on performance measurement, but hopefully consistently.
-				//int remaining = 0;
+												   //int remaining = 0;
 
 				yield return TimedResult.Measure("03) Take From Empty (In Parallel)", () =>
 				{
@@ -60,7 +72,7 @@ namespace Open.Disposable.ObjectPools
 			}
 			disposeTimer.Stop();
 
-			yield return new TimedResult("99) Pool Disposal", disposeTimer);
+			yield return new TimedResult("98) Pool Disposal", disposeTimer);
 		}
 
 		public IEnumerable<IEnumerable<TimedResult>> TestRepeated()

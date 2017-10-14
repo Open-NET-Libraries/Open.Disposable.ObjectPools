@@ -40,15 +40,16 @@ namespace Open.Disposable
 			// Else iterate to find an empty slot.
 			else
 			{
-				var items = _pool;
-				var len = items?.Length ?? 0;
+				var elements = _pool;
+				var len = elements?.Length ?? 0;
 
 				for (int i = 0; i < len; i++)
 				{
-					// As suggested by Rosyln's implementation, don't worry about interlocking here.  It's okay if a few get loose.
-					if (items[i].Value == null)
+					var e = elements[i];
+					// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
+					if (e.Value == null)
 					{
-						items[i].Value = item;
+						e.Value = item;
 						return true;
 					}
 				}
@@ -66,15 +67,16 @@ namespace Open.Disposable
 				return item;
 
 			// We missed getting the first item or it wasn't there.
-			var items = _pool;
-			var len = items?.Length ?? 0;
+			var elements = _pool;
+			var len = elements?.Length ?? 0;
 
 			for (int i = 0; i < len; i++)
 			{
-				item = items[i].Value;
+				var e = elements[i];
+				item = e.Value;
 				if (item != null)
 				{
-					if (item == Interlocked.CompareExchange(ref items[i].Value, null, item))
+					if (item == Interlocked.CompareExchange(ref e.Value, null, item))
 					{
 						return item;
 					}
