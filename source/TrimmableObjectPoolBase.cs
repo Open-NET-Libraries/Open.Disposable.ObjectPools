@@ -9,8 +9,15 @@ namespace Open.Disposable
 	public abstract class TrimmableObjectPoolBase<T> : ObjectPoolBase<T>, ITrimmableObjectPool
 		where T : class
     {
+
+
+		public TrimmableObjectPoolBase(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
+			: base(factory, recycler, capacity)
+		{
+		}
+
 		public TrimmableObjectPoolBase(Func<T> factory, int capacity = DEFAULT_CAPACITY)
-			: base(factory, capacity)
+			: this(factory, null, capacity)
 		{
 		}
 
@@ -34,6 +41,21 @@ namespace Open.Disposable
 		protected virtual void OnTakenFrom()
 		{
 			OnTakenFrom(Count);
+		}
+
+		protected override bool CanGive(T item)
+		{
+			if (item == null) return false;
+
+			if (Count >= MaxSize) return false;
+			var r = Recycler;
+			if (r != null)
+			{
+				r(item);
+				if (Count >= MaxSize) return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>

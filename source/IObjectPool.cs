@@ -23,6 +23,7 @@ namespace Open.Disposable
 		/// WARNING: The item is considered 'dead' but resurrectable so be sure not to hold on to the item's reference.
 		/// </summary>
 		/// <param name="item">The item to give up to the pool.</param>
+		/// <param name="recycler">An optional action exectue on the item only if it's possible to return to the pool.</param>
 		void Give(T item);
 
 		/// <summary>
@@ -30,6 +31,7 @@ namespace Open.Disposable
 		/// WARNING: The item is considered 'dead' but resurrectable so be sure not to hold on to the item's reference.
 		/// </summary>
 		/// <param name="item">The item to give up to the pool.</param>
+		/// <param name="recycler">An optional action exectue on the item only if it's possible to return to the pool.</param>
 		Task GiveAsync(T item);
 
 		/// <summary>

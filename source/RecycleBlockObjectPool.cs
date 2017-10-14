@@ -8,7 +8,7 @@ namespace Open.Disposable
 	/// Also does not block when .Give(T item) is called and items are recycled asynchronously.
 	/// </summary>
 	/// <typeparam name="T">The reference type contained.</typeparam>
-	public class RecyclableObjectPool<T> : BufferBlockObjectPool<T>
+	public class RecycleBlockObjectPool<T> : BufferBlockObjectPool<T>
 		where T : class
 	{
 		protected BufferBlock<T> _recycleQueue;
@@ -21,7 +21,7 @@ namespace Open.Disposable
 		/// <param name="generator">The generator function that creates the items.</param>
 		/// <param name="recycler">An recycler function that will process items before making them available.</param>
 		/// <param name="maxSize">The maximum size of the object pool.  Default is ushort.MaxValue (65535).</param>
-		internal RecyclableObjectPool(
+		public RecycleBlockObjectPool(
 			Func<T> generator,
 			Action<T> recycler,
 			int capacity = DEFAULT_CAPACITY) : base(generator, capacity)
@@ -71,17 +71,14 @@ namespace Open.Disposable
 
 		protected override bool GiveInternal(T item)
 		{
-			if (item != null)
-			{
-				var r = _recycleQueue;
-				if (r == null) // No recycler? Defer to default.
-					return base.GiveInternal(item); 
+			var r = _recycleQueue;
+			if (r == null) // No recycler? Defer to default.
+				return base.GiveInternal(item); 
 
-				// recycler? check the combined max size first then queue.
-				var p = _pool;
-				if (p != null && p.Count + r.Count + (_recycler?.InputCount ?? 0) < MaxSize && r.Post(item))
-					return true;
-			}
+			// recycler? check the combined max size first then queue.
+			var p = _pool;
+			if (p != null && p.Count + r.Count + (_recycler?.InputCount ?? 0) < MaxSize && r.Post(item))
+				return true;
 
 			return false;
 		}
@@ -116,15 +113,15 @@ namespace Open.Disposable
 
 	}
 
-	public static class RecyclableObjectPool
+	public static class RecycleBlockObjectPool
 	{
-		public static RecyclableObjectPool<T> Create<T>(Func<T> factory, Action<T> recycler, int capacity = Constants.DEFAULT_CAPACITY)
+		public static RecycleBlockObjectPool<T> Create<T>(Func<T> factory, Action<T> recycler, int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class
 		{
-			return new RecyclableObjectPool<T>(factory, recycler, capacity);
+			return new RecycleBlockObjectPool<T>(factory, recycler, capacity);
 		}
 
-		public static RecyclableObjectPool<T> Create<T>(Action<T> recycler, int capacity = Constants.DEFAULT_CAPACITY)
+		public static RecycleBlockObjectPool<T> Create<T>(Action<T> recycler, int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class, new()
 		{
 			return Create(() => new T(), recycler, capacity);

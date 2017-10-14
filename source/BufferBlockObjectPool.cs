@@ -19,15 +19,25 @@ namespace Open.Disposable
 		/// Constructs an ObjectPool that when .Take() is called will return the first possible item even if one is returned to the pool before the generator function completes.
 		/// </summary>
 		/// <param name="factory">The generator function that creates the items.</param>
+		/// <param name="recycler">The optional function that operates on an item just before entering the pool.</param>
 		/// <param name="maxSize">The maximum size of the object pool.  Default is ushort.MaxValue (65535).</param>
 		public BufferBlockObjectPool(
 			Func<T> factory,
-			int capacity = DEFAULT_CAPACITY) : base(factory, capacity)
+			Action<T> recycler,
+			int capacity = DEFAULT_CAPACITY)
+			: base(factory, recycler, capacity)
 		{
 			_pool = new BufferBlock<T>(new DataflowBlockOptions()
 			{
 				BoundedCapacity = capacity
 			});
+		}
+
+		public BufferBlockObjectPool(
+			Func<T> factory,
+			int capacity = DEFAULT_CAPACITY)
+			: this(factory, null, capacity)
+		{
 		}
 
 		protected BufferBlock<T> _pool;
@@ -102,27 +112,17 @@ namespace Open.Disposable
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
-			var pool = Nullify(ref _pool);
-			if (pool != null)
-			{
-				pool.Complete(); // No more... You're done...
-				if(pool.TryReceiveAll(out IList<T> items)) // Empty out...
-					items.Clear();
-			}
+			Nullify(ref _pool)?.Complete();
 		}
 
 		protected override bool GiveInternal(T item)
 		{
-			return (item == null ? null : _pool)
-				?.Post(item)
-				?? false;
+			return _pool.Post(item);
 		}
 
 		protected override Task<bool> GiveInternalAsync(T item)
 		{
-			return (item == null ? null : _pool)
-				?.SendAsync(item)
-				?? Task.FromResult(false);
+			return _pool.SendAsync(item);
 		}
 
 	}

@@ -110,17 +110,14 @@ class Program
 
 		string header;
 
-		Console.WriteLine(header = "ConcurrentBagObjectPool.................................");
-		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => ConcurrentBagObjectPool.Create<object>((int)count * 2))));
-
 		Console.WriteLine(header = "LinkedListObjectPool....................................");
 		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => LinkedListObjectPool.Create<object>((int)count * 2))));
 
+		Console.WriteLine(header = "QueueObjectPool.........................................");
+		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => QueueObjectPool.Create<object>((int)count * 2))));
+
 		Console.WriteLine(header = "OptimisticArrayObjectPool...............................");
 		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => OptimisticArrayObjectPool.Create<object>((int)count * 2))));
-
-		//Console.WriteLine(header = "BufferBlockObjectPool...................................");
-		//results.Add(Tuple.Create(header, OutputResults(count, repeat, () => BufferBlockObjectPool.Create<object>((int)count * 2))));
 
 		var all = results.SelectMany(r => r.Item2).ToArray();
 
@@ -140,8 +137,8 @@ class Program
 		Console.Write("Initializing...");
 
 		// Run once through first to scramble/warm-up initial conditions.
-		BenchmarkResults(100, 100, () => ConcurrentBagObjectPool.Create<object>(200));
 		BenchmarkResults(100, 100, () => LinkedListObjectPool.Create<object>(200));
+		BenchmarkResults(100, 100, () => QueueObjectPool.Create<object>(200));
 		BenchmarkResults(100, 100, () => OptimisticArrayObjectPool.Create<object>(200));
 		// BenchmarkResults(100, 100, () => BufferBlockObjectPool.Create<object>());
 

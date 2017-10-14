@@ -28,25 +28,25 @@ namespace Open.Disposable
 		/// <summary>
 		/// Constructs an auto-trimming ObjectPool helper.
 		/// </summary>
-		/// <param name="target">The governable object pool to maintain.</param>
+		/// <param name="pool">The governable object pool to maintain.</param>
 		/// <param name="trimmedSize">The target size to limit to after a half second timeout.  Allowing the pool to still grow to the max size until the trim occurs.</param>
 		/// <param name="trimDelay">The amount of time to wait/defer trimming.</param>
 		public ObjectPoolAutoTrimmer(
 			ushort trimmedSize,
-			ITrimmableObjectPool target,
+			ITrimmableObjectPool pool,
 			TimeSpan? trimDelay = null)
 		{
-			_pool = target;
-			if (target is DisposableBase pool)
-				pool.BeforeDispose += Pool_BeforeDispose;
+			_pool = pool ?? throw new ArgumentNullException("pool");
+			if (pool is DisposableBase d)
+				d.BeforeDispose += Pool_BeforeDispose;
 
 			TrimmedSize = _trimmedSize = trimmedSize;
 			TrimDelay = _trimDelay = trimDelay ?? TimeSpan.FromMilliseconds(500);
 
 			_trimmer = new ActionRunner(TrimInternal);
 
-			target.GivenTo += Target_GivenTo;
-			target.TakenFrom += Target_TakenFrom;
+			pool.GivenTo += Target_GivenTo;
+			pool.TakenFrom += Target_TakenFrom;
 
 		}
 

@@ -10,9 +10,15 @@ namespace Open.Disposable
 		where T : class
 		where TCollection : class, ICollection<T>
 	{
-		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, int capacity = DEFAULT_CAPACITY) : base(factory, capacity)
+		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
+			: base(factory, recycler, capacity)
 		{
 			Pool = pool;
+		}
+
+		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, int capacity = DEFAULT_CAPACITY)
+			: this(pool, factory, null, capacity)
+		{
 		}
 
 		protected TCollection Pool;
@@ -21,17 +27,13 @@ namespace Open.Disposable
 
 		protected override bool GiveInternal(T item)
 		{
-			if (item != null)
+			lock (Pool)
 			{
-				var p = Pool;
-				if (p != null && p.Count < MaxSize)
-				{
-					lock (p) p.Add(item); // It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
-					return true;
-				}
+				if (Count >= MaxSize) return false;
+				Pool.Add(item);
 			}
 
-			return false;
+			return true;
 		}
 
 		protected override T TryTakeInternal()
@@ -56,7 +58,7 @@ namespace Open.Disposable
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
-			Nullify(ref Pool)?.Clear();
+			Pool = null;
 		}
 	}
 

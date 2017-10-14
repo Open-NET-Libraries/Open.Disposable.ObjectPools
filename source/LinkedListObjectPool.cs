@@ -7,9 +7,16 @@ namespace Open.Disposable
 	public class LinkedListObjectPool<T> : CollectionWrapperObjectPool<T, LinkedList<T>>
 		where T : class
 	{
-		public LinkedListObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY) : base(new LinkedList<T>(), factory, capacity)
+		public LinkedListObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
+			: base(new LinkedList<T>(), factory, recycler, capacity)
 		{
 		}
+
+		public LinkedListObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+			: this(factory, null, capacity)
+		{
+		}
+
 
 		protected override T TryTakeInternal()
 		{

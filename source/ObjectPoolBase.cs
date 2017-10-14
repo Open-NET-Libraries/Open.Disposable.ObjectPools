@@ -10,15 +10,22 @@ namespace Open.Disposable
 	{
 		protected const int DEFAULT_CAPACITY = Constants.DEFAULT_CAPACITY;
 
-		protected ObjectPoolBase(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+		protected ObjectPoolBase(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
 		{
 			if (capacity < 1)
 				throw new ArgumentOutOfRangeException("capacity", capacity, "Must be at least 1.");
 			Factory = factory ?? throw new ArgumentNullException("factory");
 			MaxSize = capacity;
+			Recycler = recycler;
 		}
 
+		protected ObjectPoolBase(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+			: this(factory, null, capacity)
+		{
 
+		}
+
+		protected Action<T> Recycler;
 		protected int MaxSize;
 		public int Capacity => MaxSize;
 
@@ -31,11 +38,14 @@ namespace Open.Disposable
 			return Factory();
 		}
 
+		protected abstract bool CanGive(T item);
+
+		// Contract should be that no item can be null here.
 		protected abstract bool GiveInternal(T item);
 
 		public virtual void Give(T item)
 		{
-			GiveInternal(item);
+			if(CanGive(item)) GiveInternal(item);
 		}
 
 		protected virtual Task<bool> GiveInternalAsync(T item)
@@ -45,6 +55,7 @@ namespace Open.Disposable
 
 		public virtual Task GiveAsync(T item)
 		{
+			if (item == null) return Task.FromResult(false);
 			return GiveInternalAsync(item);
 		}
 		

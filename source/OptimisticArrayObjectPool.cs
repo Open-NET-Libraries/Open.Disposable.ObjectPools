@@ -13,10 +13,19 @@ namespace Open.Disposable
 	public class OptimisticArrayObjectPool<T> : ObjectPoolBase<T>
 		where T : class
 	{
-		public OptimisticArrayObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY) : base(factory, capacity)
+
+		public OptimisticArrayObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
+			: base(factory, recycler, capacity)
 		{
 			_pool = new Element[capacity - 1];
 		}
+
+		public OptimisticArrayObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+			: this(factory, null, capacity)
+		{
+		}
+
+
 
 		[DebuggerDisplay("{Value,nq}")]
 		private struct Element
@@ -27,10 +36,18 @@ namespace Open.Disposable
 		Element[] _pool;
 		T _firstItem;
 
+		protected override bool CanGive(T item)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Give(T item)
+		{
+			GiveInternal(item);
+		}
+
 		protected override bool GiveInternal(T item)
 		{
-			if (item == null) return false;
-
 			// First see if optimisically we can store in _firstItem;
 			if (_firstItem == null)
 			{
@@ -88,13 +105,11 @@ namespace Open.Disposable
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
+			_pool = null;
 			_firstItem = null;
-			var pool = Nullify(ref _pool);
-			var len = pool?.Length ?? 0;
-
-			for (var i = 0; i < len; i++)
-				pool[i].Value = null;
 		}
+
+
 	}
 
 	public static class OptimisticArrayObjectPool

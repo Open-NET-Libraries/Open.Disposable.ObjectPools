@@ -10,9 +10,16 @@ namespace Open.Disposable
 		where T : class
 
 	{
-		public ConcurrentBagObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY) : base(factory, capacity)
+
+		public ConcurrentBagObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
+			: base(factory, recycler, capacity)
 		{
 			Pool = new ConcurrentBag<T>();
+		}
+
+		public ConcurrentBagObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+			: this(factory, null, capacity)
+		{
 		}
 
 		ConcurrentBag<T> Pool;
@@ -21,17 +28,8 @@ namespace Open.Disposable
 
 		protected override bool GiveInternal(T item)
 		{
-			if (item != null)
-			{
-				var p = Pool;
-				if (p != null && p.Count < MaxSize)
-				{
-					p.Add(item); // It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
-					return true;
-				}
-			}
-
-			return false;
+			Pool.Add(item); // It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
+			return true;
 		}
 
 		protected override T TryTakeInternal()
