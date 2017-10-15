@@ -25,15 +25,21 @@ namespace Open.Disposable
 
 		public override int Count => Pool?.Count ?? 0;
 
-		protected override bool GiveInternal(T item)
+		protected override bool Receive(T item)
 		{
-			lock (Pool)
+			var p = Pool;
+			if (p != null)
 			{
-				if (Count >= MaxSize) return false;
-				Pool.Add(item);
+				lock (p)
+				{
+					// It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
+					// The lock operation should be quick enough to not pile up too many items.
+					p.Add(item);
+					return true;
+				}
 			}
 
-			return true;
+			return false;
 		}
 
 		protected override T TryTakeInternal()

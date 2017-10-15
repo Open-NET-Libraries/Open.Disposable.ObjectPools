@@ -115,7 +115,7 @@ namespace Open.Disposable
 			Nullify(ref _pool)?.Complete();
 		}
 
-		protected override bool GiveInternal(T item)
+		protected override bool Receive(T item)
 		{
 			return _pool.Post(item);
 		}

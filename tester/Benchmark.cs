@@ -40,28 +40,44 @@ namespace Open.Disposable.ObjectPools
 			var disposeTimer = new Stopwatch();
 			using (var pool = TimedResult.Measure(out TimedResult constructionTime, "01) Pool Construction", PoolFactory))
 			{
-				yield return constructionTime;
+				// yield return constructionTime; // Looking for anomalies.
 
 				// Indicates how long pure construction takes.  The baseline by which you should measure .Take()
-				yield return TimedResult.Measure("02) Pool.Generate() (In Parallel)", () =>
-				{
-					Parallel.For(0, TestSize, i => pool.Generate());
-				});
+				//yield return TimedResult.Measure("02) Pool.Generate() (In Parallel)", () =>
+				//{
+				//	Parallel.For(0, TestSize, i => pool.Generate());
+				//});
 
 				var tank = new ConcurrentBag<T>(); // This will have an effect on performance measurement, but hopefully consistently.
-												   //int remaining = 0;
 
 				yield return TimedResult.Measure("03) Take From Empty (In Parallel)", () =>
 				{
 					Parallel.For(0, TestSize, i => tank.Add(pool.Take()));
 				});
 
+				// Put extra in the tank.
+				for (var i = 0; i < TestSize; i++)
+				{
+					tank.Add(pool.Generate());
+				}
+
 				yield return TimedResult.Measure("04) Give To (In Parallel)", () =>
 				{
 					Parallel.ForEach(tank, e => pool.Give(e));
 				});
 
-				yield return TimedResult.Measure("05) Empty Pool (.TryTake())", () =>
+				yield return TimedResult.Measure("05) Mixed Read/Write (In Parallel)", () =>
+				{
+					Parallel.For(0, TestSize, i =>
+					{
+						if (i % 2 == 0)
+							tank.Add(pool.Take());
+						else if (tank.TryTake(out T value))
+							pool.Give(value);
+					});
+				});
+
+				yield return TimedResult.Measure("06) Empty Pool (.TryTake())", () =>
 				{
 					while (pool.TryTake() != null) {
 						// remaining++;
@@ -72,7 +88,7 @@ namespace Open.Disposable.ObjectPools
 			}
 			disposeTimer.Stop();
 
-			yield return new TimedResult("98) Pool Disposal", disposeTimer);
+			// yield return new TimedResult("98) Pool Disposal", disposeTimer);  // Looking for anomalies.
 		}
 
 		public IEnumerable<IEnumerable<TimedResult>> TestRepeated()

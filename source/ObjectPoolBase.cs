@@ -1,6 +1,7 @@
 ﻿using Open.Threading;
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Open.Disposable
@@ -38,25 +39,51 @@ namespace Open.Disposable
 			return Factory();
 		}
 
-		protected abstract bool CanGive(T item);
+		protected virtual bool CanReceive => true;
+
+		protected bool PrepareToReceive(T item)
+		{
+			if (item == null) return false;
+
+			if (!CanReceive) return false;
+			var r = Recycler;
+			if (r != null)
+			{
+				r(item);
+				if (!CanReceive) return false;
+			}
+
+			return true;
+		}
 
 		// Contract should be that no item can be null here.
-		protected abstract bool GiveInternal(T item);
+		protected abstract bool Receive(T item);
 
-		public virtual void Give(T item)
+		protected virtual void OnGivenTo()
 		{
-			if(CanGive(item)) GiveInternal(item);
+
+		}
+		protected void OnGivenTo(bool wasGiven)
+		{
+			if (wasGiven) OnGivenTo();
+		}
+
+		public void Give(T item)
+		{
+			if(PrepareToReceive(item) && (GaveToPocket(ref item) || Receive(item)))
+				OnGivenTo();
 		}
 
 		protected virtual Task<bool> GiveInternalAsync(T item)
 		{
-			return Task.Run(() => GiveInternal(item));
+			return Task.Run(() => Receive(item));
 		}
 
 		public virtual Task GiveAsync(T item)
 		{
 			if (item == null) return Task.FromResult(false);
-			return GiveInternalAsync(item);
+			return GiveInternalAsync(item)
+				.OnFullfilled((Action<bool>)OnGivenTo);
 		}
 		
 		public virtual T Take()
@@ -78,17 +105,43 @@ namespace Open.Disposable
 			return TakeAsyncInternal();
 		}
 
-		public virtual bool TryTake(out T item)
+		public bool TryTake(out T item)
 		{
 			item = TryTake();
 			return item != null;
 		}
 
+		protected bool AllowPocket = true;
+
+		protected T Pocket;
+		protected T TakeFromPocket()
+		{
+			if (!AllowPocket || Pocket == null) return null;
+			return Interlocked.Exchange(ref Pocket, null);
+		}
+
+		protected bool GaveToPocket(ref T item)
+		{
+			if (!AllowPocket || Pocket != null) return false;
+			item = Interlocked.Exchange(ref Pocket, item);
+			return item == null;
+		}
+
 		protected abstract T TryTakeInternal();
 
-		public virtual T TryTake()
+		public T TryTake()
 		{
-			return TryTakeInternal();
+			var item = TakeFromPocket() ?? TryTakeInternal();
+			if (item != null) OnTakenFrom();
+			return item;
+		}
+
+		protected virtual void OnTakenFrom()
+		{
+		}
+		protected void OnTakenFrom(bool wasTaken)
+		{
+			if (wasTaken) OnTakenFrom();
 		}
 
 		protected override void OnBeforeDispose()

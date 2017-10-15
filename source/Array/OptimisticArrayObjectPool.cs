@@ -17,7 +17,7 @@ namespace Open.Disposable
 		public OptimisticArrayObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
 			: base(factory, recycler, capacity)
 		{
-			_pool = new Element[capacity - 1];
+			AllowPocket = false;
 		}
 
 		public OptimisticArrayObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
@@ -26,27 +26,16 @@ namespace Open.Disposable
 		}
 
 
-
 		[DebuggerDisplay("{Value,nq}")]
-		private struct Element
+		protected struct Element
 		{
 			internal T Value;
 		}
 
-		Element[] _pool;
 		T _firstItem;
+		Element[] Pool;
 
-		protected override bool CanGive(T item)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Give(T item)
-		{
-			GiveInternal(item);
-		}
-
-		protected override bool GiveInternal(T item)
+		protected override bool Receive(T item)
 		{
 			// First see if optimisically we can store in _firstItem;
 			if (_firstItem == null)
@@ -57,7 +46,7 @@ namespace Open.Disposable
 			// Else iterate to find an empty slot.
 			else
 			{
-				var elements = _pool;
+				var elements = Pool;
 				var len = elements?.Length ?? 0;
 
 				for (int i = 0; i < len; i++)
@@ -84,7 +73,7 @@ namespace Open.Disposable
 				return item;
 
 			// We missed getting the first item or it wasn't there.
-			var elements = _pool;
+			var elements = Pool;
 			var len = elements?.Length ?? 0;
 
 			for (int i = 0; i < len; i++)
@@ -105,10 +94,8 @@ namespace Open.Disposable
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
-			_pool = null;
-			_firstItem = null;
+			Pool = null;
 		}
-
 
 	}
 

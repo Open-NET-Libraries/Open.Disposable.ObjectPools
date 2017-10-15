@@ -24,11 +24,14 @@ namespace Open.Disposable
 
 		public override int Count => Pool?.Count ?? 0;
 
-		protected override bool GiveInternal(T item)
+		protected override bool Receive(T item)
 		{
-			if (Count < MaxSize)
+			var p = Pool;
+			if (p!=null)
 			{
-				lock (Pool) Pool.Enqueue(item); // It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
+				// It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
+				// The lock operation should be quick enough to not pile up too many items.
+				lock (p) p.Enqueue(item);
 				return true;
 			}
 

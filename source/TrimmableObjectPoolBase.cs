@@ -26,6 +26,8 @@ namespace Open.Disposable
 		/// </summary>
 		public abstract int Count { get; }
 
+		protected override bool CanReceive => Count < MaxSize;
+
 		/// <summary>
 		/// Signal for when an item was taken (actually removed) from the pool. 
 		/// </summary>
@@ -34,30 +36,11 @@ namespace Open.Disposable
 		{
 			TakenFrom?.Invoke(newSize);
 		}
-		protected void OnTakenFrom(bool wasTaken)
-		{
-			if (wasTaken) OnTakenFrom();
-		}
-		protected virtual void OnTakenFrom()
+		protected override void OnTakenFrom()
 		{
 			OnTakenFrom(Count);
 		}
-
-		protected override bool CanGive(T item)
-		{
-			if (item == null) return false;
-
-			if (Count >= MaxSize) return false;
-			var r = Recycler;
-			if (r != null)
-			{
-				r(item);
-				if (Count >= MaxSize) return false;
-			}
-
-			return true;
-		}
-
+		
 		/// <summary>
 		/// Signal for when an item was given (actually accepted) to the pool. 
 		/// </summary>
@@ -66,33 +49,10 @@ namespace Open.Disposable
 		{
 			GivenTo?.Invoke(newSize);
 		}
-		protected void OnGivenTo(bool wasGiven)
-		{
-			if (wasGiven) OnGivenTo();
-		}
-		protected virtual void OnGivenTo()
+
+		protected override void OnGivenTo()
 		{
 			OnGivenTo(Count);
-		}
-
-
-		public sealed override void Give(T item)
-		{
-			if (GiveInternal(item))
-				OnGivenTo();
-		}
-
-		public sealed override Task GiveAsync(T item)
-		{
-			return GiveInternalAsync(item)
-				.OnFullfilled((Action<bool>)OnGivenTo);
-		}
-
-		public override T TryTake()
-		{
-			var item = TryTakeInternal();
-			if (item != null) OnTakenFrom();
-			return item;
 		}
 
 		public virtual void TrimTo(int targetSize)

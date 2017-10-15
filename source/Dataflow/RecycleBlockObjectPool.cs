@@ -66,14 +66,14 @@ namespace Open.Disposable
 
 		protected void _OnRecycled(T item)
 		{
-			base.GiveInternal(item);
+			base.Receive(item);
 		}
 
-		protected override bool GiveInternal(T item)
+		protected override bool Receive(T item)
 		{
 			var r = _recycleQueue;
 			if (r == null) // No recycler? Defer to default.
-				return base.GiveInternal(item); 
+				return base.Receive(item); 
 
 			// recycler? check the combined max size first then queue.
 			var p = _pool;

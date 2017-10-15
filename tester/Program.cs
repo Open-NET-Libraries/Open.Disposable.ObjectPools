@@ -109,15 +109,19 @@ class Program
 		var results = new List<Tuple<string,TimedResult[]>>(3);
 
 		string header;
+		var capacity = (int)count * 2;
 
 		Console.WriteLine(header = "LinkedListObjectPool....................................");
-		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => LinkedListObjectPool.Create<object>((int)count * 2))));
+		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => LinkedListObjectPool.Create<object>(capacity))));
 
 		Console.WriteLine(header = "QueueObjectPool.........................................");
-		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => QueueObjectPool.Create<object>((int)count * 2))));
+		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => QueueObjectPool.Create<object>(capacity))));
 
 		Console.WriteLine(header = "OptimisticArrayObjectPool...............................");
-		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => OptimisticArrayObjectPool.Create<object>((int)count * 2))));
+		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => OptimisticArrayObjectPool.Create<object>(capacity))));
+
+		Console.WriteLine(header = "InterlockedArrayObjectPool..............................");
+		results.Add(Tuple.Create(header, OutputResults(count, repeat, () => InterlockedArrayObjectPool.Create<object>(capacity))));
 
 		var all = results.SelectMany(r => r.Item2).ToArray();
 
@@ -140,6 +144,7 @@ class Program
 		BenchmarkResults(100, 100, () => LinkedListObjectPool.Create<object>(200));
 		BenchmarkResults(100, 100, () => QueueObjectPool.Create<object>(200));
 		BenchmarkResults(100, 100, () => OptimisticArrayObjectPool.Create<object>(200));
+		BenchmarkResults(100, 100, () => InterlockedArrayObjectPool.Create<object>(200));
 		// BenchmarkResults(100, 100, () => BufferBlockObjectPool.Create<object>());
 
 		Console.SetCursorPosition(0, Console.CursorTop);
