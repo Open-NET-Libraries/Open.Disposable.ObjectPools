@@ -1,6 +1,4 @@
-﻿using Open.Threading;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -70,7 +68,7 @@ namespace Open.Disposable
 
 		public void Give(T item)
 		{
-			if(PrepareToReceive(item) && (GaveToPocket(ref item) || Receive(item)))
+			if (PrepareToReceive(item) && (GaveToPocket(ref item) || Receive(item)))
 				OnGivenTo();
 		}
 
@@ -83,9 +81,9 @@ namespace Open.Disposable
 		{
 			if (item == null) return Task.FromResult(false);
 			return GiveInternalAsync(item)
-				.OnFullfilled((Action<bool>)OnGivenTo);
+				.ContinueWith(t => OnGivenTo(t.Result));
 		}
-		
+
 		public virtual T Take()
 		{
 			return TryTake() ?? Factory();
