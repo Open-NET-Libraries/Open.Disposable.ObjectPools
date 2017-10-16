@@ -1,18 +1,9 @@
-﻿using Open.Collections;
-using Open.Disposable;
+﻿using Open.Disposable;
 using Open.Disposable.ObjectPools;
 using Open.Text.CSV;
-using Open.Threading;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 class Program
 {
@@ -21,7 +12,16 @@ class Program
 		Console.Write("Initializing...");
 
 		var sb = new StringBuilder();
-		var report = new Report(sb);
+		var report = new ConsoleReport<object>(sb);
+
+		report.AddBenchmark("QueueObjectPool", // Note, that this one isn't far off from the following in peformance, but definitely is faster than LinkedListObjectPool and the rest.
+			count => () => QueueObjectPool.Create<object>((int)count * 2));
+		report.AddBenchmark("OptimisticArrayObjectPool",
+			count => () => OptimisticArrayObjectPool.Create<object>((int)count * 2));
+		report.AddBenchmark("InterlockedArrayObjectPool",
+			count => () => InterlockedArrayObjectPool.Create<object>((int)count * 2));
+		report.Pretest(200, 200); // Run once through first to scramble/warm-up initial conditions.
+
 		Console.SetCursorPosition(0, Console.CursorTop);
 
 		report.Test(4, 4);

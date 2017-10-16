@@ -1,44 +1,24 @@
-﻿using System;
+﻿using Open.Diagnostics;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Open.Disposable.ObjectPools
 {
-    public class Benchmark<T>
+	public class Benchmark<T> : BenchmarkBase<Func<IObjectPool<T>>>
 		where T : class
 	{
-		public readonly uint TestSize; // Pool capacity should be at least 2x this.
-		public readonly uint RepeatCount; // Number of times to repeat the test from scratch.
-		public readonly Func<IObjectPool<T>> PoolFactory;
-
-		public Benchmark(uint size, uint repeat, Func<IObjectPool<T>> poolFactory)
+		public Benchmark(uint size, uint repeat, Func<IObjectPool<T>> poolFactory) : base(size,repeat,poolFactory)
 		{
-			TestSize = size;
-			RepeatCount = repeat;
-			PoolFactory = poolFactory;
 		}
 
-		public IEnumerable<TimedResult> TestOnce()
-		{
-			var total = TimeSpan.Zero;
-			foreach(var r in TestOnceInternal())
-			{
-				total += r.Duration;
-				yield return r;
-			}
 
-			yield return new TimedResult("99) TOTAL", total);
-		}
-
-		IEnumerable<TimedResult> TestOnceInternal()
+		protected override IEnumerable<TimedResult> TestOnceInternal()
 		{
 			var disposeTimer = new Stopwatch();
-			using (var pool = TimedResult.Measure(out TimedResult constructionTime, "01) Pool Construction", PoolFactory))
+			using (var pool = TimedResult.Measure(out TimedResult constructionTime, "Pool Construction", Param))
 			{
 				// yield return constructionTime; // Looking for anomalies.
 
@@ -50,7 +30,7 @@ namespace Open.Disposable.ObjectPools
 
 				var tank = new ConcurrentBag<T>(); // This will have an effect on performance measurement, but hopefully consistently.
 
-				yield return TimedResult.Measure("03) Take From Empty (In Parallel)", () =>
+				yield return TimedResult.Measure("Take From Empty (In Parallel)", () =>
 				{
 					Parallel.For(0, TestSize, i => tank.Add(pool.Take()));
 				});
@@ -61,12 +41,12 @@ namespace Open.Disposable.ObjectPools
 					tank.Add(pool.Generate());
 				}
 
-				yield return TimedResult.Measure("04) Give To (In Parallel)", () =>
+				yield return TimedResult.Measure("Give To (In Parallel)", () =>
 				{
 					Parallel.ForEach(tank, e => pool.Give(e));
 				});
 
-				yield return TimedResult.Measure("05) Mixed Read/Write (In Parallel)", () =>
+				yield return TimedResult.Measure("Mixed Read/Write (In Parallel)", () =>
 				{
 					Parallel.For(0, TestSize, i =>
 					{
@@ -77,7 +57,7 @@ namespace Open.Disposable.ObjectPools
 					});
 				});
 
-				yield return TimedResult.Measure("06) Empty Pool (.TryTake())", () =>
+				yield return TimedResult.Measure("Empty Pool (.TryTake())", () =>
 				{
 					while (pool.TryTake() != null) {
 						// remaining++;
@@ -89,31 +69,6 @@ namespace Open.Disposable.ObjectPools
 			disposeTimer.Stop();
 
 			// yield return new TimedResult("98) Pool Disposal", disposeTimer);  // Looking for anomalies.
-		}
-
-		public IEnumerable<IEnumerable<TimedResult>> TestRepeated()
-		{
-			for(var i=0;i<RepeatCount;i++)
-			{
-				yield return TestOnce();
-			}
-		}
-
-
-		TimedResult[] _result;
-		public TimedResult[] Result
-		{
-			get
-			{
-				return LazyInitializer.EnsureInitialized(ref _result, ()=>
-					TestRepeated()
-					.SelectMany(s => s)
-					.GroupBy(k => k.Label)
-					.Select(g => g.Sum())
-					.OrderBy(r => r.Label)
-					.ToArray()
-				);
-			}
 		}
 
 		public static TimedResult[] Results(uint size, uint repeat, Func<IObjectPool<T>> poolFactory)
