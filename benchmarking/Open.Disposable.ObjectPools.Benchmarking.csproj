@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="OldTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Open.Text.CSV" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\source\Open.Disposable.ObjectPools.csproj" />
   </ItemGroup>
 
