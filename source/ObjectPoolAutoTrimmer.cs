@@ -1,4 +1,4 @@
-﻿using Open.Threading;
+﻿using Open.Threading.Tasks;
 using System;
 
 namespace Open.Disposable
