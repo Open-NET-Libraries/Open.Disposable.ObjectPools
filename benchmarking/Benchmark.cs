@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Open.Disposable.ObjectPools
@@ -12,38 +13,25 @@ namespace Open.Disposable.ObjectPools
 	{
 		public Benchmark(uint size, uint repeat, Func<IObjectPool<T>> poolFactory) : base(size,repeat,poolFactory)
 		{
+			// Because some pools do comparison checks on values, we have have unique instances/values.
+			_items = new T[(int)size];
 		}
 
+		readonly T[] _items;
 
 		protected override IEnumerable<TimedResult> TestOnceInternal()
 		{
-			var disposeTimer = new Stopwatch();
-			using (var pool = TimedResult.Measure(out TimedResult constructionTime, "Pool Construction", Param))
+			using (var pool = Param())
 			{
-				// yield return constructionTime; // Looking for anomalies.
-
-				// Indicates how long pure construction takes.  The baseline by which you should measure .Take()
-				//yield return TimedResult.Measure("02) Pool.Generate() (In Parallel)", () =>
-				//{
-				//	Parallel.For(0, TestSize, i => pool.Generate());
-				//});
-
-				var tank = new ConcurrentBag<T>(); // This will have an effect on performance measurement, but hopefully consistently.
 
 				yield return TimedResult.Measure("Take From Empty (In Parallel)", () =>
 				{
-					Parallel.For(0, TestSize, i => tank.Add(pool.Take()));
+					Parallel.For(0, TestSize, i => _items[i] = pool.Take());
 				});
-
-				// Put extra in the tank.
-				for (var i = 0; i < TestSize; i++)
-				{
-					tank.Add(pool.Generate());
-				}
 
 				yield return TimedResult.Measure("Give To (In Parallel)", () =>
 				{
-					Parallel.ForEach(tank, e => pool.Give(e));
+					Parallel.For(0, TestSize, i => pool.Give(_items[i]));
 				});
 
 				yield return TimedResult.Measure("Mixed Read/Write (In Parallel)", () =>
@@ -51,9 +39,9 @@ namespace Open.Disposable.ObjectPools
 					Parallel.For(0, TestSize, i =>
 					{
 						if (i % 2 == 0)
-							tank.Add(pool.Take());
-						else if (tank.TryTake(out T value))
-							pool.Give(value);
+							_items[i] = pool.Take();
+						else
+							pool.Give(_items[i]);
 					});
 				});
 
@@ -63,12 +51,7 @@ namespace Open.Disposable.ObjectPools
 						// remaining++;
 					}
 				});
-
-				disposeTimer.Start();
 			}
-			disposeTimer.Stop();
-
-			// yield return new TimedResult("98) Pool Disposal", disposeTimer);  // Looking for anomalies.
 		}
 
 		public static TimedResult[] Results(uint size, uint repeat, Func<IObjectPool<T>> poolFactory)

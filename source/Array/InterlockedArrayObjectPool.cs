@@ -18,6 +18,7 @@ namespace Open.Disposable
 			: base(factory, recycler, capacity)
 		{
 			AllowPocket = true;
+			Pool = new Element[capacity - 1];
 		}
 
 		public InterlockedArrayObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)

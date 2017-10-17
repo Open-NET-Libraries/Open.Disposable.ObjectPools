@@ -18,6 +18,7 @@ namespace Open.Disposable
 			: base(factory, recycler, capacity)
 		{
 			AllowPocket = false;
+			Pool = new Element[capacity - 1];
 		}
 
 		public OptimisticArrayObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
