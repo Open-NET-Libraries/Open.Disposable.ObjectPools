@@ -31,6 +31,8 @@ class Program
 			count => () => ConcurrentQueueObjectPool.Create<object>((int)count * 2));
 		report.AddBenchmark("OptimisticArrayObjectPool",
 			count => () => OptimisticArrayObjectPool.Create<object>((int)count * 2));
+		report.AddBenchmark("ChannelObjectPool",
+			count => () => ChannelObjectPool.Create<object>((int)count * 2));
 		report.Pretest(200, 200); // Run once through first to scramble/warm-up initial conditions.
 
 		Console.SetCursorPosition(0, Console.CursorTop);

@@ -29,6 +29,7 @@ Part of the "Open" set of libraries.</Description>
   <ItemGroup>
     <PackageReference Include="Open.Disposable" Version="1.0.4" />
     <PackageReference Include="Open.Threading.Tasks" Version="1.0.1" />
+    <PackageReference Include="System.Threading.Tasks.Channels" Version="0.1.0-e171018-3" />
   </ItemGroup>
 
 </Project>

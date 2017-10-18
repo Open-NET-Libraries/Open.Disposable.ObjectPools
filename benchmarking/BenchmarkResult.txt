@@ -2,149 +2,191 @@ Repeat 200000 for size 4
 ------------------------------------
 
 QueueObjectPool.........................................
-00:00:00.8239435 Take From Empty (In Parallel)
-00:00:00.7659438 Give To (In Parallel)
-00:00:00.7539503 Mixed Read/Write (In Parallel)
-00:00:00.0915139 Empty Pool (.TryTake())
-00:00:02.4353515 TOTAL
+00:00:00.8414443 Take From Empty (In Parallel)
+00:00:00.7491188 Give To (In Parallel)
+00:00:00.7633843 Mixed Read/Write (In Parallel)
+00:00:00.0939873 Empty Pool (.TryTake())
+00:00:02.4479347 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:00.8454852 Take From Empty (In Parallel)
-00:00:00.8014094 Give To (In Parallel)
-00:00:00.7777634 Mixed Read/Write (In Parallel)
-00:00:00.0943980 Empty Pool (.TryTake())
-00:00:02.5190560 TOTAL
+00:00:00.7907885 Take From Empty (In Parallel)
+00:00:00.7635269 Give To (In Parallel)
+00:00:00.7739002 Mixed Read/Write (In Parallel)
+00:00:00.0956834 Empty Pool (.TryTake())
+00:00:02.4238990 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:00.7514263 Take From Empty (In Parallel)
-00:00:00.6102573 Give To (In Parallel)
-00:00:00.6096008 Mixed Read/Write (In Parallel)
-00:00:00.0250278 Empty Pool (.TryTake())
-00:00:01.9963122 TOTAL
+00:00:00.8545861 Take From Empty (In Parallel)
+00:00:00.7298007 Give To (In Parallel)
+00:00:00.7360451 Mixed Read/Write (In Parallel)
+00:00:00.0309048 Empty Pool (.TryTake())
+00:00:02.3513367 TOTAL
+
+ChannelObjectPool.......................................
+00:00:00.9057234 Take From Empty (In Parallel)
+00:00:00.8273447 Give To (In Parallel)
+00:00:00.7409435 Mixed Read/Write (In Parallel)
+00:00:00.0901244 Empty Pool (.TryTake())
+00:00:02.5641360 TOTAL
 
 
 Repeat 80000 for size 10
 ------------------------------------
 
 QueueObjectPool.........................................
-00:00:00.4331560 Take From Empty (In Parallel)
-00:00:00.4100775 Give To (In Parallel)
-00:00:00.3880329 Mixed Read/Write (In Parallel)
-00:00:00.0806808 Empty Pool (.TryTake())
-00:00:01.3119472 TOTAL
+00:00:00.4912983 Take From Empty (In Parallel)
+00:00:00.4533136 Give To (In Parallel)
+00:00:00.4291087 Mixed Read/Write (In Parallel)
+00:00:00.0878080 Empty Pool (.TryTake())
+00:00:01.4615286 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:00.4329151 Take From Empty (In Parallel)
-00:00:00.4102398 Give To (In Parallel)
-00:00:00.4300915 Mixed Read/Write (In Parallel)
-00:00:00.0956072 Empty Pool (.TryTake())
-00:00:01.3688536 TOTAL
+00:00:00.4694570 Take From Empty (In Parallel)
+00:00:00.4624334 Give To (In Parallel)
+00:00:00.4517696 Mixed Read/Write (In Parallel)
+00:00:00.1010806 Empty Pool (.TryTake())
+00:00:01.4847406 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:00.4835332 Take From Empty (In Parallel)
-00:00:00.3670787 Give To (In Parallel)
-00:00:00.3804679 Mixed Read/Write (In Parallel)
-00:00:00.0163851 Empty Pool (.TryTake())
-00:00:01.2474649 TOTAL
+00:00:00.5033997 Take From Empty (In Parallel)
+00:00:00.3914612 Give To (In Parallel)
+00:00:00.4087611 Mixed Read/Write (In Parallel)
+00:00:00.0173492 Empty Pool (.TryTake())
+00:00:01.3209712 TOTAL
+
+ChannelObjectPool.......................................
+00:00:00.5184524 Take From Empty (In Parallel)
+00:00:00.4868362 Give To (In Parallel)
+00:00:00.4049050 Mixed Read/Write (In Parallel)
+00:00:00.0772238 Empty Pool (.TryTake())
+00:00:01.4874174 TOTAL
 
 
 Repeat 24000 for size 50
 ------------------------------------
 
 QueueObjectPool.........................................
-00:00:00.2038919 Take From Empty (In Parallel)
-00:00:00.4452561 Give To (In Parallel)
-00:00:00.2320728 Mixed Read/Write (In Parallel)
-00:00:00.1154980 Empty Pool (.TryTake())
-00:00:00.9967188 TOTAL
+00:00:00.2166941 Take From Empty (In Parallel)
+00:00:00.5193580 Give To (In Parallel)
+00:00:00.2609577 Mixed Read/Write (In Parallel)
+00:00:00.1199166 Empty Pool (.TryTake())
+00:00:01.1169264 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:00.1995862 Take From Empty (In Parallel)
-00:00:00.2350584 Give To (In Parallel)
-00:00:00.2086107 Mixed Read/Write (In Parallel)
-00:00:00.1473526 Empty Pool (.TryTake())
-00:00:00.7906079 TOTAL
+00:00:00.2071364 Take From Empty (In Parallel)
+00:00:00.2237372 Give To (In Parallel)
+00:00:00.2196626 Mixed Read/Write (In Parallel)
+00:00:00.1443611 Empty Pool (.TryTake())
+00:00:00.7948973 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:00.3295805 Take From Empty (In Parallel)
-00:00:00.1578376 Give To (In Parallel)
-00:00:00.1925929 Mixed Read/Write (In Parallel)
-00:00:00.0135767 Empty Pool (.TryTake())
-00:00:00.6935877 TOTAL
+00:00:00.3335099 Take From Empty (In Parallel)
+00:00:00.1604842 Give To (In Parallel)
+00:00:00.1997833 Mixed Read/Write (In Parallel)
+00:00:00.0136419 Empty Pool (.TryTake())
+00:00:00.7074193 TOTAL
+
+ChannelObjectPool.......................................
+00:00:00.6503868 Take From Empty (In Parallel)
+00:00:00.7734191 Give To (In Parallel)
+00:00:00.2313558 Mixed Read/Write (In Parallel)
+00:00:00.1015311 Empty Pool (.TryTake())
+00:00:01.7566928 TOTAL
 
 
 Repeat 16000 for size 100
 ------------------------------------
 
 QueueObjectPool.........................................
-00:00:00.1852586 Take From Empty (In Parallel)
-00:00:00.9325604 Give To (In Parallel)
-00:00:00.3417127 Mixed Read/Write (In Parallel)
-00:00:00.1384648 Empty Pool (.TryTake())
-00:00:01.5979965 TOTAL
+00:00:00.1955970 Take From Empty (In Parallel)
+00:00:01.4124730 Give To (In Parallel)
+00:00:00.4856747 Mixed Read/Write (In Parallel)
+00:00:00.1556698 Empty Pool (.TryTake())
+00:00:02.2494145 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:00.1971318 Take From Empty (In Parallel)
-00:00:00.2221067 Give To (In Parallel)
-00:00:00.1930569 Mixed Read/Write (In Parallel)
-00:00:00.1769435 Empty Pool (.TryTake())
-00:00:00.7892389 TOTAL
+00:00:00.1850974 Take From Empty (In Parallel)
+00:00:00.2225350 Give To (In Parallel)
+00:00:00.1948766 Mixed Read/Write (In Parallel)
+00:00:00.1859670 Empty Pool (.TryTake())
+00:00:00.7884760 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:00.4016048 Take From Empty (In Parallel)
-00:00:00.1306689 Give To (In Parallel)
-00:00:00.1996246 Mixed Read/Write (In Parallel)
-00:00:00.0152044 Empty Pool (.TryTake())
-00:00:00.7471027 TOTAL
+00:00:00.4606833 Take From Empty (In Parallel)
+00:00:00.1290964 Give To (In Parallel)
+00:00:00.2011276 Mixed Read/Write (In Parallel)
+00:00:00.0155033 Empty Pool (.TryTake())
+00:00:00.8064106 TOTAL
+
+ChannelObjectPool.......................................
+00:00:01.8300660 Take From Empty (In Parallel)
+00:00:02.1177653 Give To (In Parallel)
+00:00:00.3798079 Mixed Read/Write (In Parallel)
+00:00:00.1307917 Empty Pool (.TryTake())
+00:00:04.4584309 TOTAL
 
 
 Repeat 25600 for size 250
 ------------------------------------
 
 QueueObjectPool.........................................
-00:00:00.4788340 Take From Empty (In Parallel)
-00:00:02.5027144 Give To (In Parallel)
-00:00:02.0335266 Mixed Read/Write (In Parallel)
-00:00:00.4868144 Empty Pool (.TryTake())
-00:00:05.5018894 TOTAL
+00:00:00.5207554 Take From Empty (In Parallel)
+00:00:03.8471300 Give To (In Parallel)
+00:00:03.1776130 Mixed Read/Write (In Parallel)
+00:00:00.5699890 Empty Pool (.TryTake())
+00:00:08.1154874 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:00.4744855 Take From Empty (In Parallel)
-00:00:00.6086463 Give To (In Parallel)
-00:00:00.5306288 Mixed Read/Write (In Parallel)
-00:00:00.6649206 Empty Pool (.TryTake())
-00:00:02.2786812 TOTAL
+00:00:00.5144591 Take From Empty (In Parallel)
+00:00:00.6581721 Give To (In Parallel)
+00:00:00.5638693 Mixed Read/Write (In Parallel)
+00:00:00.7343616 Empty Pool (.TryTake())
+00:00:02.4708621 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:02.4850059 Take From Empty (In Parallel)
-00:00:00.2867497 Give To (In Parallel)
-00:00:00.7016053 Mixed Read/Write (In Parallel)
-00:00:00.0496239 Empty Pool (.TryTake())
-00:00:03.5229848 TOTAL
+00:00:03.0074967 Take From Empty (In Parallel)
+00:00:00.3465589 Give To (In Parallel)
+00:00:00.7164117 Mixed Read/Write (In Parallel)
+00:00:00.0529356 Empty Pool (.TryTake())
+00:00:04.1234029 TOTAL
+
+ChannelObjectPool.......................................
+00:00:04.8289131 Take From Empty (In Parallel)
+00:00:05.0525342 Give To (In Parallel)
+00:00:02.7992174 Mixed Read/Write (In Parallel)
+00:00:00.4744166 Empty Pool (.TryTake())
+00:00:13.1550813 TOTAL
 
 
 Repeat 9600 for size 1000
 ------------------------------------
 
 QueueObjectPool.........................................
-00:00:00.4068512 Take From Empty (In Parallel)
-00:00:02.3780043 Give To (In Parallel)
-00:00:01.7465435 Mixed Read/Write (In Parallel)
-00:00:00.6397193 Empty Pool (.TryTake())
-00:00:05.1711183 TOTAL
+00:00:00.4429800 Take From Empty (In Parallel)
+00:00:02.5445855 Give To (In Parallel)
+00:00:02.5696949 Mixed Read/Write (In Parallel)
+00:00:00.7169192 Empty Pool (.TryTake())
+00:00:06.2741796 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:00.4151344 Take From Empty (In Parallel)
-00:00:00.6236454 Give To (In Parallel)
-00:00:00.5478473 Mixed Read/Write (In Parallel)
-00:00:00.8236824 Empty Pool (.TryTake())
-00:00:02.4103095 TOTAL
+00:00:00.4447846 Take From Empty (In Parallel)
+00:00:00.6793450 Give To (In Parallel)
+00:00:00.5848884 Mixed Read/Write (In Parallel)
+00:00:00.9255401 Empty Pool (.TryTake())
+00:00:02.6345581 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:12.1866684 Take From Empty (In Parallel)
-00:00:00.2235276 Give To (In Parallel)
-00:00:01.1323710 Mixed Read/Write (In Parallel)
-00:00:00.0608345 Empty Pool (.TryTake())
-00:00:13.6034015 TOTAL
+00:00:13.5246195 Take From Empty (In Parallel)
+00:00:00.2524943 Give To (In Parallel)
+00:00:01.1490467 Mixed Read/Write (In Parallel)
+00:00:00.0721550 Empty Pool (.TryTake())
+00:00:14.9983155 TOTAL
+
+ChannelObjectPool.......................................
+00:00:03.0021715 Take From Empty (In Parallel)
+00:00:03.3152862 Give To (In Parallel)
+00:00:01.8869001 Mixed Read/Write (In Parallel)
+00:00:00.5896046 Empty Pool (.TryTake())
+00:00:08.7939624 TOTAL
 
 
