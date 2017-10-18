@@ -34,8 +34,6 @@ namespace Open.Disposable
 			TimeSpan? trimDelay = null)
 		{
 			_pool = pool ?? throw new ArgumentNullException("pool");
-			if (pool is DisposableBase d)
-				d.BeforeDispose += Pool_BeforeDispose;
 
 			TrimmedSize = _trimmedSize = trimmedSize;
 			TrimDelay = _trimDelay = trimDelay ?? TimeSpan.FromMilliseconds(500);
@@ -45,6 +43,11 @@ namespace Open.Disposable
 			pool.GivenTo += Target_GivenTo;
 			pool.TakenFrom += Target_TakenFrom;
 
+			if (pool is DisposableBase d)
+			{
+				if (d.IsDisposed) throw new ArgumentException("Cannot trim for an object pool that is already disposed.");
+				d.BeforeDispose += Pool_BeforeDispose;
+			}
 		}
 
 		protected virtual void Target_GivenTo(int newSize)
