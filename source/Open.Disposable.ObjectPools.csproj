@@ -16,10 +16,10 @@ Part of the "Open" set of libraries.</Description>
     <RepositoryType>git</RepositoryType>
     <PackageTags>objectpool, dotnet, dotnetcore, cs, idisposable, threadsafe, thread-safe</PackageTags>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
-    <PackageReleaseNotes>Added a Recycler class to allow for 'queuing' a recycle process instead of piling up tasks.</PackageReleaseNotes>
+    <PackageReleaseNotes>Removed pools that are simply too slow for real world use and migrated to separate branch since they are simply not worth</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,7 +29,6 @@ Part of the "Open" set of libraries.</Description>
   <ItemGroup>
     <PackageReference Include="Open.Disposable" Version="1.0.4" />
     <PackageReference Include="Open.Threading.Tasks" Version="1.0.1" />
-    <PackageReference Include="System.Threading.Tasks.Channels" Version="0.1.0-e171018-3" />
   </ItemGroup>
 
 </Project>
