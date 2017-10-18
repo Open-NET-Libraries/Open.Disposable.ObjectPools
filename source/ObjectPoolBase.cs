@@ -68,7 +68,8 @@ namespace Open.Disposable
 
 		public void Give(T item)
 		{
-			if (PrepareToReceive(item) && (GaveToPocket(ref item) || Receive(item)))
+			if (PrepareToReceive(item)
+				&& (GaveToPocket(ref item) || Receive(item)))
 				OnGivenTo();
 		}
 
@@ -77,11 +78,19 @@ namespace Open.Disposable
 			return Task.Run(() => Receive(item));
 		}
 
-		public virtual Task GiveAsync(T item)
+		public Task GiveAsync(T item)
 		{
-			if (item == null) return Task.FromResult(false);
-			return GiveInternalAsync(item)
-				.ContinueWith(t => OnGivenTo(t.Result));
+			// We need to pre-check CanReceive because excessive tasks could build up if not.
+			if (item == null || !CanReceive) return Task.CompletedTask;
+			
+			return GiveAsyncConditional(item);
+		}
+
+		async Task GiveAsyncConditional(T item)
+		{
+			if(PrepareToReceive(item)
+				&& (GaveToPocket(ref item) || await GiveInternalAsync(item)))
+				OnGivenTo();
 		}
 
 		public virtual T Take()
