@@ -34,22 +34,17 @@ namespace Open.Disposable
 			T _value;
 			internal bool Save(ref T value)
 			{
-				if (_value != null) return false;
-				value = Interlocked.Exchange(ref _value, value);
-				return value == null;
+				return _value != null
+					&& null == Interlocked.CompareExchange(ref _value, value, null);
 			}
 
 			internal T TryRetrieve()
 			{
 				var item = _value;
-				if (item != null)
-				{
-					if (item == Interlocked.CompareExchange(ref _value, null, item))
-					{
-						return item;
-					}
-				}
-				return null;
+				return (item != null
+					&& item == Interlocked.CompareExchange(ref _value, null, item))
+					? item
+					: null;
 			}
 		}
 
