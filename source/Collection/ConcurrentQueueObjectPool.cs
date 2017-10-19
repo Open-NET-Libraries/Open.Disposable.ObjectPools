@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Open.Disposable
 {
-	public sealed class ConcurrentQueueObjectPool<T> : TrimmableObjectPoolBase<T>
+    public sealed class ConcurrentQueueObjectPool<T> : TrimmableObjectPoolBase<T>
 		where T : class
 	{
 
@@ -24,8 +22,19 @@ namespace Open.Disposable
 		ConcurrentQueue<T> Pool;
 
 		public override int Count => Pool?.Count ?? 0;
-		
-		protected override bool Receive(T item)
+
+        // For ConcurrentQueue disable using the Pocket.  It's fast enough as it is...
+        protected override bool SaveToPocket(T item)
+        {
+            return false;
+        }
+
+        protected override T TakeFromPocket()
+        {
+            return null;
+        }
+
+        protected override bool Receive(T item)
 		{
 			var p = Pool;
 			if (p == null) return false;

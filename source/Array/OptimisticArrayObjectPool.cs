@@ -22,7 +22,7 @@ namespace Open.Disposable
         { }
 
         // As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
-        protected override bool GiveToPocket(T item)
+        protected override bool SaveToPocket(T item)
         {
             return Pocket.SetIfNull(item);
         }

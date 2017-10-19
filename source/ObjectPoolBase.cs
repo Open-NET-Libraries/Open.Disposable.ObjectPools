@@ -72,7 +72,7 @@ namespace Open.Disposable
 		public void Give(T item)
 		{
 			if (PrepareToReceive(item)
-				&& (GiveToPocket(item) || Receive(item)))
+				&& (SaveToPocket(item) || Receive(item)))
 				OnReceived();
 		}
 
@@ -93,7 +93,7 @@ namespace Open.Disposable
 		async Task ReceiveConditionalAsync(T item)
 		{
 			if(PrepareToReceive(item)
-				&& (GiveToPocket(item) || await ReceiveAsync(item)))
+				&& (SaveToPocket(item) || await ReceiveAsync(item)))
 				OnReceived();
 		}
         #endregion
@@ -124,7 +124,7 @@ namespace Open.Disposable
 			return item != null;
 		}
 
-        protected virtual bool GiveToPocket(T item)
+        protected virtual bool SaveToPocket(T item)
         {
             return Pocket.TrySave(item);
         }
