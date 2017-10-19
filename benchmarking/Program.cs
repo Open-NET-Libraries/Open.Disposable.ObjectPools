@@ -26,12 +26,20 @@ class Program
 		report.AddBenchmark("QueueObjectPool", // Note, that this one isn't far off from the following in peformance.
 			count => () => QueueObjectPool.Create<object>((int)count * 2));
 
-		// The two contenders...
-		report.AddBenchmark("ConcurrentQueueObjectPool", // Note, that this one isn't far off from the following in peformance, but definitely is faster than LinkedListObjectPool and the rest.
+        report.AddBenchmark("ConcurrentQueueObjectPool", // Note, that this one isn't far off from the following in peformance, but definitely is faster than LinkedListObjectPool and the rest.
 			count => () => ConcurrentQueueObjectPool.Create<object>((int)count * 2));
-		report.AddBenchmark("OptimisticArrayObjectPool",
+
+        report.AddBenchmark("ConcurrentStackObjectPool", // Note, that this one isn't far off from the following in peformance, but definitely is faster than LinkedListObjectPool and the rest.
+            count => () => ConcurrentStackObjectPool.Create<object>((int)count * 2));
+
+        report.AddBenchmark("OptimisticArrayObjectPool",
 			count => () => OptimisticArrayObjectPool.Create<object>((int)count * 2));
-		report.Pretest(200, 200); // Run once through first to scramble/warm-up initial conditions.
+
+        // Is ineveitably slower than the above but should be enabled for testing code changes.
+        //report.AddBenchmark("InterlockedArrayObjectPool",
+        //    count => () => InterlockedArrayObjectPool.Create<object>((int)count * 2));
+
+        report.Pretest(200, 200); // Run once through first to scramble/warm-up initial conditions.
 
 		Console.SetCursorPosition(0, Console.CursorTop);
 
@@ -40,7 +48,7 @@ class Program
 		report.Test(50, 12);
 		report.Test(100, 16);
 		report.Test(250, 64);
-		report.Test(1000, 96);
+		//report.Test(500, 72);
 
 		File.WriteAllText("./BenchmarkResult.txt", sb.ToString());
 		using (var fs = File.OpenWrite("./BenchmarkResult.csv"))

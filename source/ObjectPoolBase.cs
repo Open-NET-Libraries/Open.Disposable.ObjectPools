@@ -37,7 +37,10 @@ namespace Open.Disposable
 			return Factory();
 		}
 
-		protected virtual bool CanReceive => true;
+        protected ReferenceContainer<T> Pocket;
+
+        #region Receive (.Give(T item))
+        protected virtual bool CanReceive => true;
 
 		protected bool PrepareToReceive(T item)
 		{
@@ -57,23 +60,23 @@ namespace Open.Disposable
 		// Contract should be that no item can be null here.
 		protected abstract bool Receive(T item);
 
-		protected virtual void OnGivenTo()
+		protected virtual void OnReceived()
 		{
 
 		}
-		protected void OnGivenTo(bool wasGiven)
+		protected void OnReceived(bool wasGiven)
 		{
-			if (wasGiven) OnGivenTo();
+			if (wasGiven) OnReceived();
 		}
 
 		public void Give(T item)
 		{
 			if (PrepareToReceive(item)
-				&& (GaveToPocket(ref item) || Receive(item)))
-				OnGivenTo();
+				&& (GiveToPocket(item) || Receive(item)))
+				OnReceived();
 		}
 
-		protected virtual Task<bool> GiveInternalAsync(T item)
+		protected virtual Task<bool> ReceiveAsync(T item)
 		{
 			return Task.Run(() => Receive(item));
 		}
@@ -81,24 +84,27 @@ namespace Open.Disposable
 		public Task GiveAsync(T item)
 		{
 			// We need to pre-check CanReceive because excessive tasks could build up if not.
-			if (item == null || !CanReceive) return Task.CompletedTask;
+			if (item == null || !CanReceive)
+                return Task.CompletedTask;
 			
-			return GiveAsyncConditional(item);
+			return ReceiveConditionalAsync(item);
 		}
 
-		async Task GiveAsyncConditional(T item)
+		async Task ReceiveConditionalAsync(T item)
 		{
 			if(PrepareToReceive(item)
-				&& (GaveToPocket(ref item) || await GiveInternalAsync(item)))
-				OnGivenTo();
+				&& (GiveToPocket(item) || await ReceiveAsync(item)))
+				OnReceived();
 		}
+        #endregion
 
-		public virtual T Take()
+        #region Release (.Take())
+        public virtual T Take()
 		{
 			return TryTake() ?? Factory();
 		}
 
-		protected virtual Task<T> TakeAsyncInternal()
+		protected virtual Task<T> ReleaseAsync()
 		{
 			return Task.Run((Func<T>)Take);
 		}
@@ -109,7 +115,7 @@ namespace Open.Disposable
 			if (TryTake(out T firstTry))
 				return Task.FromResult(firstTry);
 
-			return TakeAsyncInternal();
+			return ReleaseAsync();
 		}
 
 		public bool TryTake(out T item)
@@ -118,40 +124,35 @@ namespace Open.Disposable
 			return item != null;
 		}
 
-		protected bool AllowPocket = true;
+        protected virtual bool GiveToPocket(T item)
+        {
+            return Pocket.TrySave(item);
+        }
 
-		protected T Pocket;
-		protected T TakeFromPocket()
-		{
-			if (!AllowPocket || Pocket == null) return null;
-			return Interlocked.Exchange(ref Pocket, null);
+        protected virtual T TakeFromPocket()
+        {
+            return Pocket.TryRetrieve();
 		}
 
-		protected bool GaveToPocket(ref T item)
-		{
-			if (!AllowPocket || Pocket != null) return false;
-			item = Interlocked.Exchange(ref Pocket, item);
-			return item == null;
-		}
-
-		protected abstract T TryTakeInternal();
+		protected abstract T TryRelease();
 
 		public T TryTake()
 		{
-			var item = TakeFromPocket() ?? TryTakeInternal();
-			if (item != null) OnTakenFrom();
+			var item = TakeFromPocket() ?? TryRelease();
+			if (item != null) OnReleased();
 			return item;
 		}
 
-		protected virtual void OnTakenFrom()
+		protected virtual void OnReleased()
 		{
 		}
-		protected void OnTakenFrom(bool wasTaken)
+		protected void OnReleased(bool wasTaken)
 		{
-			if (wasTaken) OnTakenFrom();
+			if (wasTaken) OnReleased();
 		}
+        #endregion
 
-		protected override void OnBeforeDispose()
+        protected override void OnBeforeDispose()
 		{
 			MaxSize = 0;
 		}

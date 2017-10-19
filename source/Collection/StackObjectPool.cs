@@ -4,23 +4,23 @@ using System.Text;
 
 namespace Open.Disposable
 {
-	public sealed class QueueObjectPool<T> : TrimmableObjectPoolBase<T>
+	public sealed class StackObjectPool<T> : TrimmableObjectPoolBase<T>
 		where T : class
 	{
 
-		public QueueObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
+		public StackObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
 			: base(factory, recycler, capacity)
 		{
-			Pool = new Queue<T>(capacity); // Very very slight speed improvment when capacity is set.
+			Pool = new Stack<T>(capacity); // Very very slight speed improvment when capacity is set.
 		}
 
-		public QueueObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+		public StackObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
 			: this(factory, null, capacity)
 		{
 			
 		}
 
-		Queue<T> Pool;
+		Stack<T> Pool;
 
 		public override int Count => Pool?.Count ?? 0;
 
@@ -31,7 +31,7 @@ namespace Open.Disposable
 			{
 				// It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
 				// The lock operation should be quick enough to not pile up too many items.
-				lock (p) p.Enqueue(item);
+				lock (p) p.Push(item);
 				return true;
 			}
 
@@ -46,7 +46,7 @@ namespace Open.Disposable
 				lock (p)
 				{
 					if (p.Count!=0)
-						return p.Dequeue();
+						return p.Pop();
 				}
 
 			}
@@ -60,15 +60,15 @@ namespace Open.Disposable
 		}
 	}
 
-	public static class QueueObjectPool
-	{
-		public static QueueObjectPool<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
+	public static class StackObjectPool
+    {
+		public static StackObjectPool<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class
 		{
-			return new QueueObjectPool<T>(factory, capacity);
+			return new StackObjectPool<T>(factory, capacity);
 		}
 
-		public static QueueObjectPool<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY)
+		public static StackObjectPool<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class, new()
 		{
 			return Create(() => new T(), capacity);

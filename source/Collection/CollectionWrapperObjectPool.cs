@@ -42,7 +42,7 @@ namespace Open.Disposable
 			return false;
 		}
 
-		protected override T TryTakeInternal()
+		protected override T TryRelease()
 		{
 			retry:
 

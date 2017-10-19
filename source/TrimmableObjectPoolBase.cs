@@ -29,28 +29,28 @@ namespace Open.Disposable
 		/// <summary>
 		/// Signal for when an item was taken (actually removed) from the pool. 
 		/// </summary>
-		public event ObjectPoolResizeEvent TakenFrom;
-		protected void OnTakenFrom(int newSize)
+		public event ObjectPoolResizeEvent Released;
+		protected void OnReleased(int newSize)
 		{
-			TakenFrom?.Invoke(newSize);
+			Released?.Invoke(newSize);
 		}
-		protected override void OnTakenFrom()
+		protected override void OnReleased()
 		{
-			OnTakenFrom(Count);
+			OnReleased(Count);
 		}
 		
 		/// <summary>
 		/// Signal for when an item was given (actually accepted) to the pool. 
 		/// </summary>
-		public event ObjectPoolResizeEvent GivenTo;
-		protected void OnGivenTo(int newSize)
+		public event ObjectPoolResizeEvent Received;
+		protected void OnReceived(int newSize)
 		{
-			GivenTo?.Invoke(newSize);
+			Received?.Invoke(newSize);
 		}
 
-		protected override void OnGivenTo()
+		protected override void OnReceived()
 		{
-			OnGivenTo(Count);
+			OnReceived(Count);
 		}
 
 		public virtual void TrimTo(int targetSize)
@@ -64,13 +64,13 @@ namespace Open.Disposable
 				i < attempts && count > targetSize;
 				i++)
 			{
-				if (TryTakeInternal() == null)
+				if (TryRelease() == null)
 					break;
 
 				count = Count;
 			}
 
-			if (i != 0) OnTakenFrom(count);
+			if (i != 0) OnReleased(count);
 		}
 
 	}

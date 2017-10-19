@@ -40,8 +40,8 @@ namespace Open.Disposable
 
 			_trimmer = new ActionRunner(TrimInternal);
 
-			pool.GivenTo += Target_GivenTo;
-			pool.TakenFrom += Target_TakenFrom;
+			pool.Received += Target_GivenTo;
+			pool.Released += Target_TakenFrom;
 
 			if (pool is DisposableBase d)
 			{
@@ -78,8 +78,8 @@ namespace Open.Disposable
 			DisposeOf(ref _trimmer);
 
 			var target = Nullify(ref _pool);
-			target.GivenTo -= Target_GivenTo;
-			target.TakenFrom -= Target_TakenFrom;
+			target.Received -= Target_GivenTo;
+			target.Released -= Target_TakenFrom;
 		}
 	}
 }

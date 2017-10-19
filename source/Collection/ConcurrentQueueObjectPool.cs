@@ -33,7 +33,7 @@ namespace Open.Disposable
 			return true;
 		}
 
-		protected override T TryTakeInternal()
+		protected override T TryRelease()
 		{
 			var p = Pool;
 			if (p == null) return null;
