@@ -12,6 +12,9 @@ namespace Open.Disposable
 		where T : class
 	{
 		IObjectPool<T> _target;
+
+		// Something else could be used and could be more performant.
+		// But it's an ideal interface for what's needed.  And the point is that the recyler should not take up too much cpu time.
 		ActionBlock<T> _bin;
 
 		public Recycler(			
