@@ -7,21 +7,21 @@ namespace Open.Disposable
 		where T : class
 	{
 
-		public ConcurrentQueueObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
-			: base(factory, recycler, capacity)
-		{
-			Pool = new ConcurrentQueue<T>();
-		}
+	public ConcurrentQueueObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
+		: base(factory, recycler, capacity)
+	{
+		Pool = new ConcurrentQueue<T>();
+	}
 
-		public ConcurrentQueueObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
-			: this(factory, null, capacity)
-		{
-			
-		}
+	public ConcurrentQueueObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+		: this(factory, null, capacity)
+	{
+		
+	}
 
-		ConcurrentQueue<T> Pool;
+	ConcurrentQueue<T> Pool;
 
-		public override int Count => Pool?.Count ?? 0;
+	public override int Count => Pool?.Count ?? 0;
 
         // For ConcurrentQueue disable using the Pocket.  It's fast enough as it is...
         protected override bool SaveToPocket(T item)
