@@ -93,7 +93,7 @@ namespace Open.Disposable
 		async Task ReceiveConditionalAsync(T item)
 		{
 			if(PrepareToReceive(item)
-				&& (SaveToPocket(item) || await ReceiveAsync(item)))
+				&& (SaveToPocket(item) || await ReceiveAsync(item).ConfigureAwait(false))) // Doesn't need original context.  Just needs to trigger OnReceived().
 				OnReceived();
 		}
         #endregion
