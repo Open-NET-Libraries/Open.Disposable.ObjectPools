@@ -14,10 +14,10 @@ namespace Open.Disposable
 		IObjectPool<T> _target;
 		ActionBlock<T> _bin;
 
-		public Recycler(			
+		internal Recycler(			
 			IObjectPool<T> target,
 			Action<T> recycleFunction,
-			ushort limit = ushort.MaxValue)
+			ushort limit = Constants.DEFAULT_CAPACITY)
 		{
 			if(recycleFunction==null) throw new ArgumentNullException("recycleFunction");
 			_target = target ?? throw new ArgumentNullException("target");
@@ -39,7 +39,7 @@ namespace Open.Disposable
 			}
 		}
 
-		public Recycler(
+        internal Recycler(
 			ushort limit,
 			IObjectPool<T> pool,
 			Action<T> recycleFunction) : this(pool, recycleFunction, limit)
@@ -72,4 +72,39 @@ namespace Open.Disposable
 			_target = null;
 		}
 	}
+
+    public static class Recycler
+    {
+        public static Recycler<T> CreateRecycler<T>(
+            this IObjectPool<T> pool,
+            Action<T> recycleFunction,
+            ushort limit = Constants.DEFAULT_CAPACITY)
+            where T : class
+        {
+            return new Recycler<T>(pool, recycleFunction, limit);
+        }
+
+        public static Recycler<T> CreateRecycler<T>(
+            this IObjectPool<T> pool,
+            ushort limit,
+            Action<T> recycleFunction)
+            where T : class
+        {
+            return new Recycler<T>(pool, recycleFunction, limit);
+        }
+
+        public static void Recycle(IRecyclable r)
+        {
+            r.Recycle();
+        }
+
+        public static Recycler<T> CreateRecycler<T>(
+            this IObjectPool<T> pool,
+            ushort limit = Constants.DEFAULT_CAPACITY)
+            where T : class, IRecyclable
+        {
+            return new Recycler<T>(pool, Recycle, limit);
+        }
+
+    }
 }

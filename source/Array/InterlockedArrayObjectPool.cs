@@ -85,5 +85,20 @@ namespace Open.Disposable
         {
             return Create(() => new T(), capacity);
         }
+
+        public static InterlockedArrayObjectPool<T> Create<T>(Func<T> factory, bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY)
+             where T : class, IRecyclable
+        {
+            Action<T> recycler = null;
+            if (autoRecycle) recycler = Recycler.Recycle;
+            return new InterlockedArrayObjectPool<T>(factory, recycler, capacity);
+        }
+
+        public static InterlockedArrayObjectPool<T> Create<T>(bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY)
+            where T : class, IRecyclable, new()
+        {
+            return Create(() => new T(), autoRecycle, capacity);
+        }
+
     }
 }
