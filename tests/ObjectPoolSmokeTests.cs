@@ -10,22 +10,6 @@ namespace Open.Disposable
 			public int ID;
 		}
 
-        [TestMethod]
-        public void BufferBlockObjectPool_FactoryTest()
-        {
-			int i = 0;
-			var pool = BufferBlockObjectPool.Create(()=>new IdContainer { ID = ++i });
-			Assert.AreEqual(1, pool.Take().ID);
-		}
-
-		[TestMethod]
-		public void ConcurrentBagObjectPool_FactoryTest()
-		{
-			int i = 0;
-			var pool = ConcurrentBagObjectPool.Create(() => new IdContainer { ID = ++i });
-			Assert.AreEqual(1, pool.Take().ID);
-		}
-
 		[TestMethod]
 		public void OptimisticArrayObjectPool_FactoryTest()
 		{
@@ -34,12 +18,5 @@ namespace Open.Disposable
 			Assert.AreEqual(1, pool.Take().ID);
 		}
 
-		[TestMethod]
-		public void LinkedListObjectPool_FactoryTest()
-		{
-			int i = 0;
-			var pool = LinkedListObjectPool.Create(() => new IdContainer { ID = ++i });
-			Assert.AreEqual(1, pool.Take().ID);
-		}
 	}
 }
