@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Open.Disposable
 {
@@ -10,20 +8,18 @@ namespace Open.Disposable
 		where T : class
 		where TCollection : class, ICollection<T>
 	{
-		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
-			: base(factory, recycler, capacity)
+		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+			: base(factory, recycler, capacity, countTrackingEnabled)
 		{
 			Pool = pool;
 		}
 
-		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, int capacity = DEFAULT_CAPACITY)
-			: this(pool, factory, null, capacity)
+		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+			: this(pool, factory, null, capacity, countTrackingEnabled)
 		{
 		}
 
 		protected TCollection Pool;
-
-		public override int Count => Pool?.Count ?? 0;
 
 		protected override bool Receive(T item)
 		{
@@ -60,7 +56,7 @@ namespace Open.Disposable
 			}
 
 			return item;
-		}		
+		}
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
@@ -71,7 +67,7 @@ namespace Open.Disposable
 	public class CollectionWrapperObjectPool<T> : CollectionWrapperObjectPool<T, ICollection<T>>
 		where T : class
 	{
-		public CollectionWrapperObjectPool(ICollection<T> pool, Func<T> factory, int capacity = DEFAULT_CAPACITY) : base(pool, factory, capacity)
+		public CollectionWrapperObjectPool(ICollection<T> pool, Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false) : base(pool, factory, capacity, countTrackingEnabled)
 		{
 		}
 	}

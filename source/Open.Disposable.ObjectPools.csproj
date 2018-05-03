@@ -23,6 +23,12 @@ Part of the "Open" set of libraries.</Description>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Channels\**" />
+    <EmbeddedResource Remove="Channels\**" />
+    <None Remove="Channels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove=".git" />
   </ItemGroup>
 

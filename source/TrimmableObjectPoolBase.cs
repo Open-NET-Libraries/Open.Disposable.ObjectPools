@@ -1,30 +1,36 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Open.Disposable
 {
-	[DebuggerDisplay("Count = {Count}")]
+	[DebuggerDisplay("Count = {_count}")]
 	public abstract class TrimmableObjectPoolBase<T> : ObjectPoolBase<T>, ITrimmableObjectPool
 		where T : class
-    {
-
-
-		public TrimmableObjectPoolBase(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
+	{
+		protected TrimmableObjectPoolBase(Func<T> factory, Action<T> recycler, int capacity, bool countTrackingEnabled)
 			: base(factory, recycler, capacity)
 		{
+			_countTrackingEnabled = countTrackingEnabled;
 		}
 
-		public TrimmableObjectPoolBase(Func<T> factory, int capacity = DEFAULT_CAPACITY)
-			: this(factory, null, capacity)
+		protected TrimmableObjectPoolBase(Func<T> factory, int capacity, bool countTrackingEnabled)
+			: this(factory, null, capacity, countTrackingEnabled)
 		{
 		}
+
+		bool _countTrackingEnabled;
+		public bool CountTrackingEnabled => _countTrackingEnabled;
+
+
+		int _count;
 
 		/// <summary>
 		/// Total number of items in the pool.
 		/// </summary>
-		public abstract int Count { get; }
+		public virtual int Count => _count; // Track this number instead of calling .Count on a collection.
 
-		protected override bool CanReceive => Count < MaxSize;
+		protected override bool CanReceive => _count < MaxSize;
 
 		/// <summary>
 		/// Signal for when an item was taken (actually removed) from the pool. 
@@ -32,45 +38,66 @@ namespace Open.Disposable
 		public event ObjectPoolResizeEvent Released;
 		protected void OnReleased(int newSize)
 		{
-			Released?.Invoke(newSize);
+			if (_countTrackingEnabled)
+			{
+				Released?.Invoke(newSize);
+			}
+
 		}
 		protected override void OnReleased()
 		{
-			OnReleased(Count);
+			if (_countTrackingEnabled)
+			{
+				var c = Interlocked.Decrement(ref _count);
+				OnReleased(c);
+				Debug.Assert(c >= 0);
+			}
 		}
-		
+
 		/// <summary>
 		/// Signal for when an item was given (actually accepted) to the pool. 
 		/// </summary>
 		public event ObjectPoolResizeEvent Received;
 		protected void OnReceived(int newSize)
 		{
-			Received?.Invoke(newSize);
+			if (_countTrackingEnabled)
+			{
+				Received?.Invoke(newSize);
+			}
 		}
 
 		protected override void OnReceived()
 		{
-			OnReceived(Count);
+			if (_countTrackingEnabled)
+			{
+				OnReceived(Interlocked.Increment(ref _count));
+			}
 		}
 
 		public virtual void TrimTo(int targetSize)
 		{
+			if (!_countTrackingEnabled)
+				throw new InvalidOperationException("Cannot trim an object pool with count tracking disabled.");
+
 			if (targetSize < 0) return; // Possible upstream math hiccup or default -1.  Silently dismiss.
-			int count = Count;
+			int count = _count;
 
-			int i = 0; // Prevent an possiblility of indefinite loop.
-			for (
-				var attempts = count - targetSize;
-				i < attempts && count > targetSize;
-				i++)
+			if (count > targetSize)
 			{
-				if (TryRelease() == null)
-					break;
+				int i = 0; // Prevent an possiblility of indefinite loop.
+				for (
+					var attempts = count - targetSize;
+					i < attempts;
+					i++)
+				{
+					if (TryRelease() == null)
+						break;
 
-				count = Count;
+					Interlocked.Decrement(ref _count);
+				}
+
+				if (i != 0) OnReleased(_count);
 			}
-
-			if (i != 0) OnReleased(count);
 		}
 
 	}

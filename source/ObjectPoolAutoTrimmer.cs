@@ -33,7 +33,16 @@ namespace Open.Disposable
 			ITrimmableObjectPool pool,
 			TimeSpan? trimDelay = null)
 		{
-			_pool = pool ?? throw new ArgumentNullException("pool");
+			_pool = pool ?? throw new ArgumentNullException(nameof(pool));
+
+			if (!pool.CountTrackingEnabled)
+				throw new ArgumentException("Only pools with count tracking enabled can be trimmed.", nameof(pool));
+
+			if (pool is DisposableBase d)
+			{
+				if (d.IsDisposed) throw new ArgumentException("Cannot trim for an object pool that is already disposed.");
+				d.BeforeDispose += Pool_BeforeDispose;
+			}
 
 			TrimmedSize = _trimmedSize = trimmedSize;
 			TrimDelay = _trimDelay = trimDelay ?? TimeSpan.FromMilliseconds(500);
@@ -42,17 +51,11 @@ namespace Open.Disposable
 
 			pool.Received += Target_GivenTo;
 			pool.Released += Target_TakenFrom;
-
-			if (pool is DisposableBase d)
-			{
-				if (d.IsDisposed) throw new ArgumentException("Cannot trim for an object pool that is already disposed.");
-				d.BeforeDispose += Pool_BeforeDispose;
-			}
 		}
 
 		protected virtual void Target_GivenTo(int newSize)
 		{
-			if (newSize>=0 && newSize > _trimmedSize)
+			if (newSize >= 0 && newSize > _trimmedSize)
 				_trimmer?.Defer(_trimDelay, false);
 		}
 

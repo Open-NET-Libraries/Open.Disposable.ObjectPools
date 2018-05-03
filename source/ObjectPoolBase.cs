@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Open.Disposable
@@ -12,8 +11,8 @@ namespace Open.Disposable
 		protected ObjectPoolBase(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
 		{
 			if (capacity < 1)
-				throw new ArgumentOutOfRangeException("capacity", capacity, "Must be at least 1.");
-			Factory = factory ?? throw new ArgumentNullException("factory");
+				throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Must be at least 1.");
+			Factory = factory ?? throw new ArgumentNullException(nameof(factory));
 			MaxSize = capacity;
 			Recycler = recycler;
 		}
@@ -37,10 +36,10 @@ namespace Open.Disposable
 			return Factory();
 		}
 
-        protected ReferenceContainer<T> Pocket;
+		protected ReferenceContainer<T> Pocket;
 
-        #region Receive (.Give(T item))
-        protected virtual bool CanReceive => true;
+		#region Receive (.Give(T item))
+		protected virtual bool CanReceive => true;
 
 		protected bool PrepareToReceive(T item)
 		{
@@ -78,28 +77,28 @@ namespace Open.Disposable
 
 		protected virtual Task<bool> ReceiveAsync(T item)
 		{
-			return Task.Run(() => Receive(item));
+			return Task.Run(() => Receive(item)); // Default implemnation, can be overridden.
 		}
 
 		public Task GiveAsync(T item)
 		{
 			// We need to pre-check CanReceive because excessive tasks could build up if not.
 			if (item == null || !CanReceive)
-                return Task.CompletedTask;
-			
+				return Task.CompletedTask;
+
 			return ReceiveConditionalAsync(item);
 		}
 
 		async Task ReceiveConditionalAsync(T item)
 		{
-			if(PrepareToReceive(item)
+			if (PrepareToReceive(item)
 				&& (SaveToPocket(item) || await ReceiveAsync(item).ConfigureAwait(false))) // Doesn't need original context.  Just needs to trigger OnReceived().
 				OnReceived();
 		}
-        #endregion
+		#endregion
 
-        #region Release (.Take())
-        public virtual T Take()
+		#region Release (.Take())
+		public virtual T Take()
 		{
 			return TryTake() ?? Factory();
 		}
@@ -124,14 +123,14 @@ namespace Open.Disposable
 			return item != null;
 		}
 
-        protected virtual bool SaveToPocket(T item)
-        {
-            return Pocket.TrySave(item);
-        }
+		protected virtual bool SaveToPocket(T item)
+		{
+			return Pocket.TrySave(item);
+		}
 
-        protected virtual T TakeFromPocket()
-        {
-            return Pocket.TryRetrieve();
+		protected virtual T TakeFromPocket()
+		{
+			return Pocket.TryRetrieve();
 		}
 
 		protected abstract T TryRelease();
@@ -150,9 +149,9 @@ namespace Open.Disposable
 		{
 			if (wasTaken) OnReleased();
 		}
-        #endregion
+		#endregion
 
-        protected override void OnBeforeDispose()
+		protected override void OnBeforeDispose()
 		{
 			MaxSize = 0;
 		}

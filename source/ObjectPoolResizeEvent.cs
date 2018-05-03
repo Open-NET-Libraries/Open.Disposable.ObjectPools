@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Open.Disposable
+﻿namespace Open.Disposable
 {
 	public delegate void ObjectPoolResizeEvent(int newSize);
 }

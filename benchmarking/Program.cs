@@ -26,6 +26,9 @@ class Program
 		report.AddBenchmark("QueueObjectPool", // Note, that this one isn't far off from the following in peformance.
 			count => () => QueueObjectPool.Create<object>((int)count * 2));
 
+        //report.AddBenchmark("ChannelObjectPool", 
+        //    count => () => ChannelObjectPool.Create<object>((int)count * 2));
+
         report.AddBenchmark("ConcurrentQueueObjectPool", // Note, that this one isn't far off from the following in peformance, but definitely is faster than LinkedListObjectPool and the rest.
 			count => () => ConcurrentQueueObjectPool.Create<object>((int)count * 2));
 
@@ -43,11 +46,12 @@ class Program
 
 		Console.SetCursorPosition(0, Console.CursorTop);
 
-		report.Test(4, 8);
-		report.Test(10, 8);
-		report.Test(50, 12);
-		report.Test(100, 16);
-		report.Test(250, 64);
+        const int loopMultiple = 2;
+		report.Test(4, 8 * loopMultiple);
+		report.Test(10, 8 * loopMultiple);
+		report.Test(50, 12 * loopMultiple);
+		report.Test(100, 16 * loopMultiple);
+		report.Test(250, 64 * loopMultiple);
 		//report.Test(500, 72);
 
 		File.WriteAllText("./BenchmarkResult.txt", sb.ToString());

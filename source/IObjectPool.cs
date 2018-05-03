@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Open.Disposable
@@ -27,14 +26,6 @@ namespace Open.Disposable
 		void Give(T item);
 
 		/// <summary>
-		/// Asynchronously receives an item and adds it to the pool. Ignores null references.
-		/// WARNING: The item is considered 'dead' but resurrectable so be sure not to hold on to the item's reference.
-		/// </summary>
-		/// <param name="item">The item to give up to the pool.</param>
-		/// <param name="recycler">An optional action exectue on the item only if it's possible to return to the pool.</param>
-		Task GiveAsync(T item);
-
-		/// <summary>
 		/// If the pool has an item currently avaialable, removes it from the pool and provides it as the out parameter.
 		/// </summary>
 		/// <param name="item">The item to return if available.  Will be null if none avaialable.</param>
@@ -55,6 +46,16 @@ namespace Open.Disposable
 		/// <returns>An item removed from the pool or generated.  Should never be null.</returns>
 		T Take();
 
+
+
+		/// <summary>
+		/// Asynchronously receives an item and adds it to the pool. Ignores null references.
+		/// WARNING: The item is considered 'dead' but resurrectable so be sure not to hold on to the item's reference.
+		/// </summary>
+		/// <param name="item">The item to give up to the pool.</param>
+		/// <param name="recycler">An optional action exectue on the item only if it's possible to return to the pool.</param>
+		Task GiveAsync(T item);
+
 		/// <summary>
 		/// Awaits an available item from the pool.  If none are available it generates one.
 		/// </summary>
@@ -62,7 +63,7 @@ namespace Open.Disposable
 		Task<T> TakeAsync();
 	}
 
-	public static class ObjectPoolExtensions
+	public static partial class ObjectPoolExtensions
 	{
 		/// <summary>
 		/// Receives items and iteratively adds them to the pool.
@@ -91,6 +92,8 @@ namespace Open.Disposable
 			target.Give(item2);
 			target.Give(items);
 		}
+
+
 
 		/// <summary>
 		/// Asynchronously receives items and iteratively adds them to the pool.

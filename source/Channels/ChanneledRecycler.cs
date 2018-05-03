@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks.Dataflow;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace Open.Disposable
 {
@@ -7,31 +8,46 @@ namespace Open.Disposable
 	/// This class is provided as an asynchronous queue for recycling instead of using a recycle delegate with an object pool and calling GiveAsync() which could pile up unnecessarily.
 	/// So if recycling an object takes extra time, this might be a good way to toss objects away and not have to worry about the heavy cost as they will one by one be processed back into the target pool.
 	/// </summary>
-	public class Recycler<T> : RecyclerBase<T>
+	public sealed class ChanneledRecycler<T> : RecyclerBase<T>
 		where T : class
 	{
 		// Something else could be used and could be more performant.
 		// But it's an ideal interface for what's needed.  And the point is that the recyler should not take up too much cpu time.
-		ActionBlock<T> _bin;
+		Channel<T> _bin;
 
-		internal Recycler(
+		internal ChanneledRecycler(
 			IObjectPool<T> target,
 			Action<T> recycleFunction,
 			ushort limit = Constants.DEFAULT_CAPACITY) : base(target, recycleFunction, limit)
 		{
-			_bin = new ActionBlock<T>(item =>
+			var b = _bin = Channel.CreateBounded<T>(new BoundedChannelOptions(limit)
 			{
-				if (Target != null)
-				{
-					recycleFunction(item);
-					Target?.Give(item);
-				}
+				FullMode = BoundedChannelFullMode.DropWrite
 			});
 
-			Completion = _bin.Completion;
+			async Task ProcessAsync()
+			{
+				var reader = _bin.Reader;
+				while (Target != null
+					&& await reader.WaitToReadAsync().ConfigureAwait(false))
+				{
+					while (Target != null
+						&& reader.TryRead(out T item))
+					{
+						recycleFunction(item);
+						Target?.Give(item);
+					}
+				}
+			}
+
+			Completion = ProcessAsync().ContinueWith(
+					t => t.IsCompleted
+						? b.Reader.Completion
+						: t)
+					.Unwrap();
 		}
 
-		internal Recycler(
+		internal ChanneledRecycler(
 			ushort limit,
 			IObjectPool<T> pool,
 			Action<T> recycleFunction) : this(pool, recycleFunction, limit)
@@ -40,38 +56,37 @@ namespace Open.Disposable
 		}
 
 		public override bool Recycle(T item)
-		{
-			return _bin?.Post(item) ?? false;
-		}
+			=> _bin?.Writer.TryWrite(item) ?? false;
 
 		protected override void OnCloseRequested()
-			=> _bin?.Complete();
+			=> _bin?.Writer.Complete();
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
-			base.OnDispose(calledExplicitly);
-			if (calledExplicitly) _bin = null;
+			_bin?.Writer.Complete();
+			_bin = null;
+			Target = null;
 		}
 	}
 
-	public static class Recycler
+	public static class ChanneledRecycler
 	{
-		public static Recycler<T> CreateRecycler<T>(
+		public static ChanneledRecycler<T> CreateRecycler<T>(
 			this IObjectPool<T> pool,
 			Action<T> recycleFunction,
 			ushort limit = Constants.DEFAULT_CAPACITY)
 			where T : class
 		{
-			return new Recycler<T>(pool, recycleFunction, limit);
+			return new ChanneledRecycler<T>(pool, recycleFunction, limit);
 		}
 
-		public static Recycler<T> CreateRecycler<T>(
+		public static ChanneledRecycler<T> CreateRecycler<T>(
 			this IObjectPool<T> pool,
 			ushort limit,
 			Action<T> recycleFunction)
 			where T : class
 		{
-			return new Recycler<T>(pool, recycleFunction, limit);
+			return new ChanneledRecycler<T>(pool, recycleFunction, limit);
 		}
 
 		public static void Recycle(IRecyclable r)
@@ -79,13 +94,15 @@ namespace Open.Disposable
 			r.Recycle();
 		}
 
-		public static Recycler<T> CreateRecycler<T>(
+		public static ChanneledRecycler<T> CreateRecycler<T>(
 			this IObjectPool<T> pool,
 			ushort limit = Constants.DEFAULT_CAPACITY)
 			where T : class, IRecyclable
 		{
-			return new Recycler<T>(pool, Recycle, limit);
+			return new ChanneledRecycler<T>(pool, Recycle, limit);
 		}
 
 	}
+
+
 }
