@@ -52,7 +52,10 @@ namespace Open.Disposable
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
-			Pool = null;
+			if(calledExplicitly)
+			{
+				Pool = null;
+			}
 		}
 
 	}
