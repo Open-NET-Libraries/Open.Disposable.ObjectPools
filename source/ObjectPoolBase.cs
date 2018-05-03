@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace Open.Disposable
 {
@@ -74,47 +73,12 @@ namespace Open.Disposable
 				&& (SaveToPocket(item) || Receive(item)))
 				OnReceived();
 		}
-
-		protected virtual Task<bool> ReceiveAsync(T item)
-		{
-			return Task.Run(() => Receive(item)); // Default implemnation, can be overridden.
-		}
-
-		public Task GiveAsync(T item)
-		{
-			// We need to pre-check CanReceive because excessive tasks could build up if not.
-			if (item == null || !CanReceive)
-				return Task.CompletedTask;
-
-			return ReceiveConditionalAsync(item);
-		}
-
-		async Task ReceiveConditionalAsync(T item)
-		{
-			if (PrepareToReceive(item)
-				&& (SaveToPocket(item) || await ReceiveAsync(item).ConfigureAwait(false))) // Doesn't need original context.  Just needs to trigger OnReceived().
-				OnReceived();
-		}
 		#endregion
 
 		#region Release (.Take())
 		public virtual T Take()
 		{
 			return TryTake() ?? Factory();
-		}
-
-		protected virtual Task<T> ReleaseAsync()
-		{
-			return Task.Run((Func<T>)Take);
-		}
-
-		public Task<T> TakeAsync()
-		{
-			// See if there's one available already.
-			if (TryTake(out T firstTry))
-				return Task.FromResult(firstTry);
-
-			return ReleaseAsync();
 		}
 
 		public bool TryTake(out T item)

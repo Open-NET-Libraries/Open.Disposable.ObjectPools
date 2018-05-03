@@ -20,7 +20,7 @@ namespace Open.Disposable
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
-			Pool?.Writer.Complete();
+			Pool?.Writer.TryComplete();
 			Pool = null;
 		}
 
