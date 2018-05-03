@@ -23,13 +23,18 @@ Part of the "Open" set of libraries.</Description>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Channels\**" />
+    <EmbeddedResource Remove="Channels\**" />
+    <None Remove="Channels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove=".git" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Open.Disposable" Version="1.1.0" />
     <PackageReference Include="Open.Threading.Tasks" Version="1.1.2" />
-    <PackageReference Include="System.Threading.Channels" Version="4.5.0-preview2-26406-04" />
   </ItemGroup>
 
 </Project>
