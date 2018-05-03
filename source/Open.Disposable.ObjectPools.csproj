@@ -16,10 +16,10 @@ Part of the "Open" set of libraries.</Description>
     <RepositoryType>git</RepositoryType>
     <PackageTags>objectpool, dotnet, dotnetcore, cs, idisposable, threadsafe, thread-safe</PackageTags>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.0</Version>
-    <AssemblyVersion>1.3.0.0</AssemblyVersion>
-    <FileVersion>1.3.0.0</FileVersion>
-    <PackageReleaseNotes>Updated to .NET Standard for compatability.</PackageReleaseNotes>
+    <Version>1.3.1</Version>
+    <AssemblyVersion>1.3.1.0</AssemblyVersion>
+    <FileVersion>1.3.1.0</FileVersion>
+    <PackageReleaseNotes>Updated Open.Threading.Tasks reference (only used for trimming).</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
