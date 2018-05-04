@@ -16,10 +16,14 @@ Part of the "Open" set of libraries.</Description>
     <RepositoryType>git</RepositoryType>
     <PackageTags>objectpool, dotnet, dotnetcore, cs, idisposable, threadsafe, thread-safe</PackageTags>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.3.1</Version>
-    <AssemblyVersion>1.3.1.0</AssemblyVersion>
-    <FileVersion>1.3.1.0</FileVersion>
-    <PackageReleaseNotes>Updated Open.Threading.Tasks reference (only used for trimming).</PackageReleaseNotes>
+    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <PackageReleaseNotes>Improved overall performance by eliminating forced count of trimmable object pools.
+Tracking counts is now optional and disabled by default.
+Removed Async Take/Give methods since they offer no benefit and may acutally be problematic.  Object pools should not have direct async methods.
+
+More interfaces and base classes added for extensibility and future development.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
