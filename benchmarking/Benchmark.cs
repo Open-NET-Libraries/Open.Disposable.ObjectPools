@@ -1,9 +1,6 @@
 ﻿using Open.Diagnostics;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Open.Disposable.ObjectPools
@@ -11,7 +8,7 @@ namespace Open.Disposable.ObjectPools
 	public class Benchmark<T> : BenchmarkBase<Func<IObjectPool<T>>>
 		where T : class
 	{
-		public Benchmark(uint size, uint repeat, Func<IObjectPool<T>> poolFactory) : base(size,repeat,poolFactory)
+		public Benchmark(uint size, uint repeat, Func<IObjectPool<T>> poolFactory) : base(size, repeat, poolFactory)
 		{
 			// Because some pools do comparison checks on values, we have have unique instances/values.
 			_items = new T[(int)size];
@@ -47,7 +44,8 @@ namespace Open.Disposable.ObjectPools
 
 				yield return TimedResult.Measure("Empty Pool (.TryTake())", () =>
 				{
-					while (pool.TryTake() != null) {
+					while (pool.TryTake() != null)
+					{
 						// remaining++;
 					}
 				});

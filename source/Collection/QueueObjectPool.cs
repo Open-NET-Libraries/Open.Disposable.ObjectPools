@@ -16,7 +16,7 @@ namespace Open.Disposable
 		public QueueObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
 			: this(factory, null, capacity, countTrackingEnabled)
 		{
-			
+
 		}
 
 		Queue<T> Pool;
@@ -24,7 +24,7 @@ namespace Open.Disposable
 		protected override bool Receive(T item)
 		{
 			var p = Pool;
-			if (p!=null)
+			if (p != null)
 			{
 				// It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
 				// The lock operation should be quick enough to not pile up too many items.
@@ -38,11 +38,11 @@ namespace Open.Disposable
 		protected override T TryRelease()
 		{
 			var p = Pool;
-			if (p!=null && p.Count != 0)
+			if (p != null && p.Count != 0)
 			{
 				lock (p)
 				{
-					if (p.Count!=0)
+					if (p.Count != 0)
 						return p.Dequeue();
 				}
 
@@ -71,19 +71,19 @@ namespace Open.Disposable
 			return Create(() => new T(), capacity, countTrackingEnabled);
 		}
 
-        public static QueueObjectPool<T> Create<T>(Func<T> factory, bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-            where T : class, IRecyclable
-        {
-            Action<T> recycler = null;
-            if (autoRecycle) recycler = Recycler.Recycle;
-            return new QueueObjectPool<T>(factory, recycler, capacity, countTrackingEnabled);
-        }
+		public static QueueObjectPool<T> Create<T>(Func<T> factory, bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+			where T : class, IRecyclable
+		{
+			Action<T> recycler = null;
+			if (autoRecycle) recycler = Recycler.Recycle;
+			return new QueueObjectPool<T>(factory, recycler, capacity, countTrackingEnabled);
+		}
 
-        public static QueueObjectPool<T> Create<T>(bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-            where T : class, IRecyclable, new()
-        {
-            return Create(() => new T(), autoRecycle, capacity, countTrackingEnabled);
-        }
+		public static QueueObjectPool<T> Create<T>(bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+			where T : class, IRecyclable, new()
+		{
+			return Create(() => new T(), autoRecycle, capacity, countTrackingEnabled);
+		}
 
-    }
+	}
 }

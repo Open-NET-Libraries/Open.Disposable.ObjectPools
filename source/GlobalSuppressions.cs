@@ -6,4 +6,3 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "<Pending>", Scope = "type", Target = "~T:Open.Disposable.ReferenceContainer`1")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "<Pending>", Scope = "type", Target = "~T:Open.Disposable.DualReferenceContainer`1")]
-

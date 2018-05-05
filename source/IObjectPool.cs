@@ -45,7 +45,7 @@ namespace Open.Disposable
 		/// <returns>An item removed from the pool or generated.  Should never be null.</returns>
 		T Take();
 
-		
+
 	}
 
 	public static partial class ObjectPoolExtensions
@@ -77,6 +77,6 @@ namespace Open.Disposable
 			target.Give(item2);
 			target.Give(items);
 		}
-		
+
 	}
 }
