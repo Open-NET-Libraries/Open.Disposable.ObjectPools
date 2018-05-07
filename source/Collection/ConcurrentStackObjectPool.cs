@@ -3,23 +3,20 @@ using System.Collections.Concurrent;
 
 namespace Open.Disposable
 {
-	public sealed class ConcurrentStackObjectPool<T> : TrimmableObjectPoolBase<T>
+	public sealed class ConcurrentStackObjectPool<T> : TrimmableCollectionObjectPoolBase<T, ConcurrentStack<T>>
 		where T : class
 	{
 
-		public ConcurrentStackObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			: base(factory, recycler, capacity, countTrackingEnabled)
+		public ConcurrentStackObjectPool(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY)
+			: base(new ConcurrentStack<T>(), factory, recycler, disposer, capacity)
 		{
-			Pool = new ConcurrentStack<T>();
 		}
 
-		public ConcurrentStackObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			: this(factory, null, capacity, countTrackingEnabled)
+		public ConcurrentStackObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+			: this(factory, null, null, capacity)
 		{
 
 		}
-
-		ConcurrentStack<T> Pool;
 
 		protected override bool Receive(T item)
 		{
@@ -37,39 +34,44 @@ namespace Open.Disposable
 			return item;
 		}
 
-		protected override void OnDispose(bool calledExplicitly)
-		{
-			Pool = null;
-		}
-
 	}
 
 	public static class ConcurrentStackObjectPool
 	{
-		public static ConcurrentStackObjectPool<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static ConcurrentStackObjectPool<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class
 		{
-			return new ConcurrentStackObjectPool<T>(factory, capacity, countTrackingEnabled);
+			return new ConcurrentStackObjectPool<T>(factory, capacity);
 		}
 
-		public static ConcurrentStackObjectPool<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static ConcurrentStackObjectPool<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class, new()
 		{
-			return Create(() => new T(), capacity, countTrackingEnabled);
+			return Create(() => new T(), capacity);
 		}
 
-		public static ConcurrentStackObjectPool<T> Create<T>(Func<T> factory, bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			where T : class, IRecyclable
+		public static ConcurrentStackObjectPool<T> CreateAutoRecycle<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
+			 where T : class, IRecyclable
 		{
-			Action<T> recycler = null;
-			if (autoRecycle) recycler = Recycler.Recycle;
-			return new ConcurrentStackObjectPool<T>(factory, recycler, capacity, countTrackingEnabled);
+			return new ConcurrentStackObjectPool<T>(factory, Recycler.Recycle, null, capacity);
 		}
 
-		public static ConcurrentStackObjectPool<T> Create<T>(bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static ConcurrentStackObjectPool<T> CreateAutoRecycle<T>(int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class, IRecyclable, new()
 		{
-			return Create(() => new T(), autoRecycle, capacity, countTrackingEnabled);
+			return CreateAutoRecycle(() => new T(), capacity);
+		}
+
+		public static ConcurrentStackObjectPool<T> CreateAutoDisposal<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
+			where T : class, IDisposable
+		{
+			return new ConcurrentStackObjectPool<T>(factory, null, d => d.Dispose(), capacity);
+		}
+
+		public static ConcurrentStackObjectPool<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
+			where T : class, IDisposable, new()
+		{
+			return CreateAutoDisposal(() => new T(), capacity);
 		}
 
 	}

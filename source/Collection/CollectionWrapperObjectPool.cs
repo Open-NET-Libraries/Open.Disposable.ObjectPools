@@ -4,22 +4,19 @@ using System.Linq;
 
 namespace Open.Disposable
 {
-	public class CollectionWrapperObjectPool<T, TCollection> : TrimmableObjectPoolBase<T>
+	public class CollectionWrapperObjectPool<T, TCollection> : TrimmableGenericCollectionObjectPoolBase<T, TCollection>
 		where T : class
 		where TCollection : class, ICollection<T>
 	{
-		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			: base(factory, recycler, capacity, countTrackingEnabled)
-		{
-			Pool = pool;
-		}
-
-		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			: this(pool, factory, null, capacity, countTrackingEnabled)
+		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
+			: base(pool, factory, recycler, disposer, capacity, countTrackingEnabled)
 		{
 		}
 
-		protected TCollection Pool;
+		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
+			: this(pool, factory, null, null, capacity, countTrackingEnabled)
+		{
+		}
 
 		protected override bool Receive(T item)
 		{
@@ -58,16 +55,12 @@ namespace Open.Disposable
 			return item;
 		}
 
-		protected override void OnDispose(bool calledExplicitly)
-		{
-			Pool = null;
-		}
 	}
 
 	public class CollectionWrapperObjectPool<T> : CollectionWrapperObjectPool<T, ICollection<T>>
 		where T : class
 	{
-		public CollectionWrapperObjectPool(ICollection<T> pool, Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false) : base(pool, factory, capacity, countTrackingEnabled)
+		public CollectionWrapperObjectPool(ICollection<T> pool, Func<T> factory, int capacity = DEFAULT_CAPACITY) : base(pool, factory, capacity)
 		{
 		}
 	}

@@ -31,11 +31,33 @@ namespace Open.Disposable.ObjectPools
 					Parallel.For(0, TestSize, i => pool.Give(_items[i]));
 				});
 
-				yield return TimedResult.Measure("Mixed Read/Write (In Parallel)", () =>
+				yield return TimedResult.Measure("Mixed 90%-Take/10%-Give (In Parallel)", () =>
+				{
+					Parallel.For(0, TestSize, i =>
+					{
+						if (i % 10 == 0)
+							pool.Give(_items[i]);
+						else
+							_items[i] = pool.Take();
+					});
+				});
+
+				yield return TimedResult.Measure("Mixed 50%-Take/50%-Give (In Parallel)", () =>
 				{
 					Parallel.For(0, TestSize, i =>
 					{
 						if (i % 2 == 0)
+							_items[i] = pool.Take();
+						else
+							pool.Give(_items[i]);
+					});
+				});
+
+				yield return TimedResult.Measure("Mixed 10%-Take/90%-Give (In Parallel)", () =>
+				{
+					Parallel.For(0, TestSize, i =>
+					{
+						if (i % 10 == 0)
 							_items[i] = pool.Take();
 						else
 							pool.Give(_items[i]);

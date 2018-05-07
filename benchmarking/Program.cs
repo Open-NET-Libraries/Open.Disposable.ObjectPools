@@ -23,8 +23,8 @@ class Program
 		 */
 
 		// Start with a baseline...
-		report.AddBenchmark("QueueObjectPool", // Note, that this one isn't far off from the following in peformance.
-			count => () => QueueObjectPool.Create<object>((int)count * 2));
+		//report.AddBenchmark("QueueObjectPool", // Note, that this one isn't far off from the following in peformance.
+		//	count => () => QueueObjectPool.Create<object>((int)count * 2));
 
 		//report.AddBenchmark("ChannelObjectPool", 
 		//    count => () => ChannelObjectPool.Create<object>((int)count * 2));
@@ -40,19 +40,19 @@ class Program
 
 		// Is ineveitably slower than the above but should be enabled for testing code changes.
 		//report.AddBenchmark("InterlockedArrayObjectPool",
-		//    count => () => InterlockedArrayObjectPool.Create<object>((int)count * 2));
+		//	count => () => InterlockedArrayObjectPool.Create<object>((int)count * 2));
 
 		report.Pretest(200, 200); // Run once through first to scramble/warm-up initial conditions.
 
 		Console.SetCursorPosition(0, Console.CursorTop);
 
-		const int loopMultiple = 2;
+		const int loopMultiple = 4;
 		report.Test(4, 8 * loopMultiple);
 		report.Test(10, 8 * loopMultiple);
 		report.Test(50, 12 * loopMultiple);
 		report.Test(100, 16 * loopMultiple);
-		report.Test(250, 64 * loopMultiple);
-		//report.Test(500, 72);
+		report.Test(250, 32 * loopMultiple);
+		report.Test(2000, 64 * loopMultiple);
 
 		File.WriteAllText("./BenchmarkResult.txt", sb.ToString());
 		using (var fs = File.OpenWrite("./BenchmarkResult.csv"))

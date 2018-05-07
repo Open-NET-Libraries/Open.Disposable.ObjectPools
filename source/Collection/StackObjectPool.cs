@@ -3,23 +3,22 @@ using System.Collections.Generic;
 
 namespace Open.Disposable
 {
-	public sealed class StackObjectPool<T> : TrimmableObjectPoolBase<T>
+	public sealed class StackObjectPool<T> : TrimmableCollectionObjectPoolBase<T, Stack<T>>
 		where T : class
 	{
 
-		public StackObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			: base(factory, recycler, capacity, countTrackingEnabled)
+		public StackObjectPool(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY)
+			: base(
+				  new Stack<T>(Math.Min(DEFAULT_CAPACITY, capacity)) /* Very very slight speed improvment when capacity is set. */,
+				  factory, recycler, disposer, capacity, false)
 		{
-			Pool = new Stack<T>(capacity); // Very very slight speed improvment when capacity is set.
 		}
 
-		public StackObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			: this(factory, null, capacity, countTrackingEnabled)
+		public StackObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+			: this(factory, null, null, capacity)
 		{
 
 		}
-
-		Stack<T> Pool;
 
 		protected override bool Receive(T item)
 		{
@@ -50,39 +49,45 @@ namespace Open.Disposable
 
 			return null;
 		}
-
-		protected override void OnDispose(bool calledExplicitly)
-		{
-			Pool = null;
-		}
 	}
+
 
 	public static class StackObjectPool
 	{
-		public static StackObjectPool<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static StackObjectPool<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class
 		{
-			return new StackObjectPool<T>(factory, capacity, countTrackingEnabled);
+			return new StackObjectPool<T>(factory, capacity);
 		}
 
-		public static StackObjectPool<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static StackObjectPool<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class, new()
 		{
-			return Create(() => new T(), capacity, countTrackingEnabled);
+			return Create(() => new T(), capacity);
 		}
 
-		public static StackObjectPool<T> Create<T>(Func<T> factory, bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static StackObjectPool<T> CreateAutoRecycle<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
 			 where T : class, IRecyclable
 		{
-			Action<T> recycler = null;
-			if (autoRecycle) recycler = Recycler.Recycle;
-			return new StackObjectPool<T>(factory, recycler, capacity, countTrackingEnabled);
+			return new StackObjectPool<T>(factory, Recycler.Recycle, null, capacity);
 		}
 
-		public static StackObjectPool<T> Create<T>(bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static StackObjectPool<T> CreateAutoRecycle<T>(int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class, IRecyclable, new()
 		{
-			return Create(() => new T(), autoRecycle, capacity, countTrackingEnabled);
+			return CreateAutoRecycle(() => new T(), capacity);
+		}
+
+		public static StackObjectPool<T> CreateAutoDisposal<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
+			where T : class, IDisposable
+		{
+			return new StackObjectPool<T>(factory, null, d => d.Dispose(), capacity);
+		}
+
+		public static StackObjectPool<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
+			where T : class, IDisposable, new()
+		{
+			return CreateAutoDisposal(() => new T(), capacity);
 		}
 
 	}

@@ -35,9 +35,6 @@ namespace Open.Disposable
 		{
 			_pool = pool ?? throw new ArgumentNullException(nameof(pool));
 
-			if (!pool.CountTrackingEnabled)
-				throw new ArgumentException("Only pools with count tracking enabled can be trimmed.", nameof(pool));
-
 			if (pool is DisposableBase d)
 			{
 				if (d.IsDisposed) throw new ArgumentException("Cannot trim for an object pool that is already disposed.");

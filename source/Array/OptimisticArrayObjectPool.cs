@@ -1,7 +1,6 @@
 ﻿/* Based on Roslyn's ObjectPool */
 
 using System;
-using System.Threading;
 
 namespace Open.Disposable
 {
@@ -14,7 +13,7 @@ namespace Open.Disposable
 	{
 
 		public OptimisticArrayObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
-			: base(factory, recycler, capacity)
+			: base(factory, recycler, null /* disposer not applicable here */, capacity)
 		{ }
 
 		public OptimisticArrayObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
@@ -23,30 +22,11 @@ namespace Open.Disposable
 
 		// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
 		protected override bool SaveToPocket(T item)
-		{
-			return Pocket.SetIfNull(item);
-		}
+			=> Pocket.SetIfNull(item);
 
-		protected override bool Receive(T item)
-		{
-			var elements = Pool;
-			var len = elements?.Length ?? 0;
-
-			for (int i = 0; i < len; i++)
-			{
-				// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
-				if (elements[i].SetIfNull(item))
-				{
-					var m = MaxStored;
-					if (i >= m) Interlocked.CompareExchange(ref MaxStored, m + MaxStoredIncrement, m);
-
-					return true;
-				}
-			}
-
-			return false;
-		}
-
+		// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
+		protected override bool Store(ReferenceContainer<T>[] p, T item, int index)
+			=> p[index].SetIfNull(item);
 	}
 
 	public static class OptimisticArrayObjectPool
@@ -63,18 +43,16 @@ namespace Open.Disposable
 			return Create(() => new T(), capacity);
 		}
 
-		public static OptimisticArrayObjectPool<T> Create<T>(Func<T> factory, bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY)
+		public static OptimisticArrayObjectPool<T> CreateAutoRecycle<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
 			 where T : class, IRecyclable
 		{
-			Action<T> recycler = null;
-			if (autoRecycle) recycler = Recycler.Recycle;
-			return new OptimisticArrayObjectPool<T>(factory, recycler, capacity);
+			return new OptimisticArrayObjectPool<T>(factory, Recycler.Recycle, capacity);
 		}
 
-		public static OptimisticArrayObjectPool<T> Create<T>(bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY)
+		public static OptimisticArrayObjectPool<T> CreateAutoRecycle<T>(int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class, IRecyclable, new()
 		{
-			return Create(() => new T(), autoRecycle, capacity);
+			return CreateAutoRecycle(() => new T(), capacity);
 		}
 
 	}

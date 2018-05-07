@@ -3,23 +3,22 @@ using System.Collections.Generic;
 
 namespace Open.Disposable
 {
-	public sealed class QueueObjectPool<T> : TrimmableObjectPoolBase<T>
+	public sealed class QueueObjectPool<T> : TrimmableCollectionObjectPoolBase<T, Queue<T>>
 		where T : class
 	{
 
-		public QueueObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			: base(factory, recycler, capacity, countTrackingEnabled)
+		public QueueObjectPool(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY)
+			: base(
+				  new Queue<T>(Math.Min(DEFAULT_CAPACITY, capacity)) /* Very very slight speed improvment when capacity is initially set. */,
+				  factory, recycler, disposer, capacity, false)
 		{
-			Pool = new Queue<T>(capacity); // Very very slight speed improvment when capacity is set.
 		}
 
-		public QueueObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			: this(factory, null, capacity, countTrackingEnabled)
+		public QueueObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
+			: this(factory, null, null, capacity)
 		{
 
 		}
-
-		Queue<T> Pool;
 
 		protected override bool Receive(T item)
 		{
@@ -51,38 +50,44 @@ namespace Open.Disposable
 			return null;
 		}
 
-		protected override void OnDispose(bool calledExplicitly)
-		{
-			Pool = null;
-		}
 	}
 
 	public static class QueueObjectPool
 	{
-		public static QueueObjectPool<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static QueueObjectPool<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class
 		{
-			return new QueueObjectPool<T>(factory, capacity, countTrackingEnabled);
+			return new QueueObjectPool<T>(factory, capacity);
 		}
 
-		public static QueueObjectPool<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static QueueObjectPool<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class, new()
 		{
-			return Create(() => new T(), capacity, countTrackingEnabled);
+			return Create(() => new T(), capacity);
 		}
 
-		public static QueueObjectPool<T> Create<T>(Func<T> factory, bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
-			where T : class, IRecyclable
+		public static QueueObjectPool<T> CreateAutoRecycle<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
+			 where T : class, IRecyclable
 		{
-			Action<T> recycler = null;
-			if (autoRecycle) recycler = Recycler.Recycle;
-			return new QueueObjectPool<T>(factory, recycler, capacity, countTrackingEnabled);
+			return new QueueObjectPool<T>(factory, Recycler.Recycle, null, capacity);
 		}
 
-		public static QueueObjectPool<T> Create<T>(bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY, bool countTrackingEnabled = false)
+		public static QueueObjectPool<T> CreateAutoRecycle<T>(int capacity = Constants.DEFAULT_CAPACITY)
 			where T : class, IRecyclable, new()
 		{
-			return Create(() => new T(), autoRecycle, capacity, countTrackingEnabled);
+			return CreateAutoRecycle(() => new T(), capacity);
+		}
+
+		public static QueueObjectPool<T> CreateAutoDisposal<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
+			where T : class, IDisposable
+		{
+			return new QueueObjectPool<T>(factory, null, d => d.Dispose(), capacity);
+		}
+
+		public static QueueObjectPool<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
+			where T : class, IDisposable, new()
+		{
+			return CreateAutoDisposal(() => new T(), capacity);
 		}
 
 	}
