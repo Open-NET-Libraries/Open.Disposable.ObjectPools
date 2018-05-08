@@ -20,6 +20,12 @@ namespace Open.Disposable
 		protected int MaxSize;
 		public int Capacity => MaxSize;
 
+		/// <summary>
+		/// Total number of items in the pool.
+		/// </summary>
+		public abstract int Count { get; }
+		protected virtual int PocketCount => Pocket.Value == null ? 0 : 1;
+
 		protected Action<T> Recycler; // Before entering the pool.
 		protected Action<T> OnDiscarded; // When not able to be used.
 
@@ -37,9 +43,7 @@ namespace Open.Disposable
 
 		protected bool PrepareToReceive(T item)
 		{
-			if (item == null) return false;
-
-			if (CanReceive)
+			if (item!=null && CanReceive)
 			{
 				var r = Recycler;
 				if (r != null)

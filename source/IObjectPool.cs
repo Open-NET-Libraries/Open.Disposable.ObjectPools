@@ -45,7 +45,11 @@ namespace Open.Disposable
 		/// <returns>An item removed from the pool or generated.  Should never be null.</returns>
 		T Take();
 
-
+		/// <summary>
+		/// Total number of items in the pool.
+		/// Depending on the implementation could be an O(n) operation and should only be used for debugging.
+		/// </summary>
+		int Count { get; }
 	}
 
 	public static partial class ObjectPoolExtensions

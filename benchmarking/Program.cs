@@ -46,13 +46,13 @@ class Program
 
 		Console.SetCursorPosition(0, Console.CursorTop);
 
-		const int loopMultiple = 4;
+		const int loopMultiple = 2;
 		report.Test(4, 8 * loopMultiple);
 		report.Test(10, 8 * loopMultiple);
 		report.Test(50, 12 * loopMultiple);
 		report.Test(100, 16 * loopMultiple);
 		report.Test(250, 32 * loopMultiple);
-		report.Test(2000, 64 * loopMultiple);
+		//report.Test(2000, 64 * loopMultiple);
 
 		File.WriteAllText("./BenchmarkResult.txt", sb.ToString());
 		using (var fs = File.OpenWrite("./BenchmarkResult.csv"))

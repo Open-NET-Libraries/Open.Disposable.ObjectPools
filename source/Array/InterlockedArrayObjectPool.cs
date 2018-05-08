@@ -1,6 +1,7 @@
 ﻿/* Based on Roslyn's ObjectPool */
 
 using System;
+using System.Linq;
 using System.Threading;
 
 namespace Open.Disposable
@@ -28,6 +29,9 @@ namespace Open.Disposable
 		// Sets a limit on what has been stored yet to prevent over searching the array unnecessarily.. 
 		protected int MaxStored = 0;
 		protected const int MaxStoredIncrement = 5; // Instead of every one.
+
+		public override int Count
+			=> Pool.Count(e => e.Value != null)	+ PocketCount;
 
 		protected virtual bool Store(ReferenceContainer<T>[] p, T item, int index)
 			=> p[index].TrySave(item);
