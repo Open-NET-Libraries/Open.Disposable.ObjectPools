@@ -27,6 +27,10 @@ Added 'OnDiscarded' for special handling of objects that will never be used agai
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Channels\**" />
     <EmbeddedResource Remove="Channels\**" />
