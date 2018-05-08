@@ -17,11 +17,6 @@ namespace Open.Disposable
 		int _count = 0;
 		bool _countTrackingEnabled; // When true this enables tracking the number of entries entering and exiting the pool instead of calling '.Count'.  
 
-		/// <summary>
-		/// Total number of items in the pool.
-		/// </summary>
-		public abstract int Count { get; }
-
 		protected int CountInternal => _countTrackingEnabled ? _count : Count;
 
 		protected override bool CanReceive => CountInternal < MaxSize;
@@ -87,9 +82,12 @@ namespace Open.Disposable
 		//protected ReferenceContainer<T> Pocket2; // Default struct constructs itself.
 
 		//protected override bool SaveToPocket(T item)
-		//	=> false;// Pocket.TrySave(item) || Pocket2.TrySave(item);
+		//	=> Pocket.TrySave(item) || Pocket2.TrySave(item);
 
 		//protected override T TakeFromPocket()
-		//	=> null; // Pocket.TryRetrieve() ?? Pocket2.TryRetrieve();
+		//	=> Pocket.TryRetrieve() ?? Pocket2.TryRetrieve();
+
+		//protected override int PocketCount =>
+		//	base.PocketCount + (Pocket2.Value == null ? 0 : 1);
 	}
 }

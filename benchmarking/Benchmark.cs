@@ -1,6 +1,7 @@
 ﻿using Open.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Open.Disposable.ObjectPools
@@ -12,6 +13,8 @@ namespace Open.Disposable.ObjectPools
 		{
 			// Because some pools do comparison checks on values, we have have unique instances/values.
 			_items = new T[(int)size];
+			var pool = Param();
+			Parallel.For(0, TestSize, i => _items[i] = pool.Take());
 		}
 
 		readonly T[] _items;
@@ -21,14 +24,16 @@ namespace Open.Disposable.ObjectPools
 			using (var pool = Param())
 			{
 
-				yield return TimedResult.Measure("Take From Empty (In Parallel)", () =>
-				{
-					Parallel.For(0, TestSize, i => _items[i] = pool.Take());
-				});
+				//yield return TimedResult.Measure("Take From Empty (In Parallel)", () =>
+				//{
+				//	Parallel.For(0, TestSize, i => _items[i] = pool.Take());
+				//});
 
 				yield return TimedResult.Measure("Give To (In Parallel)", () =>
 				{
 					Parallel.For(0, TestSize, i => pool.Give(_items[i]));
+					var count = pool.Count;
+					Debug.Assert(pool is OptimisticArrayObjectPool<T> || count == TestSize, $"Expected {TestSize}, acutal count: {count}");
 				});
 
 				yield return TimedResult.Measure("Mixed 90%-Take/10%-Give (In Parallel)", () =>

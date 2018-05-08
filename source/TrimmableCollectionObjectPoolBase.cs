@@ -9,20 +9,15 @@ namespace Open.Disposable
 		where TCollection : class, ICollection
 	{
 
-		public TrimmableCollectionObjectPoolBase(TCollection pool, Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
+		protected TrimmableCollectionObjectPoolBase(TCollection pool, Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
 			: base(factory, recycler, disposer, capacity, countTrackingEnabled)
 		{
 			Pool = pool ?? throw new ArgumentNullException(nameof(pool));
 		}
 
-		public TrimmableCollectionObjectPoolBase(TCollection pool, Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
-			: this(pool, factory, null, null, capacity, countTrackingEnabled)
-		{
-		}
-
 		protected TCollection Pool;
 
-		public override int Count => Pool?.Count ?? 0;
+		public override int Count => (Pool?.Count ?? 0) + PocketCount;
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
@@ -36,15 +31,10 @@ namespace Open.Disposable
 		where TCollection : class, ICollection<T>
 	{
 
-		public TrimmableGenericCollectionObjectPoolBase(TCollection pool, Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
+		protected TrimmableGenericCollectionObjectPoolBase(TCollection pool, Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
 			: base(factory, recycler, disposer, capacity, countTrackingEnabled)
 		{
 			Pool = pool;
-		}
-
-		public TrimmableGenericCollectionObjectPoolBase(TCollection pool, Func<T> factory, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
-			: this(pool, factory, null, null, capacity, countTrackingEnabled)
-		{
 		}
 
 		protected TCollection Pool;
