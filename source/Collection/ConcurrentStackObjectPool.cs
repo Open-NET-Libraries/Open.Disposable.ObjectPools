@@ -30,7 +30,7 @@ namespace Open.Disposable
 		{
 			var p = Pool;
 			if (p == null) return null;
-			p.TryPop(out T item);
+			p.TryPop(out var item);
 			return item;
 		}
 

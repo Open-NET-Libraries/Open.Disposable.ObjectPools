@@ -21,7 +21,6 @@ namespace Open.Disposable
 		/// WARNING: The item is considered 'dead' but resurrectable so be sure not to hold on to the item's reference.
 		/// </summary>
 		/// <param name="item">The item to give up to the pool.</param>
-		/// <param name="recycler">An optional action exectue on the item only if it's possible to return to the pool.</param>
 		void Give(T item);
 
 		/// <summary>
@@ -52,26 +51,28 @@ namespace Open.Disposable
 		int Count { get; }
 	}
 
-	public static partial class ObjectPoolExtensions
+	public static class ObjectPoolExtensions
 	{
 		/// <summary>
 		/// Receives items and iteratively adds them to the pool.
 		/// WARNING: These items are considered 'dead' but resurrectable so be sure not to hold on to their reference.
 		/// </summary>
+		/// <param name="target">The pool to give to.</param>
 		/// <param name="items">The items to give up to the pool.</param>
 		public static void Give<T>(this IObjectPool<T> target, IEnumerable<T> items)
 			where T : class
 		{
-			if (items != null)
-				foreach (var i in items)
-					target.Give(i);
+			if (items == null) return;
+			foreach (var i in items)
+				target.Give(i);
 		}
 
 		/// <summary>
 		/// Receives items and iteratively adds them to the pool.
 		/// WARNING: These items are considered 'dead' but resurrectable so be sure not to hold on to their reference.
 		/// </summary>
-		/// <param name="item2">The first item to give up to the pool.</param>
+		/// <param name="target">The pool to give to.</param>
+		/// <param name="item1">The first item to give up to the pool.</param>
 		/// <param name="item2">The second item to give up to the pool.</param>
 		/// <param name="items">The remaining items to give up to the pool.</param>
 		public static void Give<T>(this IObjectPool<T> target, T item1, T item2, params T[] items)

@@ -39,14 +39,14 @@ class Program
 			count => () => OptimisticArrayObjectPool.Create<object>((int)count * 2));
 
 		// Is ineveitably slower than the above but should be enabled for testing code changes.
-		//report.AddBenchmark("InterlockedArrayObjectPool",
-		//	count => () => InterlockedArrayObjectPool.Create<object>((int)count * 2));
+		report.AddBenchmark("InterlockedArrayObjectPool",
+			count => () => InterlockedArrayObjectPool.Create<object>((int)count * 2));
 
 		report.Pretest(200, 200); // Run once through first to scramble/warm-up initial conditions.
 
 		Console.SetCursorPosition(0, Console.CursorTop);
 
-		const int loopMultiple = 2;
+		const int loopMultiple = 6;
 		report.Test(4, 8 * loopMultiple);
 		report.Test(10, 8 * loopMultiple);
 		report.Test(50, 12 * loopMultiple);

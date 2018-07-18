@@ -14,8 +14,8 @@ namespace Open.Disposable
 			_countTrackingEnabled = countTrackingEnabled;
 		}
 
-		int _count = 0;
-		bool _countTrackingEnabled; // When true this enables tracking the number of entries entering and exiting the pool instead of calling '.Count'.  
+		int _count;
+		readonly bool _countTrackingEnabled; // When true this enables tracking the number of entries entering and exiting the pool instead of calling '.Count'.  
 
 		protected int CountInternal => _countTrackingEnabled ? _count : Count;
 
@@ -52,11 +52,11 @@ namespace Open.Disposable
 		public virtual void TrimTo(int targetSize)
 		{
 			if (targetSize < 0) return; // Possible upstream math hiccup or default -1.  Silently dismiss.
-			int count = CountInternal;
+			var count = CountInternal;
 
 			if (count > targetSize)
 			{
-				int i = 0; // Prevent an possiblility of indefinite loop.
+				var i = 0; // Prevent an possiblility of indefinite loop.
 				for (
 					var attempts = count - targetSize;
 					i < attempts;

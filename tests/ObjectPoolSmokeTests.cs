@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Open.Disposable
 {
@@ -13,7 +13,7 @@ namespace Open.Disposable
 		[TestMethod]
 		public void OptimisticArrayObjectPool_FactoryTest()
 		{
-			int i = 0;
+			var i = 0;
 			var pool = OptimisticArrayObjectPool.Create(() => new IdContainer { ID = ++i });
 			Assert.AreEqual(1, pool.Take().ID);
 		}

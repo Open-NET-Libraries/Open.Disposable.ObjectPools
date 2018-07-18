@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace Open.Disposable
@@ -7,6 +8,7 @@ namespace Open.Disposable
 	/// This class is provided as an asynchronous queue for recycling instead of using a recycle delegate with an object pool and calling GiveAsync() which could pile up unnecessarily.
 	/// So if recycling an object takes extra time, this might be a good way to toss objects away and not have to worry about the heavy cost as they will one by one be processed back into the target pool.
 	/// </summary>
+	// ReSharper disable once InheritdocConsiderUsage
 	public abstract class RecyclerBase<T> : DisposableBase, IRecycler<T>
 		where T : class
 	{
@@ -14,17 +16,16 @@ namespace Open.Disposable
 
 		protected RecyclerBase(
 			IObjectPool<T> target,
-			Action<T> recycleFunction,
-			ushort limit = Constants.DEFAULT_CAPACITY)
+			Action<T> recycleFunction)
 		{
 			if (recycleFunction == null) throw new ArgumentNullException(nameof(recycleFunction));
 			Target = target ?? throw new ArgumentNullException(nameof(target));
-			if (target is DisposableBase d)
-			{
-				if (d.IsDisposed) throw new ArgumentException("Cannot recycle for an object pool that is already disposed.");
-				d.BeforeDispose += Pool_BeforeDispose;
-				// Could possibly dispose before this line somewhere... But that's just nasty. :P  
-			}
+			Contract.EndContractBlock();
+
+			if (!(target is DisposableBase d)) return;
+			if (d.IsDisposed) throw new ArgumentException("Cannot recycle for an object pool that is already disposed.");
+			d.BeforeDispose += Pool_BeforeDispose;
+			// Could possibly dispose before this line somewhere... But that's just nasty. :P  
 		}
 
 		void Pool_BeforeDispose(object sender, EventArgs e) => Dispose();
@@ -33,6 +34,7 @@ namespace Open.Disposable
 
 		protected abstract void OnCloseRequested();
 
+		// ReSharper disable once MemberCanBeProtected.Global
 		public Task Completion { get; protected set; }
 
 		public Task Close()

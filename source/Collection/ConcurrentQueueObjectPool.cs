@@ -35,7 +35,7 @@ namespace Open.Disposable
 		{
 			var p = Pool;
 			if (p == null) return null;
-			p.TryDequeue(out T item);
+			p.TryDequeue(out var item);
 			return item;
 		}
 

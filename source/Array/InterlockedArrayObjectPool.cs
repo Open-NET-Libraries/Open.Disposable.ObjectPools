@@ -27,11 +27,11 @@ namespace Open.Disposable
 		protected ReferenceContainer<T>[] Pool;
 
 		// Sets a limit on what has been stored yet to prevent over searching the array unnecessarily.. 
-		protected int MaxStored = 0;
+		protected int MaxStored;
 		protected const int MaxStoredIncrement = 5; // Instead of every one.
 
 		public override int Count
-			=> Pool.Count(e => e.Value != null)	+ PocketCount;
+			=> Pool.Count(e => e.Value != null) + PocketCount;
 
 		protected virtual bool Store(ReferenceContainer<T>[] p, T item, int index)
 			=> p[index].TrySave(item);
@@ -41,7 +41,7 @@ namespace Open.Disposable
 			var elements = Pool;
 			var len = elements?.Length ?? 0;
 
-			for (int i = 0; i < len; i++)
+			for (var i = 0; i < len; i++)
 			{
 				if (Store(elements, item, i))
 				{
@@ -62,7 +62,7 @@ namespace Open.Disposable
 			if (elements == null) return null;
 
 			var len = elements.Length;
-			for (int i = 0; i < MaxStored && i < len; i++)
+			for (var i = 0; i < MaxStored && i < len; i++)
 			{
 				var item = elements[i].TryRetrieve();
 				if (item != null) return item;

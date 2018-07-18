@@ -1,8 +1,10 @@
 ﻿using Open.Threading.Tasks;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Open.Disposable
 {
+	[SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
 	public class ObjectPoolAutoTrimmer : DisposableBase
 	{
 		ITrimmableObjectPool _pool;
@@ -15,11 +17,13 @@ namespace Open.Disposable
 		/// <summary>
 		///  Max size that trimming will allow.
 		/// </summary>
+		// ReSharper disable once NotAccessedField.Global
 		public readonly ushort TrimmedSize;
 
 		/// <summary>
 		/// Time to wait/defer trimming. Default is 500 milliSeconds.
 		/// </summary>
+		// ReSharper disable once NotAccessedField.Global
 		public readonly TimeSpan TrimDelay;
 
 		/// <summary>

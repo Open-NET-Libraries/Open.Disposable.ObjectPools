@@ -20,14 +20,15 @@ namespace Open.Disposable
 		protected int MaxSize;
 		public int Capacity => MaxSize;
 
+		/// <inheritdoc />
 		/// <summary>
 		/// Total number of items in the pool.
 		/// </summary>
 		public abstract int Count { get; }
-		protected virtual int PocketCount => Pocket.Value == null ? 0 : 1;
+		protected int PocketCount => Pocket.Value == null ? 0 : 1;
 
-		protected Action<T> Recycler; // Before entering the pool.
-		protected Action<T> OnDiscarded; // When not able to be used.
+		protected readonly Action<T> Recycler; // Before entering the pool.
+		protected readonly Action<T> OnDiscarded; // When not able to be used.
 
 
 		// Read-only because if Take() is called after disposal, this still facilitates returing an object.
@@ -36,6 +37,7 @@ namespace Open.Disposable
 
 		public T Generate() => Factory();
 
+		// ReSharper disable once UnassignedField.Global
 		protected ReferenceContainer<T> Pocket; // Default struct constructs itself.
 
 		#region Receive (.Give(T item))
@@ -43,7 +45,7 @@ namespace Open.Disposable
 
 		protected bool PrepareToReceive(T item)
 		{
-			if (item!=null && CanReceive)
+			if (item != null && CanReceive)
 			{
 				var r = Recycler;
 				if (r != null)
@@ -97,7 +99,7 @@ namespace Open.Disposable
 		protected virtual bool SaveToPocket(T item)
 			=> Pocket.TrySave(item);
 
-		protected virtual T TakeFromPocket()
+		protected T TakeFromPocket()
 			=> Pocket.TryRetrieve();
 
 
@@ -122,11 +124,9 @@ namespace Open.Disposable
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
-			if (calledExplicitly && OnDiscarded != null)
-			{
-				T d;
-				while ((d = TryRelease()) != null) OnDiscarded(d);
-			}
+			if (!calledExplicitly || OnDiscarded == null) return;
+			T d;
+			while ((d = TryRelease()) != null) OnDiscarded(d);
 		}
 	}
 }

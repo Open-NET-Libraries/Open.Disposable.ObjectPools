@@ -1,56 +1,55 @@
 ﻿using System;
-using System.Threading.Tasks.Dataflow;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace Open.Disposable
 {
-	/// <summary>
-	/// This class is provided as an asynchronous queue for recycling instead of using a recycle delegate with an object pool and calling GiveAsync() which could pile up unnecessarily.
-	/// So if recycling an object takes extra time, this might be a good way to toss objects away and not have to worry about the heavy cost as they will one by one be processed back into the target pool.
-	/// </summary>
+	/// <inheritdoc />
 	public class Recycler<T> : RecyclerBase<T>
 		where T : class
 	{
-		// Something else could be used and could be more performant.
-		// But it's an ideal interface for what's needed.  And the point is that the recyler should not take up too much cpu time.
-		ActionBlock<T> _bin;
+		Channel<T> _bin;
 
 		internal Recycler(
 			IObjectPool<T> target,
 			Action<T> recycleFunction,
-			ushort limit = Constants.DEFAULT_CAPACITY) : base(target, recycleFunction, limit)
+			ushort limit = Constants.DEFAULT_CAPACITY) : base(target, recycleFunction)
 		{
-			_bin = new ActionBlock<T>(item =>
+			_bin = Channel.CreateBounded<T>(limit);
+			Completion = Processor(recycleFunction);
+		}
+
+		async Task Processor(Action<T> recycleFunction)
+		{
+			var bin = _bin;
+			do
 			{
-				if (Target != null)
+				while (bin.Reader.TryRead(out var item))
 				{
 					recycleFunction(item);
 					Target?.Give(item);
 				}
-			});
-
-			Completion = _bin.Completion;
+			}
+			while (await bin.Reader.WaitToReadAsync());
 		}
 
 		internal Recycler(
 			ushort limit,
 			IObjectPool<T> pool,
-			Action<T> recycleFunction) : this(pool, recycleFunction, limit)
-		{
-
-		}
+			Action<T> recycleFunction) : this(pool, recycleFunction, limit) { }
 
 		public override bool Recycle(T item)
-		{
-			return _bin?.Post(item) ?? false;
-		}
+			=> _bin?.Writer.TryWrite(item) ?? false;
 
 		protected override void OnCloseRequested()
-			=> _bin?.Complete();
+			=> _bin?.Writer.Complete();
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
 			base.OnDispose(calledExplicitly);
-			if (calledExplicitly) _bin = null;
+			if (!calledExplicitly) return;
+			_bin.Writer.TryComplete();
+			_bin = null;
 		}
 	}
 
@@ -61,31 +60,22 @@ namespace Open.Disposable
 			Action<T> recycleFunction,
 			ushort limit = Constants.DEFAULT_CAPACITY)
 			where T : class
-		{
-			return new Recycler<T>(pool, recycleFunction, limit);
-		}
+			=> new Recycler<T>(pool, recycleFunction, limit);
 
 		public static Recycler<T> CreateRecycler<T>(
 			this IObjectPool<T> pool,
 			ushort limit,
 			Action<T> recycleFunction)
 			where T : class
-		{
-			return new Recycler<T>(pool, recycleFunction, limit);
-		}
+			=> new Recycler<T>(pool, recycleFunction, limit);
 
 		public static void Recycle(IRecyclable r)
-		{
-			r.Recycle();
-		}
+			=> r.Recycle();
 
 		public static Recycler<T> CreateRecycler<T>(
 			this IObjectPool<T> pool,
 			ushort limit = Constants.DEFAULT_CAPACITY)
 			where T : class, IRecyclable
-		{
-			return new Recycler<T>(pool, Recycle, limit);
-		}
-
+			=> new Recycler<T>(pool, Recycle, limit);
 	}
 }

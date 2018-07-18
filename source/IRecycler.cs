@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Open.Disposable
 {
-	interface IRecycler<T> : IDisposable
+	interface IRecycler<in T> : IDisposable
 		where T : class
 	{
 		bool Recycle(T item);
