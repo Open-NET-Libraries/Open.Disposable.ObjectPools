@@ -1,11 +1,16 @@
 ﻿using Open.Diagnostics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 namespace Open.Disposable.ObjectPools
 {
+	[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 	public class Benchmark<T> : BenchmarkBase<Func<IObjectPool<T>>>
 		where T : class
 	{
@@ -23,7 +28,7 @@ namespace Open.Disposable.ObjectPools
 		{
 			using (var pool = Param())
 			{
-
+				if (pool == null) throw new NullReferenceException();
 				//yield return TimedResult.Measure("Take From Empty (In Parallel)", () =>
 				//{
 				//	Parallel.For(0, TestSize, i => _items[i] = pool.Take());
@@ -31,9 +36,12 @@ namespace Open.Disposable.ObjectPools
 
 				yield return TimedResult.Measure("Give To (In Parallel)", () =>
 				{
+					// ReSharper disable once AccessToDisposedClosure
 					Parallel.For(0, TestSize, i => pool.Give(_items[i]));
+#if DEBUG
 					var count = pool.Count;
 					Debug.Assert(pool is OptimisticArrayObjectPool<T> || count == TestSize, $"Expected {TestSize}, acutal count: {count}");
+#endif
 				});
 
 				yield return TimedResult.Measure("Mixed 90%-Take/10%-Give (In Parallel)", () =>

@@ -2,12 +2,14 @@
 using Open.Disposable.ObjectPools;
 using Open.Text.CSV;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 
 class Program
 {
-	static void Main(string[] args)
+	[SuppressMessage("ReSharper", "CoVariantArrayConversion")]
+	static void Main()
 	{
 		Console.Write("Initializing...");
 
