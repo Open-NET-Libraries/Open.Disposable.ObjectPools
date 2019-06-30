@@ -1,180 +1,180 @@
-Repeat 120000 for size 4
+Repeat 1200000 for size 4
 ------------------------------------
 
 ConcurrentQueueObjectPool...............................
-00:00:00.4328809 Give To (In Parallel)
-00:00:00.4157680 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.4065244 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.4045626 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0271763 Empty Pool (.TryTake())
-00:00:01.6869122 TOTAL
+00:00:04.3234623 Give To (In Parallel)
+00:00:04.2859159 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:04.0856252 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:04.1629271 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.2383071 Empty Pool (.TryTake())
+00:00:17.0962376 TOTAL
 
 ConcurrentStackObjectPool...............................
-00:00:01.0126419 Give To (In Parallel)
-00:00:00.9358291 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.9317805 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.9543443 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0426221 Empty Pool (.TryTake())
-00:00:03.8772179 TOTAL
+00:00:03.4181177 Give To (In Parallel)
+00:00:03.1483734 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:03.0326640 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:03.2275135 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.2194885 Empty Pool (.TryTake())
+00:00:13.0461571 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:00.3072837 Give To (In Parallel)
-00:00:00.2791047 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.2824113 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.2763940 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0181322 Empty Pool (.TryTake())
-00:00:01.1633259 TOTAL
+00:00:02.9567086 Give To (In Parallel)
+00:00:02.9408997 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.8979050 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.9429304 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.1781477 Empty Pool (.TryTake())
+00:00:11.9165914 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:00.2849269 Give To (In Parallel)
-00:00:00.2799949 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.2987070 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.2980612 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0179067 Empty Pool (.TryTake())
-00:00:01.1795967 TOTAL
+00:00:02.8507860 Give To (In Parallel)
+00:00:02.8378750 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.8065261 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.7729287 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.1748178 Empty Pool (.TryTake())
+00:00:11.4429336 TOTAL
 
 
-Repeat 48000 for size 10
+Repeat 480000 for size 10
 ------------------------------------
 
 ConcurrentQueueObjectPool...............................
-00:00:00.2049617 Give To (In Parallel)
-00:00:00.1879537 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.1863383 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.1791973 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0187886 Empty Pool (.TryTake())
-00:00:00.7772396 TOTAL
+00:00:01.9110391 Give To (In Parallel)
+00:00:01.7929113 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.7431428 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.7539962 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.1864032 Empty Pool (.TryTake())
+00:00:07.3874926 TOTAL
 
 ConcurrentStackObjectPool...............................
-00:00:00.2312536 Give To (In Parallel)
-00:00:00.2063132 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.1973173 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.2137496 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0209974 Empty Pool (.TryTake())
-00:00:00.8696311 TOTAL
+00:00:02.2080509 Give To (In Parallel)
+00:00:01.9085663 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.7999023 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.0333784 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.2014246 Empty Pool (.TryTake())
+00:00:08.1513225 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:00.1948958 Give To (In Parallel)
-00:00:00.1866085 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.1851642 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.1743788 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0212318 Empty Pool (.TryTake())
-00:00:00.7622791 TOTAL
+00:00:01.9464026 Give To (In Parallel)
+00:00:01.8209826 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.7283101 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.7703791 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.2067250 Empty Pool (.TryTake())
+00:00:07.4727994 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:00.2025915 Give To (In Parallel)
-00:00:00.1947096 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.1832321 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.1855078 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0213919 Empty Pool (.TryTake())
-00:00:00.7874329 TOTAL
+00:00:01.9864203 Give To (In Parallel)
+00:00:01.8975615 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.7755688 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.8424227 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.2128414 Empty Pool (.TryTake())
+00:00:07.7148147 TOTAL
 
 
-Repeat 14400 for size 50
+Repeat 144000 for size 50
 ------------------------------------
 
 ConcurrentQueueObjectPool...............................
-00:00:00.1153192 Give To (In Parallel)
-00:00:00.0930024 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.0847000 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.0976083 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0225625 Empty Pool (.TryTake())
-00:00:00.4131924 TOTAL
+00:00:01.0865387 Give To (In Parallel)
+00:00:00.9103388 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:00.7864308 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:00.8607428 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.2207286 Empty Pool (.TryTake())
+00:00:03.8647797 TOTAL
 
 ConcurrentStackObjectPool...............................
-00:00:00.1210192 Give To (In Parallel)
-00:00:00.0938168 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.0859916 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.1097679 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0232161 Empty Pool (.TryTake())
-00:00:00.4338116 TOTAL
+00:00:01.2035505 Give To (In Parallel)
+00:00:00.9058416 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:00.8623919 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.0519578 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.2300882 Empty Pool (.TryTake())
+00:00:04.2538300 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:00.1162956 Give To (In Parallel)
-00:00:00.1051234 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.0809849 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.0920824 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0592899 Empty Pool (.TryTake())
-00:00:00.4537762 TOTAL
+00:00:01.0794476 Give To (In Parallel)
+00:00:00.9707866 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:00.7703522 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:00.8925395 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.5686048 Empty Pool (.TryTake())
+00:00:04.2817307 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:00.1351777 Give To (In Parallel)
-00:00:00.1015328 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.0834721 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.1115662 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0940603 Empty Pool (.TryTake())
-00:00:00.5258091 TOTAL
+00:00:01.2918612 Give To (In Parallel)
+00:00:00.9923932 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:00.7856951 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.0361033 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.8871188 Empty Pool (.TryTake())
+00:00:04.9931716 TOTAL
 
 
-Repeat 9600 for size 100
+Repeat 96000 for size 100
 ------------------------------------
 
 ConcurrentQueueObjectPool...............................
-00:00:00.1223762 Give To (In Parallel)
-00:00:00.0972226 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.0758479 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.0921301 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0327353 Empty Pool (.TryTake())
-00:00:00.4203121 TOTAL
+00:00:01.1936583 Give To (In Parallel)
+00:00:00.9884302 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:00.7937749 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:00.9104213 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.3325926 Empty Pool (.TryTake())
+00:00:04.2188773 TOTAL
 
 ConcurrentStackObjectPool...............................
-00:00:00.1517036 Give To (In Parallel)
-00:00:00.2118948 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.1054921 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.1368268 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0473453 Empty Pool (.TryTake())
-00:00:00.6532626 TOTAL
+00:00:01.2954728 Give To (In Parallel)
+00:00:01.5919051 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:00.8887785 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.1267305 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.3910861 Empty Pool (.TryTake())
+00:00:05.2939730 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:00.1073093 Give To (In Parallel)
-00:00:00.1045937 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.0705415 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.0824673 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0956365 Empty Pool (.TryTake())
-00:00:00.4605483 TOTAL
+00:00:01.0586862 Give To (In Parallel)
+00:00:01.0613279 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:00.7160126 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:00.8147263 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.9588449 Empty Pool (.TryTake())
+00:00:04.6095979 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:00.1494063 Give To (In Parallel)
-00:00:00.1077739 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.0746742 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.1128479 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.2238334 Empty Pool (.TryTake())
-00:00:00.6685357 TOTAL
+00:00:01.5202602 Give To (In Parallel)
+00:00:01.0914433 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:00.7177933 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.1267538 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:02.1815610 Empty Pool (.TryTake())
+00:00:06.6378116 TOTAL
 
 
-Repeat 7680 for size 250
+Repeat 76800 for size 250
 ------------------------------------
 
 ConcurrentQueueObjectPool...............................
-00:00:00.2123888 Give To (In Parallel)
-00:00:00.1725807 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.1277665 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.1629961 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.0699733 Empty Pool (.TryTake())
-00:00:00.7457054 TOTAL
+00:00:02.1343720 Give To (In Parallel)
+00:00:01.7012785 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.2752111 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.6435934 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:00.6997324 Empty Pool (.TryTake())
+00:00:07.4541874 TOTAL
 
 ConcurrentStackObjectPool...............................
-00:00:00.7008323 Give To (In Parallel)
-00:00:03.4680108 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.7312092 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.7532056 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.2733349 Empty Pool (.TryTake())
-00:00:05.9265928 TOTAL
+00:00:06.2066697 Give To (In Parallel)
+00:00:27.8900516 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:06.5621678 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:06.4422102 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:02.4804319 Empty Pool (.TryTake())
+00:00:49.5815312 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:00.2225184 Give To (In Parallel)
-00:00:00.2290041 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.1110785 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.1400907 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.3309545 Empty Pool (.TryTake())
-00:00:01.0336462 TOTAL
+00:00:02.0446809 Give To (In Parallel)
+00:00:02.2047801 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.0930008 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.3709434 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:03.2508715 Empty Pool (.TryTake())
+00:00:09.9642767 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:00.4984438 Give To (In Parallel)
-00:00:00.2336851 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:00.1059643 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:00.2670714 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:00.8555392 Empty Pool (.TryTake())
-00:00:01.9607038 TOTAL
+00:00:05.1034766 Give To (In Parallel)
+00:00:02.3508106 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.0738597 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.7216389 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:08.5749945 Empty Pool (.TryTake())
+00:00:19.8247803 TOTAL
 
 
