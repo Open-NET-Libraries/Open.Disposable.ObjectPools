@@ -41,7 +41,7 @@ namespace Open.Disposable
 
 			if (pool is DisposableBase d)
 			{
-				if (d.IsDisposed) throw new ArgumentException("Cannot trim for an object pool that is already disposed.");
+				if (d.WasDisposed) throw new ArgumentException("Cannot trim for an object pool that is already disposed.");
 				d.BeforeDispose += Pool_BeforeDispose;
 			}
 
