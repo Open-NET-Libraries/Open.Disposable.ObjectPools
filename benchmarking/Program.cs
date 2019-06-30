@@ -28,8 +28,8 @@ class Program
 		//report.AddBenchmark("QueueObjectPool", // Note, that this one isn't far off from the following in peformance.
 		//	count => () => QueueObjectPool.Create<object>((int)count * 2));
 
-		//report.AddBenchmark("ChannelObjectPool", 
-		//    count => () => ChannelObjectPool.Create<object>((int)count * 2));
+		report.AddBenchmark("ChannelObjectPool",
+			count => () => ChannelObjectPool.Create<object>((int)count * 2));
 
 		report.AddBenchmark("ConcurrentQueueObjectPool", // Note, that this one isn't far off from the following in peformance, but definitely is faster than LinkedListObjectPool and the rest.
 			count => () => ConcurrentQueueObjectPool.Create<object>((int)count * 2));

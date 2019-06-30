@@ -18,7 +18,7 @@ namespace Open.Disposable
 		internal ChanneledRecycler(
 			IObjectPool<T> target,
 			Action<T> recycleFunction,
-			ushort limit = Constants.DEFAULT_CAPACITY) : base(target, recycleFunction, limit)
+			ushort limit = Constants.DEFAULT_CAPACITY) : base(target, recycleFunction)
 		{
 			var b = _bin = Channel.CreateBounded<T>(new BoundedChannelOptions(limit)
 			{

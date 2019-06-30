@@ -6,17 +6,19 @@ namespace Open.Disposable
 	public sealed class ChannelObjectPool<T> : ObjectPoolBase<T>
 		where T : class
 	{
-		public ChannelObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
-			: base(factory, recycler, capacity)
+		public ChannelObjectPool(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY)
+			: base(factory, recycler, disposer, capacity)
 		{
 			Pool = Channel.CreateBounded<T>(new BoundedChannelOptions(capacity) { FullMode = BoundedChannelFullMode.DropWrite });
 		}
 
 		public ChannelObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
-			: this(factory, null, capacity)
+			: this(factory, null, null, capacity)
 		{ }
 
 		Channel<T> Pool;
+
+		public override int Count => -1;
 
 		protected override void OnDispose(bool calledExplicitly)
 		{
@@ -56,7 +58,7 @@ namespace Open.Disposable
 		{
 			Action<T> recycler = null;
 			if (autoRecycle) recycler = Recycler.Recycle;
-			return new ChannelObjectPool<T>(factory, recycler, capacity);
+			return new ChannelObjectPool<T>(factory, recycler, null, capacity);
 		}
 
 		public static ChannelObjectPool<T> Create<T>(bool autoRecycle, int capacity = Constants.DEFAULT_CAPACITY)

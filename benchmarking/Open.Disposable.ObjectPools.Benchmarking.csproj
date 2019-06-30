@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Open.Diagnostics" Version="1.3.0" />
-    <PackageReference Include="Open.Text.CSV" Version="1.1.0" />
+    <PackageReference Include="Open.Text.CSV" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
