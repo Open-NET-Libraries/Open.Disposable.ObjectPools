@@ -77,7 +77,7 @@ namespace Open.Disposable
 			_pool?.TrimTo(_trimmedSize);
 		}
 
-		protected override void OnDispose(bool calledExplicitly)
+		protected override void OnDispose()
 		{
 			DisposeOf(ref _trimmer);
 

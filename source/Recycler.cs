@@ -44,10 +44,10 @@ namespace Open.Disposable
 		protected override void OnCloseRequested()
 			=> _bin?.Writer.Complete();
 
-		protected override void OnDispose(bool calledExplicitly)
+		protected override void OnDispose()
 		{
-			base.OnDispose(calledExplicitly);
-			if (!calledExplicitly) return;
+			base.OnDispose();
+
 			_bin.Writer.TryComplete();
 			_bin = null;
 		}

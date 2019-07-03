@@ -19,10 +19,10 @@ namespace Open.Disposable
 
 		public override int Count => (Pool?.Count ?? 0) + PocketCount;
 
-		protected override void OnDispose(bool calledExplicitly)
+		protected override void OnDispose()
 		{
-			base.OnDispose(calledExplicitly); // Do not call because the following is more optimized.
-			if (calledExplicitly) Pool = null;
+			base.OnDispose();
+			Pool = null;
 		}
 	}
 
@@ -34,30 +34,27 @@ namespace Open.Disposable
 		protected TrimmableGenericCollectionObjectPoolBase(TCollection pool, Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
 			: base(factory, recycler, disposer, capacity, countTrackingEnabled)
 		{
-			Pool = pool;
+			Pool = pool ?? throw new ArgumentNullException(nameof(pool)); ;
 		}
 
 		protected TCollection Pool;
 
 		public override int Count => Pool?.Count ?? 0;
 
-		protected override void OnDispose(bool calledExplicitly)
+		protected override void OnDispose()
 		{
-			//base.OnDispose(calledExplicitly); // Do not call because the following is more optimized.
+			//base.OnDispose(); // Do not call because the following is more optimized.
 
-			if (calledExplicitly)
+			var p = Pool;
+			Pool = null;
+
+			if (OnDiscarded != null)
 			{
-				var p = Pool;
-				Pool = null;
-
-				if (OnDiscarded != null)
-				{
-					foreach (var item in p)
-						OnDiscarded(item);
-				}
-
-				p.Clear();
+				foreach (var item in p)
+					OnDiscarded(item);
 			}
+
+			p.Clear();
 		}
 	}
 

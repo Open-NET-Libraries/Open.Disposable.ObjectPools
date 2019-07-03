@@ -71,9 +71,9 @@ namespace Open.Disposable
 			return null;
 		}
 
-		protected override void OnDispose(bool calledExplicitly)
+		protected override void OnDispose()
 		{
-			base.OnDispose(calledExplicitly);
+			base.OnDispose();
 			Pool = null;
 			MaxStored = 0;
 		}

@@ -122,9 +122,10 @@ namespace Open.Disposable
 			MaxSize = 0;
 		}
 
-		protected override void OnDispose(bool calledExplicitly)
+		protected override void OnDispose()
 		{
-			if (!calledExplicitly || OnDiscarded == null) return;
+			if (OnDiscarded == null) return;
+
 			T d;
 			while ((d = TryRelease()) != null) OnDiscarded(d);
 		}

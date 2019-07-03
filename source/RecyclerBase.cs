@@ -43,10 +43,10 @@ namespace Open.Disposable
 			return Completion;
 		}
 
-		protected override void OnDispose(bool calledExplicitly)
+		protected override void OnDispose()
 		{
 			OnCloseRequested();
-			if (calledExplicitly) Target = null;
+			Target = null;
 		}
 	}
 
