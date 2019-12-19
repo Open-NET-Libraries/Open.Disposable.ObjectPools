@@ -7,7 +7,7 @@ namespace Open.Disposable
 		where T : class
 	{
 
-		public QueueObjectPool(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY)
+		public QueueObjectPool(Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity = DEFAULT_CAPACITY)
 			: base(
 				  new Queue<T>(Math.Min(DEFAULT_CAPACITY, capacity)) /* Very very slight speed improvment when capacity is initially set. */,
 				  factory, recycler, disposer, capacity, false)
@@ -34,7 +34,7 @@ namespace Open.Disposable
 			return false;
 		}
 
-		protected override T TryRelease()
+		protected override T? TryRelease()
 		{
 			var p = Pool;
 			if (p != null && p.Count != 0)

@@ -9,7 +9,7 @@ namespace Open.Disposable
 		where TCollection : class, ICollection
 	{
 
-		protected TrimmableCollectionObjectPoolBase(TCollection pool, Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
+		protected TrimmableCollectionObjectPoolBase(TCollection pool, Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
 			: base(factory, recycler, disposer, capacity, countTrackingEnabled)
 		{
 			Pool = pool ?? throw new ArgumentNullException(nameof(pool));
@@ -22,7 +22,7 @@ namespace Open.Disposable
 		protected override void OnDispose()
 		{
 			base.OnDispose();
-			Pool = null;
+			Pool = null!;
 		}
 	}
 
@@ -31,10 +31,10 @@ namespace Open.Disposable
 		where TCollection : class, ICollection<T>
 	{
 
-		protected TrimmableGenericCollectionObjectPoolBase(TCollection pool, Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
+		protected TrimmableGenericCollectionObjectPoolBase(TCollection pool, Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
 			: base(factory, recycler, disposer, capacity, countTrackingEnabled)
 		{
-			Pool = pool ?? throw new ArgumentNullException(nameof(pool)); ;
+			Pool = pool ?? throw new ArgumentNullException(nameof(pool));
 		}
 
 		protected TCollection Pool;
@@ -46,7 +46,7 @@ namespace Open.Disposable
 			//base.OnDispose(); // Do not call because the following is more optimized.
 
 			var p = Pool;
-			Pool = null;
+			Pool = null!;
 
 			if (OnDiscarded != null)
 			{

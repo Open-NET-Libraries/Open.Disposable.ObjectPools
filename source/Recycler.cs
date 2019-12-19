@@ -49,7 +49,7 @@ namespace Open.Disposable
 			base.OnDispose();
 
 			_bin.Writer.TryComplete();
-			_bin = null;
+			_bin = null!;
 		}
 	}
 
@@ -70,7 +70,7 @@ namespace Open.Disposable
 			=> new Recycler<T>(pool, recycleFunction, limit);
 
 		public static void Recycle(IRecyclable r)
-			=> r.Recycle();
+			=>(r ?? throw new ArgumentNullException(nameof(r))).Recycle();
 
 		public static Recycler<T> CreateRecycler<T>(
 			this IObjectPool<T> pool,

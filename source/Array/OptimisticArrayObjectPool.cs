@@ -12,7 +12,7 @@ namespace Open.Disposable
 		where T : class
 	{
 
-		public OptimisticArrayObjectPool(Func<T> factory, Action<T> recycler, int capacity = DEFAULT_CAPACITY)
+		public OptimisticArrayObjectPool(Func<T> factory, Action<T>? recycler, int capacity = DEFAULT_CAPACITY)
 			: base(factory, recycler, null /* disposer not applicable here */, capacity)
 		{ }
 
@@ -25,6 +25,7 @@ namespace Open.Disposable
 			=> Pocket.SetIfNull(item);
 
 		// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Should never be null.")]
 		protected override bool Store(ReferenceContainer<T>[] p, T item, int index)
 			=> p[index].SetIfNull(item);
 	}

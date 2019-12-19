@@ -8,7 +8,7 @@ namespace Open.Disposable
 	public abstract class TrimmableObjectPoolBase<T> : ObjectPoolBase<T>, ITrimmableObjectPool
 		where T : class
 	{
-		protected TrimmableObjectPoolBase(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity, bool countTrackingEnabled = true)
+		protected TrimmableObjectPoolBase(Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity, bool countTrackingEnabled = true)
 			: base(factory, recycler, disposer, capacity)
 		{
 			_countTrackingEnabled = countTrackingEnabled;
@@ -24,7 +24,7 @@ namespace Open.Disposable
 		/// <summary>
 		/// Signal for when an item was taken (actually removed) from the pool. 
 		/// </summary>
-		public event ObjectPoolResizeEvent Released;
+		public event ObjectPoolResizeEvent? Released;
 		protected void OnReleased(int newSize)
 		{
 			Debug.Assert(newSize > -2, $"newSize: {newSize}, _count: {_count}"); // Should never get out of control.  It may go negative temporarily but should be 100% accounted for.
@@ -38,7 +38,7 @@ namespace Open.Disposable
 		/// <summary>
 		/// Signal for when an item was given (actually accepted) to the pool. 
 		/// </summary>
-		public event ObjectPoolResizeEvent Received;
+		public event ObjectPoolResizeEvent? Received;
 		protected void OnReceived(int newSize)
 		{
 			Received?.Invoke(newSize);

@@ -14,7 +14,7 @@ namespace Open.Disposable
 		where T : class
 	{
 
-		public InterlockedArrayObjectPool(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY)
+		public InterlockedArrayObjectPool(Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity = DEFAULT_CAPACITY)
 			: base(factory, recycler, disposer, capacity)
 		{
 			Pool = new ReferenceContainer<T>[capacity - 1];
@@ -33,6 +33,7 @@ namespace Open.Disposable
 		public override int Count
 			=> Pool.Count(e => e.Value != null) + PocketCount;
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Should never be null.")]
 		protected virtual bool Store(ReferenceContainer<T>[] p, T item, int index)
 			=> p[index].TrySave(item);
 
@@ -43,7 +44,7 @@ namespace Open.Disposable
 
 			for (var i = 0; i < len; i++)
 			{
-				if (Store(elements, item, i))
+				if (Store(elements!, item, i))
 				{
 					var m = MaxStored;
 					if (i >= m) Interlocked.CompareExchange(ref MaxStored, m + MaxStoredIncrement, m);
@@ -55,7 +56,7 @@ namespace Open.Disposable
 			return false;
 		}
 
-		protected override T TryRelease()
+		protected override T? TryRelease()
 		{
 			// We missed getting the first item or it wasn't there.
 			var elements = Pool;
@@ -74,7 +75,7 @@ namespace Open.Disposable
 		protected override void OnDispose()
 		{
 			base.OnDispose();
-			Pool = null;
+			Pool = null!;
 			MaxStored = 0;
 		}
 

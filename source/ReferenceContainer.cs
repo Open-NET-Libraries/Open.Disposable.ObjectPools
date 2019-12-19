@@ -11,18 +11,19 @@ namespace Open.Disposable
 		int Capacity { get; }
 		bool SetIfNull(T value);
 		bool TrySave(T value);
-		T TryRetrieve();
+		T? TryRetrieve();
 	}
 
 	[DebuggerDisplay("{Value,nq}")]
+	[SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Undesired.")]
 	public struct ReferenceContainer<T> : IReferenceContainer<T>
 		where T : class
 	{
 		public int Capacity => 1;
 
-		T _value;
+		T? _value;
 
-		public T Value
+		public T? Value
 		{
 			get => _value;
 			set => _value = value;
@@ -39,7 +40,7 @@ namespace Open.Disposable
 			=> _value == null
 				&& null == Interlocked.CompareExchange(ref _value, value, null);
 
-		public T TryRetrieve()
+		public T? TryRetrieve()
 		{
 			var item = _value;
 			return (item != null

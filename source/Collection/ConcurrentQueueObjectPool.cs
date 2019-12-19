@@ -7,7 +7,7 @@ namespace Open.Disposable
 		where T : class
 	{
 
-		public ConcurrentQueueObjectPool(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY)
+		public ConcurrentQueueObjectPool(Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity = DEFAULT_CAPACITY)
 			: base(new ConcurrentQueue<T>(), factory, recycler, disposer, capacity)
 		{
 		}
@@ -31,7 +31,7 @@ namespace Open.Disposable
 			return true;
 		}
 
-		protected override T TryRelease()
+		protected override T? TryRelease()
 		{
 			var p = Pool;
 			if (p == null) return null;

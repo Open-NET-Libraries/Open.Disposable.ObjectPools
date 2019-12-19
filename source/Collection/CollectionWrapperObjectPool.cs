@@ -8,7 +8,7 @@ namespace Open.Disposable
 		where T : class
 		where TCollection : class, ICollection<T>
 	{
-		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
+		public CollectionWrapperObjectPool(TCollection pool, Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity = DEFAULT_CAPACITY, bool countTrackingEnabled = true)
 			: base(pool, factory, recycler, disposer, capacity, countTrackingEnabled)
 		{
 		}
@@ -35,9 +35,9 @@ namespace Open.Disposable
 			return false;
 		}
 
-		protected override T TryRelease()
+		protected override T? TryRelease()
 		{
-			retry:
+		retry:
 
 			var p = Pool;
 			var item = p?.FirstOrDefault();
@@ -47,7 +47,7 @@ namespace Open.Disposable
 				 * This implementation is in place for reference more than practice.  Sub classes should override. */
 
 			bool wasRemoved;
-			lock (p) wasRemoved = p.Remove(item);
+			lock (p!) wasRemoved = p.Remove(item);
 			if (!wasRemoved) goto retry;
 
 			return item;

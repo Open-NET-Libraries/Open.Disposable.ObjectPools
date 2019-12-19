@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 
 namespace Open.Disposable
 {
@@ -30,13 +31,17 @@ namespace Open.Disposable
 		/// </summary>
 		/// <param name="item">The item to return if available.  Will be null if none avaialable.</param>
 		/// <returns>True if an item is provided.</returns>
-		bool TryTake(out T item);
+#if NETSTANDARD2_1
+		bool TryTake([NotNullWhen(true)] out T? item);
+#else
+		bool TryTake(out T? item);
+#endif
 
 		/// <summary>
 		/// If the pool has an item currently avaialable, removes it from the pool and returns it.
 		/// </summary>
 		/// <returns>The item to return if available.  Will be null if none avaialable.</returns>
-		T TryTake();
+		T? TryTake();
 
 
 		/// <summary>
@@ -64,6 +69,9 @@ namespace Open.Disposable
 		public static void Give<T>(this IObjectPool<T> target, IEnumerable<T> items)
 			where T : class
 		{
+			if (target is null) throw new ArgumentNullException(nameof(target));
+			Contract.EndContractBlock();
+
 			if (items == null) return;
 			foreach (var i in items)
 				target.Give(i);
@@ -80,6 +88,9 @@ namespace Open.Disposable
 		public static void Give<T>(this IObjectPool<T> target, T item1, T item2, params T[] items)
 			where T : class
 		{
+			if (target is null) throw new ArgumentNullException(nameof(target));
+			Contract.EndContractBlock();
+
 			target.Give(item1);
 			target.Give(item2);
 			target.Give(items);

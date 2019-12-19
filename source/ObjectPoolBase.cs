@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Open.Disposable
 {
@@ -7,7 +8,7 @@ namespace Open.Disposable
 	{
 		protected const int DEFAULT_CAPACITY = Constants.DEFAULT_CAPACITY;
 
-		protected ObjectPoolBase(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY)
+		protected ObjectPoolBase(Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity = DEFAULT_CAPACITY)
 		{
 			if (capacity < 1)
 				throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Must be at least 1.");
@@ -27,8 +28,8 @@ namespace Open.Disposable
 		public abstract int Count { get; }
 		protected int PocketCount => Pocket.Value == null ? 0 : 1;
 
-		protected readonly Action<T> Recycler; // Before entering the pool.
-		protected readonly Action<T> OnDiscarded; // When not able to be used.
+		protected readonly Action<T>? Recycler; // Before entering the pool.
+		protected readonly Action<T>? OnDiscarded; // When not able to be used.
 
 
 		// Read-only because if Take() is called after disposal, this still facilitates returing an object.
@@ -86,26 +87,25 @@ namespace Open.Disposable
 
 		#region Release (.Take())
 		public virtual T Take()
-		{
-			return TryTake() ?? Factory();
-		}
+			=> TryTake() ?? Factory();
 
-		public bool TryTake(out T item)
-		{
-			item = TryTake();
-			return item != null;
-		}
+#if NETSTANDARD2_1
+		public bool TryTake([NotNullWhen(true)] out T? item)
+#else
+		public bool TryTake(out T? item)
+#endif
+			=> (item = TryTake()) != null;
 
 		protected virtual bool SaveToPocket(T item)
 			=> Pocket.TrySave(item);
 
-		protected T TakeFromPocket()
+		protected T? TakeFromPocket()
 			=> Pocket.TryRetrieve();
 
 
-		protected abstract T TryRelease();
+		protected abstract T? TryRelease();
 
-		public T TryTake()
+		public T? TryTake()
 		{
 			var item = TakeFromPocket() ?? TryRelease();
 			if (item != null) OnReleased();
@@ -126,7 +126,7 @@ namespace Open.Disposable
 		{
 			if (OnDiscarded == null) return;
 
-			T d;
+			T? d;
 			while ((d = TryRelease()) != null) OnDiscarded(d);
 		}
 	}

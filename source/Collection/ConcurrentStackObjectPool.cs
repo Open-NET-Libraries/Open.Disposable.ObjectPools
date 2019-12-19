@@ -7,7 +7,7 @@ namespace Open.Disposable
 		where T : class
 	{
 
-		public ConcurrentStackObjectPool(Func<T> factory, Action<T> recycler, Action<T> disposer, int capacity = DEFAULT_CAPACITY)
+		public ConcurrentStackObjectPool(Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity = DEFAULT_CAPACITY)
 			: base(new ConcurrentStack<T>(), factory, recycler, disposer, capacity)
 		{
 		}
@@ -26,7 +26,7 @@ namespace Open.Disposable
 			return true;
 		}
 
-		protected override T TryRelease()
+		protected override T? TryRelease()
 		{
 			var p = Pool;
 			if (p == null) return null;

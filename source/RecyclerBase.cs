@@ -25,7 +25,7 @@ namespace Open.Disposable
 			if (!(target is DisposableBase d)) return;
 			if (d.WasDisposed) throw new ArgumentException("Cannot recycle for an object pool that is already disposed.");
 			d.BeforeDispose += Pool_BeforeDispose;
-			// Could possibly dispose before this line somewhere... But that's just nasty. :P  
+			// Could possibly dispose before this line somewhere... But that's just nasty. :P 
 		}
 
 		void Pool_BeforeDispose(object sender, EventArgs e) => Dispose();
@@ -35,7 +35,7 @@ namespace Open.Disposable
 		protected abstract void OnCloseRequested();
 
 		// ReSharper disable once MemberCanBeProtected.Global
-		public Task Completion { get; protected set; }
+		public Task Completion { get; protected set; } = Task.CompletedTask;
 
 		public Task Close()
 		{
@@ -46,7 +46,7 @@ namespace Open.Disposable
 		protected override void OnDispose()
 		{
 			OnCloseRequested();
-			Target = null;
+			Target = null!;
 		}
 	}
 

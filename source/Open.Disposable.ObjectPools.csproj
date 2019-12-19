@@ -1,50 +1,55 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-    <RootNamespace>Open.Disposable</RootNamespace>
-    <Description>A set of variations on ObjectPool implementations with differing underlying collections.
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+		<RootNamespace>Open.Disposable</RootNamespace>
+		<Description>
+			A set of variations on ObjectPool implementations with differing underlying collections.
 
-Part of the "Open" set of libraries.</Description>
-    <Authors>electricessence</Authors>
-    <Company>electricessence</Company>
-    <Product />
-    <Copyright>https://github.com/electricessence/Open.Disposable.ObjectPools/blob/master/LISCENSE.md</Copyright>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/electricessence/Open.Disposable.ObjectPools/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/electricessence/Open.Disposable.ObjectPools/</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>objectpool, dotnet, dotnetcore, cs, idisposable, threadsafe, thread-safe</PackageTags>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>2.3.3</Version>
-    <AssemblyVersion>2.3.3.0</AssemblyVersion>
-    <FileVersion>2.3.3.0</FileVersion>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
+			Part of the "Open" set of libraries.
+		</Description>
+		<Authors>electricessence</Authors>
+		<Company>electricessence</Company>
+		<Product />
+		<Copyright>https://github.com/electricessence/Open.Disposable.ObjectPools/blob/master/LISCENSE.md</Copyright>
+		<PackageLicenseUrl></PackageLicenseUrl>
+		<PackageProjectUrl>https://github.com/electricessence/Open.Disposable.ObjectPools/</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/electricessence/Open.Disposable.ObjectPools/</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>objectpool, dotnet, dotnetcore, cs, idisposable, threadsafe, thread-safe</PackageTags>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Version>2.4.0</Version>
+		<PackageReleaseNotes></PackageReleaseNotes>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Channels\**" />
-    <EmbeddedResource Remove="Channels\**" />
-    <None Remove="Channels\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Channels\**" />
+		<EmbeddedResource Remove="Channels\**" />
+		<None Remove="Channels\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove=".git" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove=".git" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Open.Disposable" Version="2.3.0" />
-    <PackageReference Include="Open.Threading.Tasks" Version="1.1.3" />
-    <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Open.Disposable" Version="2.3.0" />
+		<PackageReference Include="Open.Threading.Tasks" Version="1.1.3" />
+		<PackageReference Include="System.Threading.Channels" Version="4.7.0" />
+	</ItemGroup>
 
 </Project>
