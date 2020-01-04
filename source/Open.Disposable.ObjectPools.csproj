@@ -18,7 +18,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>objectpool, dotnet, dotnetcore, cs, idisposable, threadsafe, thread-safe</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Version>2.4.0</Version>
+		<Version>2.4.1</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Nullable>enable</Nullable>

@@ -70,7 +70,7 @@ namespace Open.Disposable
 			=> new Recycler<T>(pool, recycleFunction, limit);
 
 		public static void Recycle(IRecyclable r)
-			=>(r ?? throw new ArgumentNullException(nameof(r))).Recycle();
+			=> (r ?? throw new ArgumentNullException(nameof(r))).Recycle();
 
 		public static Recycler<T> CreateRecycler<T>(
 			this IObjectPool<T> pool,

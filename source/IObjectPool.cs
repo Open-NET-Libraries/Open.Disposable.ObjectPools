@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 
 namespace Open.Disposable
 {
@@ -96,5 +97,80 @@ namespace Open.Disposable
 			target.Give(items);
 		}
 
+		/// <summary>
+		/// Provides an item from the pool and returns it when the action sucessfully completes.
+		/// </summary>
+		/// <typeparam name="T">The object type from the pool.</typeparam>
+		/// <param name="source">The object pool.</param>
+		/// <param name="action">The action to execute.</param>
+		public static void Rent<T>(this IObjectPool<T> source, Action<T> action)
+			where T : class
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			if (action is null) throw new ArgumentNullException(nameof(action));
+			Contract.EndContractBlock();
+
+			var item = source.Take();
+			action(item);
+			source.Give(item);
+		}
+
+		/// <summary>
+		/// Provides an item from the pool and returns it when the action sucessfully completes.
+		/// </summary>
+		/// <typeparam name="T">The object type from the pool.</typeparam>
+		/// <param name="source">The object pool.</param>
+		/// <param name="action">The action to execute.</param>
+		/// <returns>The value from the action.</returns>
+		public static TResult Rent<T, TResult>(this IObjectPool<T> source, Func<T, TResult> action)
+			where T : class
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			if (action is null) throw new ArgumentNullException(nameof(action));
+			Contract.EndContractBlock();
+
+			var item = source.Take();
+			var result = action(item);
+			source.Give(item);
+			return result;
+		}
+
+		/// <summary>
+		/// Provides an item from the pool and returns it when the action sucessfully completes.
+		/// </summary>
+		/// <typeparam name="T">The object type from the pool.</typeparam>
+		/// <param name="source">The object pool.</param>
+		/// <param name="action">The action to execute.</param>
+		public static async ValueTask RentAsync<T>(this IObjectPool<T> source, Func<T, ValueTask> action)
+			where T : class
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			if (action is null) throw new ArgumentNullException(nameof(action));
+			Contract.EndContractBlock();
+
+			var item = source.Take();
+			await action(item);
+			source.Give(item);
+		}
+
+		/// <summary>
+		/// Provides an item from the pool and returns it when the action sucessfully completes.
+		/// </summary>
+		/// <typeparam name="T">The object type from the pool.</typeparam>
+		/// <param name="source">The object pool.</param>
+		/// <param name="action">The action to execute.</param>
+		/// <returns>The value from the action.</returns>
+		public static async ValueTask<TResult> RentAsync<T, TResult>(this IObjectPool<T> source, Func<T, ValueTask<TResult>> action)
+			where T : class
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			if (action is null) throw new ArgumentNullException(nameof(action));
+			Contract.EndContractBlock();
+
+			var item = source.Take();
+			var result = await action(item);
+			source.Give(item);
+			return result;
+		}
 	}
 }
