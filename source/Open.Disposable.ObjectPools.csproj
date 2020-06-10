@@ -43,13 +43,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Open.Disposable" Version="2.3.0" />
 		<PackageReference Include="Open.Threading.Tasks" Version="1.1.3" />
-		<PackageReference Include="System.Threading.Channels" Version="4.7.0" />
+		<PackageReference Include="System.Threading.Channels" Version="4.7.1" />
 	</ItemGroup>
 
 </Project>
