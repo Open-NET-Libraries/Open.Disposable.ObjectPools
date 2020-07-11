@@ -26,7 +26,7 @@ namespace Open.Disposable
 		/// Total number of items in the pool.
 		/// </summary>
 		public abstract int Count { get; }
-		protected int PocketCount => Pocket.Value == null ? 0 : 1;
+		protected int PocketCount => Pocket.Value is null ? 0 : 1;
 
 		protected readonly Action<T>? Recycler; // Before entering the pool.
 		protected readonly Action<T>? OnDiscarded; // When not able to be used.
@@ -124,7 +124,7 @@ namespace Open.Disposable
 
 		protected override void OnDispose()
 		{
-			if (OnDiscarded == null) return;
+			if (OnDiscarded is null) return;
 
 			T? d;
 			while ((d = TryRelease()) != null) OnDiscarded(d);

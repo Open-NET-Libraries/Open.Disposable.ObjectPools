@@ -30,7 +30,7 @@ namespace Open.Disposable
 					Target?.Give(item);
 				}
 			}
-			while (await bin.Reader.WaitToReadAsync());
+			while (await bin.Reader.WaitToReadAsync().ConfigureAwait(false));
 		}
 
 		internal Recycler(

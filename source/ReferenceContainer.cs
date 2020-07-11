@@ -37,7 +37,7 @@ namespace Open.Disposable
 		}
 
 		public bool TrySave(T value)
-			=> _value == null
+			=> _value is null
 				&& null == Interlocked.CompareExchange(ref _value, value, null);
 
 		public T? TryRetrieve()

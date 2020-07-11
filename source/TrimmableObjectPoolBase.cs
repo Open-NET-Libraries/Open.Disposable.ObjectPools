@@ -63,7 +63,7 @@ namespace Open.Disposable
 					i++)
 				{
 					var e = TryRelease();
-					if (e == null) break;
+					if (e is null) break;
 
 					if (_countTrackingEnabled)
 					{
@@ -88,6 +88,6 @@ namespace Open.Disposable
 		//	=> Pocket.TryRetrieve() ?? Pocket2.TryRetrieve();
 
 		//protected override int PocketCount =>
-		//	base.PocketCount + (Pocket2.Value == null ? 0 : 1);
+		//	base.PocketCount + (Pocket2.Value is null ? 0 : 1);
 	}
 }

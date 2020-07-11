@@ -60,7 +60,7 @@ namespace Open.Disposable
 		{
 			// We missed getting the first item or it wasn't there.
 			var elements = Pool;
-			if (elements == null) return null;
+			if (elements is null) return null;
 
 			var len = elements.Length;
 			for (var i = 0; i < MaxStored && i < len; i++)

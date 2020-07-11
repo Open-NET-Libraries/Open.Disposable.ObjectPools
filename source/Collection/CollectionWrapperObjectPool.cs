@@ -41,7 +41,7 @@ namespace Open.Disposable
 
 			var p = Pool;
 			var item = p?.FirstOrDefault();
-			if (item == null) return null;
+			if (item is null) return null;
 			/* Removing the first item is typically horribly inefficient but we can't make assumptions about the implementation here.
 				 * It's a trade off between potentially iterating the entire collection before removing the last item, or relying on the underlying implementation.
 				 * This implementation is in place for reference more than practice.  Sub classes should override. */

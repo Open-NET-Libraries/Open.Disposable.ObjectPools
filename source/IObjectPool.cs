@@ -73,7 +73,7 @@ namespace Open.Disposable
 			if (target is null) throw new ArgumentNullException(nameof(target));
 			Contract.EndContractBlock();
 
-			if (items == null) return;
+			if (items is null) return;
 			foreach (var i in items)
 				target.Give(i);
 		}
@@ -149,7 +149,7 @@ namespace Open.Disposable
 			Contract.EndContractBlock();
 
 			var item = source.Take();
-			await action(item);
+			await action(item).ConfigureAwait(false);
 			source.Give(item);
 		}
 
@@ -168,7 +168,7 @@ namespace Open.Disposable
 			Contract.EndContractBlock();
 
 			var item = source.Take();
-			var result = await action(item);
+			var result = await action(item).ConfigureAwait(false);
 			source.Give(item);
 			return result;
 		}

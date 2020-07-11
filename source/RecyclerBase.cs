@@ -18,7 +18,7 @@ namespace Open.Disposable
 			IObjectPool<T> target,
 			Action<T> recycleFunction)
 		{
-			if (recycleFunction == null) throw new ArgumentNullException(nameof(recycleFunction));
+			if (recycleFunction is null) throw new ArgumentNullException(nameof(recycleFunction));
 			Target = target ?? throw new ArgumentNullException(nameof(target));
 			Contract.EndContractBlock();
 

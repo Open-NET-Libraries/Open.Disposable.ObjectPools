@@ -21,7 +21,7 @@ namespace Open.Disposable
 		protected override bool Receive(T item)
 		{
 			var p = Pool;
-			if (p == null) return false;
+			if (p is null) return false;
 			p.Push(item); // It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
 			return true;
 		}
@@ -29,7 +29,7 @@ namespace Open.Disposable
 		protected override T? TryRelease()
 		{
 			var p = Pool;
-			if (p == null) return null;
+			if (p is null) return null;
 			p.TryPop(out var item);
 			return item;
 		}
