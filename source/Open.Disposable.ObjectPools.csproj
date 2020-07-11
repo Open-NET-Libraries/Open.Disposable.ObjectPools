@@ -5,21 +5,24 @@
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 		<RootNamespace>Open.Disposable</RootNamespace>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>electricessence</Authors>
 		<Description>A set of variations on ObjectPool implementations with differing underlying collections.
 
 Part of the "Open" set of libraries.
 </Description>
-		<Copyright>https://github.com/electricessence/Open.Disposable.ObjectPools/blob/master/LISCENSE.md</Copyright>
-		<PackageLicenseUrl></PackageLicenseUrl>
-		<PackageProjectUrl>https://github.com/electricessence/Open.Disposable.ObjectPools/</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/electricessence/Open.Disposable.ObjectPools/</RepositoryUrl>
+		<Copyright>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/blob/master/LISCENSE.md</Copyright>
+		<PackageProjectUrl>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>objectpool, dotnet, dotnetcore, cs, idisposable, threadsafe, thread-safe</PackageTags>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Version>2.4.1</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageIcon>logo.png</PackageIcon>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -34,6 +37,10 @@ Part of the "Open" set of libraries.
 		<Compile Remove="Channels\**" />
 		<EmbeddedResource Remove="Channels\**" />
 		<None Remove="Channels\**" />
+		<None Include="logo.png">
+		  <Pack>True</Pack>
+		  <PackagePath></PackagePath>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
