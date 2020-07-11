@@ -16,7 +16,7 @@ Part of the "Open" set of libraries.
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>objectpool, dotnet, dotnetcore, cs, idisposable, threadsafe, thread-safe</PackageTags>
-		<Version>2.4.1</Version>
+		<Version>2.4.2</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
