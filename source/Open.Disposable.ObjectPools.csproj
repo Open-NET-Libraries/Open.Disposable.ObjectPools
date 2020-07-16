@@ -11,11 +11,11 @@
 
 Part of the "Open" set of libraries.
 </Description>
-		<Copyright>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/blob/master/LISCENSE.md</Copyright>
+		<Copyright>© electricessence (Oren F.) All rights reserved.</Copyright>
 		<PackageProjectUrl>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>objectpool, dotnet, dotnetcore, cs, idisposable, threadsafe, thread-safe</PackageTags>
+		<PackageTags>objectpool;idisposable;thread safe</PackageTags>
 		<Version>2.4.2</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -23,14 +23,6 @@ Part of the "Open" set of libraries.
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageIcon>logo.png</PackageIcon>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -48,8 +40,8 @@ Part of the "Open" set of libraries.
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Open.Disposable" Version="2.4.0" />
-		<PackageReference Include="Open.Threading.Tasks" Version="1.2.0" />
+		<PackageReference Include="Open.Disposable" Version="2.4.1" />
+		<PackageReference Include="Open.Threading.Tasks" Version="1.2.1" />
 		<PackageReference Include="System.Threading.Channels" Version="4.7.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
 			<PrivateAssets>all</PrivateAssets>
