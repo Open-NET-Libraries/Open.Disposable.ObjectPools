@@ -8,3 +8,6 @@ dotnet_diagnostic.CA1303.severity = silent
 
 # CA1051: Do not declare visible instance fields
 dotnet_diagnostic.CA1051.severity = silent
+
+# CA1000: Do not declare static members on generic types
+dotnet_diagnostic.CA1000.severity = silent
