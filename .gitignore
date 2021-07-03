@@ -300,3 +300,4 @@ __pycache__/
 *.xsd.cs
 .vscode/launch.json
 .vscode/tasks.json
+/source/nuget.config
