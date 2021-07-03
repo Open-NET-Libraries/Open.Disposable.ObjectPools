@@ -42,11 +42,7 @@ Part of the "Open" set of libraries.
 	<ItemGroup>
 		<PackageReference Include="Open.Disposable" Version="2.4.1" />
 		<PackageReference Include="Open.Threading.Tasks" Version="1.2.1" />
-		<PackageReference Include="System.Threading.Channels" Version="4.7.1" />
-		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="System.Threading.Channels" Version="5.0.0" />
 	</ItemGroup>
 
 </Project>
