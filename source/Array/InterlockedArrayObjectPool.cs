@@ -33,7 +33,6 @@ namespace Open.Disposable
 		public override int Count
 			=> Pool.Count(e => e.Value != null) + PocketCount;
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Should never be null.")]
 		protected virtual bool Store(ReferenceContainer<T>[] p, T item, int index)
 			=> p[index].TrySave(item);
 

@@ -60,14 +60,14 @@ namespace Open.Disposable
 			Action<T> recycleFunction,
 			ushort limit = Constants.DEFAULT_CAPACITY)
 			where T : class
-			=> new Recycler<T>(pool, recycleFunction, limit);
+			=> new(pool, recycleFunction, limit);
 
 		public static Recycler<T> CreateRecycler<T>(
 			this IObjectPool<T> pool,
 			ushort limit,
 			Action<T> recycleFunction)
 			where T : class
-			=> new Recycler<T>(pool, recycleFunction, limit);
+			=> new(pool, recycleFunction, limit);
 
 		public static void Recycle(IRecyclable r)
 			=> (r ?? throw new ArgumentNullException(nameof(r))).Recycle();
@@ -76,6 +76,6 @@ namespace Open.Disposable
 			this IObjectPool<T> pool,
 			ushort limit = Constants.DEFAULT_CAPACITY)
 			where T : class, IRecyclable
-			=> new Recycler<T>(pool, Recycle, limit);
+			=> new(pool, Recycle, limit);
 	}
 }

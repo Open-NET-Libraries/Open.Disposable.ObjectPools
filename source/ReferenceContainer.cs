@@ -1,10 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace Open.Disposable
 {
-	[SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
 	public interface IReferenceContainer<T>
 		where T : class
 	{
@@ -15,7 +13,6 @@ namespace Open.Disposable
 	}
 
 	[DebuggerDisplay("{Value,nq}")]
-	[SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Undesired.")]
 	public struct ReferenceContainer<T> : IReferenceContainer<T>
 		where T : class
 	{

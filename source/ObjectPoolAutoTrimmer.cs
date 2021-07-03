@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Open.Disposable
 {
-	[SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
 	[SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Micro-optimization for retrieving this value as read-only is slightly slower")]
 	public class ObjectPoolAutoTrimmer : DisposableBase
 	{

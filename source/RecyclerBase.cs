@@ -22,7 +22,7 @@ namespace Open.Disposable
 			Target = target ?? throw new ArgumentNullException(nameof(target));
 			Contract.EndContractBlock();
 
-			if (!(target is DisposableBase d)) return;
+			if (target is not DisposableBase d) return;
 			if (d.WasDisposed) throw new ArgumentException("Cannot recycle for an object pool that is already disposed.");
 			d.BeforeDispose += Pool_BeforeDispose;
 			// Could possibly dispose before this line somewhere... But that's just nasty. :P 

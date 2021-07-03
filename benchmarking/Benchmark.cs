@@ -1,7 +1,6 @@
 ﻿using Open.Diagnostics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 #if DEBUG
@@ -10,7 +9,6 @@ using System.Diagnostics;
 
 namespace Open.Disposable.ObjectPools
 {
-	[SuppressMessage("ReSharper", "AccessToDisposedClosure")]
 	public class Benchmark<T> : BenchmarkBase<Func<IObjectPool<T>>>
 		where T : class
 	{
