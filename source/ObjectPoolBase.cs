@@ -18,6 +18,7 @@ namespace Open.Disposable
 			OnDiscarded = disposer;
 		}
 
+		// Not read-only due to quirk where read-only is slower than not.
 		protected int MaxSize;
 		public int Capacity => MaxSize;
 
@@ -42,7 +43,7 @@ namespace Open.Disposable
 		protected ReferenceContainer<T> Pocket; // Default struct constructs itself.
 
 		#region Receive (.Give(T item))
-		protected virtual bool CanReceive => true; // A default of true is acceptable, enabling the Recieve method to do the actual deciding. 
+		protected virtual bool CanReceive => true; // A default of true is acceptable, enabling the Receive method to do the actual deciding. 
 
 		protected bool PrepareToReceive(T item)
 		{
@@ -68,11 +69,6 @@ namespace Open.Disposable
 		protected virtual void OnReceived()
 		{
 
-		}
-
-		protected void OnReceived(bool wasGiven)
-		{
-			if (wasGiven) OnReceived();
 		}
 
 		public void Give(T item)

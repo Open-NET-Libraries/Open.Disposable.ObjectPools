@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Open.Disposable
 {
-	public sealed class ConcurrentQueueObjectPoolSlim<T> : ObjectPoolBase<T>
+	public sealed class ConcurrentQueueObjectPoolSlim<T> : CountTrackedObjectPoolBase<T>
 		where T : class
 	{
 
@@ -21,19 +21,6 @@ namespace Open.Disposable
 		}
 
 		ConcurrentQueue<T> Pool;
-		int _count;
-		public override int Count => _count;
-
-		protected override bool CanReceive => _count < MaxSize;
-
-		protected override void OnReleased()
-		{
-			Interlocked.Decrement(ref _count);
-		}
-		protected override void OnReceived()
-		{
-			Interlocked.Increment(ref _count);
-		}
 
 		/*
          * NOTE: ConcurrentQueue is very fast and will perform quite well without using the 'Pocket' feature.
