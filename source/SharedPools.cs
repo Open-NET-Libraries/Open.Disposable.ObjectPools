@@ -9,13 +9,13 @@ namespace Open.Disposable
 		/// The list is cleared after being returned.
 		/// The max size of the pool is 128 which should suffice for most use cases.
 		/// </summary>
-		public static readonly ConcurrentQueueObjectPool<List<T>> Shared = Create();
+		public static readonly InterlockedArrayObjectPool<List<T>> Shared = Create();
 
 		/// <summary>
 		/// Creates an object pool for use with lists.
 		/// The list is cleared after being returned.
 		/// </summary>
-		public static ConcurrentQueueObjectPool<List<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new List<T>(), h =>
+		public static InterlockedArrayObjectPool<List<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new List<T>(), h =>
 		{
 			h.Clear();
 			if (h.Capacity > 16) h.Capacity = 16;
@@ -29,13 +29,13 @@ namespace Open.Disposable
 		/// The hash-set is cleared after being returned.
 		/// The max size of the pool is 128 which should suffice for most use cases.
 		/// </summary>
-		public static readonly ConcurrentQueueObjectPool<HashSet<T>> Shared = Create();
+		public static readonly InterlockedArrayObjectPool<HashSet<T>> Shared = Create();
 
 		/// <summary>
 		/// Creates an object pool for use with hash-sets.
 		/// The hash-set is cleared after being returned.
 		/// </summary>
-		public static ConcurrentQueueObjectPool<HashSet<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new HashSet<T>(), h => h.Clear(), null, capacity);
+		public static InterlockedArrayObjectPool<HashSet<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new HashSet<T>(), h => h.Clear(), null, capacity);
 	}
 
 	public static class DictionaryPool<TKey, TValue>
@@ -45,13 +45,13 @@ namespace Open.Disposable
 		/// The dictionary is cleared after being returned.
 		/// The max size of the pool is 128 which should suffice for most use cases.
 		/// </summary>
-		public static readonly ConcurrentQueueObjectPool<Dictionary<TKey, TValue>> Shared = Create();
+		public static readonly InterlockedArrayObjectPool<Dictionary<TKey, TValue>> Shared = Create();
 
 		/// <summary>
 		/// Creates an object pooll for use with dictionaries.
 		/// The dictionary is cleared after being returned.
 		/// </summary>
-		public static ConcurrentQueueObjectPool<Dictionary<TKey, TValue>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new Dictionary<TKey, TValue>(), h => h.Clear(), null, capacity);
+		public static InterlockedArrayObjectPool<Dictionary<TKey, TValue>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new Dictionary<TKey, TValue>(), h => h.Clear(), null, capacity);
 
 	}
 }
