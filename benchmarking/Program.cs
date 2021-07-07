@@ -26,13 +26,13 @@ class Program
 		//report.AddBenchmark("QueueObjectPool", // Note, that this one isn't far off from the following in peformance.
 		//	count => () => QueueObjectPool.Create<object>((int)count * 2));
 
-		report.AddBenchmark("ConcurrentQueueObjectPool", // Note, that this one isn't far off from the following in peformance, but definitely is faster than LinkedListObjectPool and the rest.
-			count => () => ConcurrentQueueObjectPool.Create<object>((int)count * 2));
-
-		report.AddBenchmark("ConcurrentQueueObjectPoolSlim", // Note, that this one isn't far off from the following in peformance, but definitely is faster than LinkedListObjectPool and the rest.
+		report.AddBenchmark("ConcurrentQueueObjectPoolSlim",
 			count => () => ConcurrentQueueObjectPoolSlim.Create<object>((int)count * 2));
 
-		//report.AddBenchmark("ConcurrentStackObjectPool", // Note, that this one isn't far off from the following in peformance, but definitely is faster than LinkedListObjectPool and the rest.
+		report.AddBenchmark("ConcurrentQueueObjectPool",
+			count => () => ConcurrentQueueObjectPool.Create<object>((int)count * 2));
+
+		//report.AddBenchmark("ConcurrentStackObjectPool",
 		//	count => () => ConcurrentStackObjectPool.Create<object>((int)count * 2));
 
 		report.AddBenchmark("OptimisticArrayObjectPool",
@@ -46,7 +46,7 @@ class Program
 
 		Console.SetCursorPosition(0, Console.CursorTop);
 
-		const int loopMultiple = 6;
+		const int loopMultiple = 12;
 		report.Test(4, 8 * loopMultiple);
 		report.Test(10, 8 * loopMultiple);
 		report.Test(50, 12 * loopMultiple);
