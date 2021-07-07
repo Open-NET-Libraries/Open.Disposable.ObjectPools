@@ -18,5 +18,16 @@ namespace Open.Disposable
 			Assert.AreEqual(1, pool.Take().ID);
 		}
 
+		[TestMethod]
+		public void ListPool_RecycleTest()
+		{
+			var pool = ListPool<int>.Shared;
+			var list = pool.Take();
+			list.Add(1);
+			pool.Give(list);
+			Assert.AreEqual(list, pool.Take());
+			Assert.AreEqual(0, list.Count);
+		}
+
 	}
 }
