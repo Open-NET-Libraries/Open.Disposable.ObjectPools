@@ -25,8 +25,13 @@ namespace Open.Disposable
 			=> Pocket.SetIfNull(item);
 
 		// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
-		protected override bool Store(ReferenceContainer<T>[] p, T item, int index)
-			=> p[index].SetIfNull(item);
+		protected override bool Store(T item, int index)
+		{
+			ref var current = ref Pool.Span[index];
+			if (current is not null) return false;
+			current = item;
+			return true;
+		}
 	}
 
 	public static class OptimisticArrayObjectPool
