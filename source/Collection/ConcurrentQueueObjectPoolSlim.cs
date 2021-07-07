@@ -24,7 +24,7 @@ namespace Open.Disposable
 		int _count;
 		public override int Count => _count;
 
-		protected override bool CanReceive => _count < Capacity;
+		protected override bool CanReceive => _count < MaxSize;
 
 		protected override void OnReleased()
 		{
