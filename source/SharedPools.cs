@@ -48,7 +48,7 @@ namespace Open.Disposable
 		public static readonly ConcurrentQueueObjectPoolSlim<Dictionary<TKey, TValue>> Shared = Create();
 
 		/// <summary>
-		/// Creates an object pooll for use with dictionaries.
+		/// Creates an object pool for use with dictionaries.
 		/// The dictionary is cleared after being returned.
 		/// </summary>
 		public static ConcurrentQueueObjectPoolSlim<Dictionary<TKey, TValue>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new Dictionary<TKey, TValue>(), h => h.Clear(), null, capacity);
