@@ -97,6 +97,17 @@ namespace Open.Disposable
 		}
 
 		/// <summary>
+		/// Provides a disposable RecycleHelper that contains an item from the pool.
+		/// Will be returned to the pool once .Dispose() is called.
+		/// </summary>
+		/// <typeparam name="T">The object type from the pool.</typeparam>
+		/// <param name="source">The object pool.</param>
+		/// <returns>A RecycleHelper containing an item from the pool.</returns>
+		public static RecycleHelper<T> Rent<T>(this IObjectPool<T> source)
+			where T : class
+			=> new(source);
+
+		/// <summary>
 		/// Provides an item from the pool and returns it when the action sucessfully completes.
 		/// </summary>
 		/// <typeparam name="T">The object type from the pool.</typeparam>
