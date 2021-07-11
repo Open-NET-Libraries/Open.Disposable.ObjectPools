@@ -24,11 +24,10 @@ namespace Open.Disposable
 
 		public void Dispose()
 		{
-			var i = Item;
+			var i = _item;
 			_item = null;
-			var p = _pool ?? throw new ObjectDisposedException(GetType().ToString());
-			_pool = null;
-			p.Give(i);
+			if (i == null) return;
+			_pool?.Give(i);
 		}
 	}
 }
