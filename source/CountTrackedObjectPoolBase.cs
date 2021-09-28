@@ -16,6 +16,7 @@ namespace Open.Disposable
 
 
 		int _count;
+		/// <inheritdoc />
 		public override int Count => _count;
 
 		protected override bool CanReceive => _count < MaxSize;

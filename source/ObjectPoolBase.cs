@@ -23,10 +23,10 @@ namespace Open.Disposable
 		protected int MaxSize;
 		public int Capacity => MaxSize;
 
-		/// <inheritdoc />
 		/// <summary>
 		/// Total number of items in the pool.
 		/// </summary>
+		/// <inheritdoc />
 		public abstract int Count { get; }
 		protected int PocketCount => Pocket.Value is null ? 0 : 1;
 
@@ -48,7 +48,7 @@ namespace Open.Disposable
 
 		protected bool PrepareToReceive(T item)
 		{
-			if (item is not null && CanReceive)
+			if (CanReceive && item is not null)
 			{
 				var r = Recycler;
 				if (r is not null)
@@ -72,6 +72,7 @@ namespace Open.Disposable
 
 		}
 
+		/// <inheritdoc />
 		public void Give(T item)
 		{
 			if (PrepareToReceive(item)
@@ -83,9 +84,11 @@ namespace Open.Disposable
 		#endregion
 
 		#region Release (.Take())
+		/// <inheritdoc />
 		public virtual T Take()
 			=> TryTake() ?? Factory();
 
+		/// <inheritdoc />
 #if NETSTANDARD2_1
 		public bool TryTake([NotNullWhen(true)] out T? item)
 #else
@@ -104,6 +107,7 @@ namespace Open.Disposable
 
 		protected abstract T? TryRelease();
 
+		/// <inheritdoc />
 		public T? TryTake()
 		{
 			var item = TakeFromPocket() ?? TryRelease();

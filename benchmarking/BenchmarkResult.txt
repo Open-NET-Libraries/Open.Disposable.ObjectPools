@@ -2,194 +2,194 @@ Repeat 2400000 for size 4
 ------------------------------------
 
 Microsoft.Extensions.ObjectPool.DefaultObjectPool.......
-00:00:10.2988122 Give To (In Parallel)
-00:00:10.4798439 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:10.3993411 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:10.3464322 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:41.5244294 TOTAL
+00:00:08.7536436 Give To (In Parallel)
+00:00:08.8078884 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:08.7786113 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:08.7696869 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:35.1098302 TOTAL
 
 ConcurrentQueueObjectPoolSlim...........................
-00:00:11.1870930 Give To (In Parallel)
-00:00:11.5168981 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:11.1280664 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:11.2224827 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:45.0545402 TOTAL
+00:00:10.9719702 Give To (In Parallel)
+00:00:11.2012940 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:10.9157990 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:10.9839675 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:44.0730307 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:09.1399563 Give To (In Parallel)
-00:00:09.3180086 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:09.2816926 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:09.1941966 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:36.9338541 TOTAL
+00:00:11.9357472 Give To (In Parallel)
+00:00:12.0596338 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:11.8062979 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:11.9269534 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:47.7286323 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:10.8894648 Give To (In Parallel)
-00:00:11.4317863 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:11.0345582 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:11.0905596 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:44.4463689 TOTAL
+00:00:11.3448787 Give To (In Parallel)
+00:00:11.9320120 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:11.6168340 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:11.5151251 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:46.4088498 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:11.4199709 Give To (In Parallel)
-00:00:11.9546985 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:11.4750506 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:11.6023244 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:46.4520444 TOTAL
+00:00:11.4076831 Give To (In Parallel)
+00:00:12.0350556 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:11.5814744 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:11.4369017 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:46.4611148 TOTAL
 
 
 Repeat 960000 for size 10
 ------------------------------------
 
 Microsoft.Extensions.ObjectPool.DefaultObjectPool.......
-00:00:04.2160006 Give To (In Parallel)
-00:00:03.7725744 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:03.5597736 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:04.0179846 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:15.5663332 TOTAL
+00:00:03.1998733 Give To (In Parallel)
+00:00:02.8702785 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.6837168 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.9629105 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:11.7167791 TOTAL
 
 ConcurrentQueueObjectPoolSlim...........................
-00:00:04.4151484 Give To (In Parallel)
-00:00:04.6938482 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:04.4135618 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:04.5366021 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:18.0591605 TOTAL
+00:00:02.9492963 Give To (In Parallel)
+00:00:03.2428289 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:03.0176898 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:03.0319249 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:12.2417399 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:03.4561782 Give To (In Parallel)
-00:00:03.8400098 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:03.4414185 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:03.5460435 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:14.2836500 TOTAL
+00:00:02.8828210 Give To (In Parallel)
+00:00:03.2011413 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.8822661 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.9505638 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:11.9167922 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:03.7549698 Give To (In Parallel)
-00:00:04.2279702 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:03.6004288 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:03.7115653 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:15.2949341 TOTAL
+00:00:03.0700174 Give To (In Parallel)
+00:00:03.5310316 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.9952085 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:03.0371614 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:12.6334189 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:03.3626513 Give To (In Parallel)
-00:00:03.4878549 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:02.9997860 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:03.3175440 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:13.1678362 TOTAL
+00:00:03.2483005 Give To (In Parallel)
+00:00:03.3170740 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.9369241 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:03.2100109 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:12.7123095 TOTAL
 
 
 Repeat 288000 for size 50
 ------------------------------------
 
 Microsoft.Extensions.ObjectPool.DefaultObjectPool.......
-00:00:04.7460719 Give To (In Parallel)
-00:00:01.7401188 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.3147629 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:03.6584918 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:11.4594454 TOTAL
+00:00:04.6794305 Give To (In Parallel)
+00:00:01.7429937 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.3513779 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:03.6357603 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:11.4095624 TOTAL
 
 ConcurrentQueueObjectPoolSlim...........................
-00:00:01.6226510 Give To (In Parallel)
-00:00:01.7854581 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.3020626 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:01.6743924 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:06.3845641 TOTAL
+00:00:01.6163124 Give To (In Parallel)
+00:00:01.7762298 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.3300174 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.6749817 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:06.3975413 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:01.7477988 Give To (In Parallel)
-00:00:01.8965112 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.4379041 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:01.7960447 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:06.8782588 TOTAL
+00:00:01.7832340 Give To (In Parallel)
+00:00:01.9323201 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.4793899 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.8423448 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:07.0372888 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:02.0226269 Give To (In Parallel)
-00:00:02.0758868 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.4867332 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:01.9249519 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:07.5101988 TOTAL
+00:00:01.8823951 Give To (In Parallel)
+00:00:01.9428592 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.4112225 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.7877122 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:07.0241890 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:02.3024578 Give To (In Parallel)
-00:00:02.0728807 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.4972879 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:02.0989055 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:07.9715319 TOTAL
+00:00:02.2154790 Give To (In Parallel)
+00:00:02.0187594 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.4717288 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.0234332 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:07.7294004 TOTAL
 
 
 Repeat 192000 for size 100
 ------------------------------------
 
 Microsoft.Extensions.ObjectPool.DefaultObjectPool.......
-00:00:08.7588527 Give To (In Parallel)
-00:00:01.8885618 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.2955575 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:06.7774603 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:18.7204323 TOTAL
+00:00:08.6239380 Give To (In Parallel)
+00:00:01.7883047 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.2339147 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:06.6098240 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:18.2559814 TOTAL
 
 ConcurrentQueueObjectPoolSlim...........................
-00:00:02.5878519 Give To (In Parallel)
-00:00:02.6535733 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.4588720 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:02.4315543 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:09.1318515 TOTAL
+00:00:02.6089351 Give To (In Parallel)
+00:00:02.6653084 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.4554945 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.4419762 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:09.1717142 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:02.8200448 Give To (In Parallel)
-00:00:02.8029050 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.7456810 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:02.7047082 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:10.0733390 TOTAL
+00:00:02.8683847 Give To (In Parallel)
+00:00:02.8497468 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.7801622 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.7221468 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:10.2204405 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:02.2072395 Give To (In Parallel)
-00:00:02.4041567 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.4230022 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:01.8949625 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:07.9293609 TOTAL
+00:00:02.2792049 Give To (In Parallel)
+00:00:02.4557422 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.4629279 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:01.9573853 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:08.1552603 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:03.1657165 Give To (In Parallel)
-00:00:02.5525702 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:01.5274323 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:02.6791879 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:09.9249069 TOTAL
+00:00:03.1284602 Give To (In Parallel)
+00:00:02.5353265 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:01.5067879 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:02.6633642 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:09.8339388 TOTAL
 
 
 Repeat 153600 for size 250
 ------------------------------------
 
 Microsoft.Extensions.ObjectPool.DefaultObjectPool.......
-00:00:27.5101753 Give To (In Parallel)
-00:00:03.2947973 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:02.3024871 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:20.5458083 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:53.6532680 TOTAL
+00:00:27.6249504 Give To (In Parallel)
+00:00:03.3819394 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.3777699 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:20.7230291 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:54.1076888 TOTAL
 
 ConcurrentQueueObjectPoolSlim...........................
-00:00:06.4921520 Give To (In Parallel)
-00:00:05.6483503 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:02.9681300 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:05.5662083 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:20.6748406 TOTAL
+00:00:06.4197135 Give To (In Parallel)
+00:00:05.5706983 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.9047885 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:05.5148018 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:20.4100021 TOTAL
 
 ConcurrentQueueObjectPool...............................
-00:00:06.6973676 Give To (In Parallel)
-00:00:05.8383753 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:03.5723233 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:05.8146242 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:21.9226904 TOTAL
+00:00:06.6929502 Give To (In Parallel)
+00:00:05.8257810 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:03.6463958 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:05.7592677 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:21.9243947 TOTAL
 
 OptimisticArrayObjectPool...............................
-00:00:04.7849466 Give To (In Parallel)
-00:00:05.0781449 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:02.4908361 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:03.6097713 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:15.9636989 TOTAL
+00:00:04.5394559 Give To (In Parallel)
+00:00:04.9284349 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.4790010 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:03.4449412 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:15.3918330 TOTAL
 
 InterlockedArrayObjectPool..............................
-00:00:07.3464588 Give To (In Parallel)
-00:00:05.3703708 Mixed 90%-Take/10%-Give (In Parallel)
-00:00:02.8338082 Mixed 50%-Take/50%-Give (In Parallel)
-00:00:05.5183809 Mixed 10%-Take/90%-Give (In Parallel)
-00:00:21.0690187 TOTAL
+00:00:07.2010676 Give To (In Parallel)
+00:00:05.3582282 Mixed 90%-Take/10%-Give (In Parallel)
+00:00:02.8324961 Mixed 50%-Take/50%-Give (In Parallel)
+00:00:05.4306754 Mixed 10%-Take/90%-Give (In Parallel)
+00:00:20.8224673 TOTAL
 
 

@@ -38,6 +38,7 @@ namespace Open.Disposable
 			IObjectPool<T> pool,
 			Action<T> recycleFunction) : this(pool, recycleFunction, limit) { }
 
+		/// <inheritdoc />
 		public override bool Recycle(T item)
 			=> _bin?.Writer.TryWrite(item) ?? false;
 

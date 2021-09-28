@@ -21,12 +21,19 @@ namespace Open.Disposable
 
 		T? _value;
 
+		/// <summary>
+		/// The value contained.
+		/// </summary>
 		public T? Value
 		{
 			get => _value;
 			set => _value = value;
 		}
 
+		/// <summary>
+		/// Sets the value if it is currently null without interlocking.
+		/// </summary>
+		/// <returns>true if the value was set; otherwise false.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool SetIfNull(T value)
 		{
@@ -35,11 +42,19 @@ namespace Open.Disposable
 			return true;
 		}
 
+		/// <summary>
+		/// Tries to atomically store the value.
+		/// </summary>
+		/// <returns>true if the value was set; otherwise false.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool TrySave(T value)
 			=> _value is null
 				&& null == Interlocked.CompareExchange(ref _value, value, null);
 
+		/// <summary>
+		/// Tries to atomically retrieve the value.
+		/// </summary>
+		/// <returns>The value retrieved; otherwise null.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public T? TryRetrieve()
 		{

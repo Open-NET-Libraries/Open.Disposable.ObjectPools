@@ -17,6 +17,7 @@ namespace Open.Disposable
 
 		protected TCollection Pool;
 
+		/// <inheritdoc />
 		public override int Count => (Pool?.Count ?? 0) + PocketCount;
 
 		protected override void OnDispose()
@@ -39,6 +40,7 @@ namespace Open.Disposable
 
 		protected TCollection Pool;
 
+		/// <inheritdoc />
 		public override int Count => Pool?.Count ?? 0;
 
 		protected override void OnDispose()

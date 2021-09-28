@@ -55,6 +55,7 @@ namespace Open.Disposable
 			OnReceived(_countTrackingEnabled ? Interlocked.Increment(ref _count) : Count);
 		}
 
+		/// <inheritdoc />
 		public virtual void TrimTo(int targetSize)
 		{
 			if (targetSize < 0) return; // Possible upstream math hiccup or default -1.  Silently dismiss.

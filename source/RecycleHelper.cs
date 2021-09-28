@@ -2,6 +2,9 @@
 
 namespace Open.Disposable
 {
+	/// <summary>
+	/// Allows for the 'using' syntax to be used with any object to return it to the pool.
+	/// </summary>
 	public struct RecycleHelper<T> : IDisposable
 		where T : class
 	{

@@ -37,6 +37,7 @@ namespace Open.Disposable
 		// ReSharper disable once MemberCanBeProtected.Global
 		public Task Completion { get; protected set; } = Task.CompletedTask;
 
+		/// <inheritdoc />
 		public Task Close()
 		{
 			OnCloseRequested();
