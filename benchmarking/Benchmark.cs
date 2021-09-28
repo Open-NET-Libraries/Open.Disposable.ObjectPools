@@ -75,10 +75,11 @@ namespace Open.Disposable.ObjectPools
 				});
 			});
 
+			if (pool is DefaultObjectPool<object>) yield break;
 			yield return TimedResult.Measure("Empty Pool (.TryTake())", () =>
 			{
-				var count = TestSize;
-				while (pool.TryTake() != null && --count>0)
+
+				while (pool.TryTake() != null)
 				{
 					// remaining++;
 				}
