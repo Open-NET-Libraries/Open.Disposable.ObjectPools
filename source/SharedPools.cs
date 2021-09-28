@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Open.Disposable
 {
@@ -15,7 +16,7 @@ namespace Open.Disposable
 		/// Creates an object pool for use with lists.
 		/// The list is cleared after being returned.
 		/// </summary>
-		public static ConcurrentQueueObjectPoolSlim<List<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new List<T>(), h =>
+		public static ConcurrentQueueObjectPoolSlim<List<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new (), h =>
 		{
 			h.Clear();
 			if (h.Capacity > 16) h.Capacity = 16;
@@ -35,7 +36,23 @@ namespace Open.Disposable
 		/// Creates an object pool for use with hash-sets.
 		/// The hash-set is cleared after being returned.
 		/// </summary>
-		public static ConcurrentQueueObjectPoolSlim<HashSet<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new HashSet<T>(), h => h.Clear(), null, capacity);
+		public static ConcurrentQueueObjectPoolSlim<HashSet<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new(), h => h.Clear(), null, capacity);
+	}
+
+	public static class StringBuilderPool<T>
+	{
+		/// <summary>
+		/// A shared object pool for use with StringBuilders.
+		/// The StringBuilder is cleared after being returned.
+		/// The max size of the pool is 64 which should suffice for most use cases.
+		/// </summary>
+		public static readonly ConcurrentQueueObjectPoolSlim<StringBuilder> Shared = Create();
+
+		/// <summary>
+		/// Creates an object pool for use with StringBuilders.
+		/// The StringBuilder is cleared after being returned.
+		/// </summary>
+		public static ConcurrentQueueObjectPoolSlim<StringBuilder> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new(), sb => sb.Clear(), null, capacity);
 	}
 
 	public static class DictionaryPool<TKey, TValue>
