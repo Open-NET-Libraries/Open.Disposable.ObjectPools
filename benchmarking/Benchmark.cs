@@ -36,6 +36,7 @@ namespace Open.Disposable.ObjectPools
 				// ReSharper disable once AccessToDisposedClosure
 				Parallel.For(0, TestSize, i => pool.Give(_items[i]));
 #if DEBUG
+				if (pool is DefaultObjectPool<object>) return;
 				var count = pool.Count;
 				Debug.Assert(pool is OptimisticArrayObjectPool<T> || count == TestSize, $"Expected {TestSize}, acutal count: {count}");
 #endif
@@ -76,7 +77,8 @@ namespace Open.Disposable.ObjectPools
 
 			yield return TimedResult.Measure("Empty Pool (.TryTake())", () =>
 			{
-				while (pool.TryTake() != null)
+				var count = TestSize;
+				while (pool.TryTake() != null && --count>0)
 				{
 					// remaining++;
 				}
