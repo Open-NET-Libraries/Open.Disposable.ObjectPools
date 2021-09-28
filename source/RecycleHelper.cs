@@ -5,7 +5,7 @@ namespace Open.Disposable
 	public struct RecycleHelper<T> : IDisposable
 		where T : class
 	{
-		private IObjectPool<T>? _pool;
+		private readonly IObjectPool<T> _pool;
 
 		private RecycleHelper(IObjectPool<T> pool, T item)
 		{
@@ -27,7 +27,7 @@ namespace Open.Disposable
 			var i = _item;
 			_item = null;
 			if (i == null) return;
-			_pool?.Give(i);
+			_pool.Give(i);
 		}
 	}
 }
