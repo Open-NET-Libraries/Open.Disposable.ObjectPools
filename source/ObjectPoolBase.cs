@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Open.Disposable
 {
@@ -47,10 +48,10 @@ namespace Open.Disposable
 
 		protected bool PrepareToReceive(T item)
 		{
-			if (item != null && CanReceive)
+			if (item is not null && CanReceive)
 			{
 				var r = Recycler;
-				if (r != null)
+				if (r is not null)
 				{
 					r(item);
 					// Did the recycle take so long that the state changed?
@@ -90,11 +91,13 @@ namespace Open.Disposable
 #else
 		public bool TryTake(out T? item)
 #endif
-			=> (item = TryTake()) != null;
+			=> (item = TryTake()) is not null;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected virtual bool SaveToPocket(T item)
 			=> Pocket.TrySave(item);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected T? TakeFromPocket()
 			=> Pocket.TryRetrieve();
 
@@ -104,10 +107,11 @@ namespace Open.Disposable
 		public T? TryTake()
 		{
 			var item = TakeFromPocket() ?? TryRelease();
-			if (item != null) OnReleased();
+			if (item is not null) OnReleased();
 			return item;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected virtual void OnReleased()
 		{
 		}
@@ -123,7 +127,7 @@ namespace Open.Disposable
 			if (OnDiscarded is null) return;
 
 			T? d;
-			while ((d = TryRelease()) != null) OnDiscarded(d);
+			while ((d = TryRelease()) is not null) OnDiscarded(d);
 		}
 	}
 }

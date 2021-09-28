@@ -23,7 +23,7 @@ namespace Open.Disposable
 		protected override bool Receive(T item)
 		{
 			var p = Pool;
-			if (p != null)
+			if (p is not null)
 			{
 				// It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
 				// The lock operation should be quick enough to not pile up too many items.
@@ -37,7 +37,7 @@ namespace Open.Disposable
 		protected override T? TryRelease()
 		{
 			var p = Pool;
-			if (p != null && p.Count != 0)
+			if (p is not null && p.Count != 0)
 			{
 				lock (p)
 				{

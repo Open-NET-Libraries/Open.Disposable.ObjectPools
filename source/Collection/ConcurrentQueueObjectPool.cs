@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 
 namespace Open.Disposable
 {
@@ -23,6 +24,7 @@ namespace Open.Disposable
          * Benchmarking reveals that mixed read/writes (what really matters) are still faster with the pocket enabled so best to keep it so.
          */
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected override bool Receive(T item)
 		{
 			var p = Pool;
@@ -31,6 +33,7 @@ namespace Open.Disposable
 			return true;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected override T? TryRelease()
 		{
 			var p = Pool;

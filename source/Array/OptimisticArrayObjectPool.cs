@@ -1,6 +1,7 @@
 ﻿/* Based on Roslyn's ObjectPool */
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Open.Disposable
 {
@@ -21,10 +22,14 @@ namespace Open.Disposable
 		{ }
 
 		// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected override bool SaveToPocket(T item)
 			=> Pocket.SetIfNull(item);
 
 		// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected override bool Store(ReferenceContainer<T>[] p, T item, int index)
 			=> p[index].SetIfNull(item);
 	}

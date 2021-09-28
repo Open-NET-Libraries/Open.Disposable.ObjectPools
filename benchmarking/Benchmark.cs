@@ -25,7 +25,7 @@ namespace Open.Disposable.ObjectPools
 		protected override IEnumerable<TimedResult> TestOnceInternal()
 		{
 			using var pool = Param();
-			if (pool == null) throw new NullReferenceException();
+			if (pool is null) throw new NullReferenceException();
 			//yield return TimedResult.Measure("Take From Empty (In Parallel)", () =>
 			//{
 			//	Parallel.For(0, TestSize, i => _items[i] = pool.Take());
@@ -75,15 +75,15 @@ namespace Open.Disposable.ObjectPools
 				});
 			});
 
-			if (pool is DefaultObjectPool<object>) yield break;
-			yield return TimedResult.Measure("Empty Pool (.TryTake())", () =>
-			{
+			//if (pool is DefaultObjectPool<object>) yield break;
+			//yield return TimedResult.Measure("Empty Pool (.TryTake())", () =>
+			//{
 
-				while (pool.TryTake() != null)
-				{
-					// remaining++;
-				}
-			});
+			//	while (pool.TryTake() is not null)
+			//	{
+			//		// remaining++;
+			//	}
+			//});
 		}
 
 		public static TimedResult[] Results(uint size, uint repeat, Func<IObjectPool<T>> poolFactory)

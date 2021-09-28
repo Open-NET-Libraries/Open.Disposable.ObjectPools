@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Open.Disposable
@@ -31,8 +32,9 @@ namespace Open.Disposable
 		protected const int MaxStoredIncrement = 5; // Instead of every one.
 
 		public override int Count
-			=> Pool.Count(e => e.Value != null) + PocketCount;
+			=> Pool.Count(e => e.Value is not null) + PocketCount;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected virtual bool Store(ReferenceContainer<T>[] p, T item, int index)
 			=> p[index].TrySave(item);
 
@@ -65,7 +67,7 @@ namespace Open.Disposable
 			for (var i = 0; i < MaxStored && i < len; i++)
 			{
 				var item = elements[i].TryRetrieve();
-				if (item != null) return item;
+				if (item is not null) return item;
 			}
 
 			return null;

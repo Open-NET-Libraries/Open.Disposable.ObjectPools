@@ -27,7 +27,7 @@ class Program
 		//	count => () => QueueObjectPool.Create<object>((int)count * 2));
 
 		report.AddBenchmark("Microsoft.Extensions.ObjectPool.DefaultObjectPool",
-			count => () => new DefaultObjectPool<object>(() => new object(), null, (int)count * 2));
+			count => () => new DefaultObjectPool<object>(() => new object(), (int)count * 2));
 
 		report.AddBenchmark("ConcurrentQueueObjectPoolSlim",
 			count => () => ConcurrentQueueObjectPoolSlim.Create<object>((int)count * 2));
@@ -49,7 +49,7 @@ class Program
 
 		Console.SetCursorPosition(0, Console.CursorTop);
 
-		const int loopMultiple = 2;
+		const int loopMultiple = 12;
 		report.Test(4, 8 * loopMultiple);
 		report.Test(10, 8 * loopMultiple);
 		report.Test(50, 12 * loopMultiple);

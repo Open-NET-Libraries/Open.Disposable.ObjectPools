@@ -26,7 +26,7 @@ namespace Open.Disposable
 		{
 			var i = _item;
 			_item = null;
-			if (i == null) return;
+			if (i is null) return;
 			_pool.Give(i);
 		}
 	}

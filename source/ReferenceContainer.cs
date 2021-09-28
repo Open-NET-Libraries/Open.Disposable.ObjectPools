@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Open.Disposable
@@ -26,21 +27,24 @@ namespace Open.Disposable
 			set => _value = value;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool SetIfNull(T value)
 		{
-			if (_value != null) return false;
+			if (_value is not null) return false;
 			_value = value;
 			return true;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool TrySave(T value)
 			=> _value is null
 				&& null == Interlocked.CompareExchange(ref _value, value, null);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public T? TryRetrieve()
 		{
 			var item = _value;
-			return (item != null
+			return (item is not null
 				&& item == Interlocked.CompareExchange(ref _value, null, item))
 				? item
 				: null;

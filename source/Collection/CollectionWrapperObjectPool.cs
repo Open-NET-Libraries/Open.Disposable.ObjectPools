@@ -21,7 +21,7 @@ namespace Open.Disposable
 		protected override bool Receive(T item)
 		{
 			var p = Pool;
-			if (p != null)
+			if (p is not null)
 			{
 				lock (p)
 				{

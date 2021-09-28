@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Open.Disposable
@@ -19,10 +20,13 @@ namespace Open.Disposable
 
 		protected override bool CanReceive => _count < MaxSize;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected override void OnReleased()
 		{
 			Interlocked.Decrement(ref _count);
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected override void OnReceived()
 		{
 			Interlocked.Increment(ref _count);

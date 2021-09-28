@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Open.Disposable
@@ -30,6 +31,8 @@ namespace Open.Disposable
 			Debug.Assert(newSize > -2, $"newSize: {newSize}, _count: {_count}"); // Should never get out of control.  It may go negative temporarily but should be 100% accounted for.
 			Released?.Invoke(newSize);
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected override void OnReleased()
 		{
 			OnReleased(_countTrackingEnabled ? Interlocked.Decrement(ref _count) : Count);
@@ -39,11 +42,14 @@ namespace Open.Disposable
 		/// Signal for when an item was given (actually accepted) to the pool. 
 		/// </summary>
 		public event ObjectPoolResizeEvent? Received;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected void OnReceived(int newSize)
 		{
 			Received?.Invoke(newSize);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected override void OnReceived()
 		{
 			OnReceived(_countTrackingEnabled ? Interlocked.Increment(ref _count) : Count);

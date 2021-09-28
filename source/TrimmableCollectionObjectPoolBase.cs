@@ -48,7 +48,7 @@ namespace Open.Disposable
 			var p = Pool;
 			Pool = null!;
 
-			if (OnDiscarded != null)
+			if (OnDiscarded is not null)
 			{
 				foreach (var item in p)
 					OnDiscarded(item);
