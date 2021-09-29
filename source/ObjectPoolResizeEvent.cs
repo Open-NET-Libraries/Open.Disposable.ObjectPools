@@ -1,4 +1,3 @@
-﻿namespace Open.Disposable
-{
-	public delegate void ObjectPoolResizeEvent(int newSize);
-}
+﻿namespace Open.Disposable;
+
+public delegate void ObjectPoolResizeEvent(int newSize);

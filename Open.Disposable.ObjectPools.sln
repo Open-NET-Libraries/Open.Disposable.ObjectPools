@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.Disposable.ObjectPools.Benchmarking", "benchmarking\Open.Disposable.ObjectPools.Benchmarking.csproj", "{8404875C-ED46-4057-8D97-598B4D7B8040}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.Disposable.ObjectPools", "source\Open.Disposable.ObjectPools.csproj", "{7DF5DA35-AB11-479D-BD87-27461AC3F5A8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.Disposable.ObjectPools.Tests", "tests\Open.Disposable.ObjectPools.Tests.csproj", "{507DBB8A-A662-4D16-A375-48470A578B50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4E2B0ECD-63D2-42CF-91D2-53917748B856}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

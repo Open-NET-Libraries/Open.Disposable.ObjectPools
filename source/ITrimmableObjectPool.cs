@@ -1,10 +1,9 @@
-﻿namespace Open.Disposable
-{
-	public interface ITrimmableObjectPool
-	{
-		event ObjectPoolResizeEvent Received;
-		event ObjectPoolResizeEvent Released;
+﻿namespace Open.Disposable;
 
-		void TrimTo(int targetSize);
-	}
+public interface ITrimmableObjectPool
+{
+	event ObjectPoolResizeEvent Received;
+	event ObjectPoolResizeEvent Released;
+
+	void TrimTo(int targetSize);
 }

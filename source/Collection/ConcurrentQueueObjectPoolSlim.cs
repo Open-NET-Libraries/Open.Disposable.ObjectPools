@@ -2,93 +2,43 @@
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 
-namespace Open.Disposable
+namespace Open.Disposable;
+
+public sealed class ConcurrentQueueObjectPoolSlim<T>
+	: ConcurrentQueueObjectPoolSlimBase<T>
+	where T : class
 {
-	public sealed class ConcurrentQueueObjectPoolSlim<T> : CountTrackedObjectPoolBase<T>
-		where T : class
-	{
+	public ConcurrentQueueObjectPoolSlim(
+		Func<T> factory,
+		Action<T>? recycler,
+		Action<T>? disposer,
+		int capacity = DEFAULT_CAPACITY - 10)
+	: base(factory, recycler, disposer, capacity) { }
 
-		public ConcurrentQueueObjectPoolSlim(Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity = DEFAULT_CAPACITY - 10)
-			: base(factory, recycler, disposer, capacity)
-		{
-			Pool = new();
-		}
+	public ConcurrentQueueObjectPoolSlim(
+		Func<T> factory,
+		int capacity = DEFAULT_CAPACITY - 10)
+		: this(factory, null, null, capacity) { }
+}
 
-		public ConcurrentQueueObjectPoolSlim(Func<T> factory, int capacity = DEFAULT_CAPACITY - 10)
-			: this(factory, null, null, capacity)
-		{
+public static class ConcurrentQueueObjectPoolSlim
+{
+	public static ConcurrentQueueObjectPoolSlim<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
+		where T : class => new(factory, capacity);
 
-		}
+	public static ConcurrentQueueObjectPoolSlim<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY)
+		where T : class, new() => Create(() => new T(), capacity);
 
-		ConcurrentQueue<T> Pool;
+	public static ConcurrentQueueObjectPoolSlim<T> CreateAutoRecycle<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
+		 where T : class, IRecyclable => new(factory, Recycler.Recycle, null, capacity);
 
-		/*
-         * NOTE: ConcurrentQueue is very fast and will perform quite well without using the 'Pocket' feature.
-         * Benchmarking reveals that mixed read/writes (what really matters) are still faster with the pocket enabled so best to keep it so.
-         */
+	public static ConcurrentQueueObjectPoolSlim<T> CreateAutoRecycle<T>(int capacity = Constants.DEFAULT_CAPACITY)
+		where T : class, IRecyclable, new() => CreateAutoRecycle(() => new T(), capacity);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected override bool Receive(T item)
-		{
-			var p = Pool;
-			if (p is null) return false;
-			p.Enqueue(item); // It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
-			return true;
-		}
+	public static ConcurrentQueueObjectPoolSlim<T> CreateAutoDisposal<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
+		where T : class, IDisposable => new(factory, null, d => d.Dispose(), capacity);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected override T? TryRelease()
-		{
-			var p = Pool;
-			if (p is null) return null;
-			p.TryDequeue(out var item);
-			return item;
-		}
+	public static ConcurrentQueueObjectPoolSlim<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
+		where T : class, IDisposable, new() => CreateAutoDisposal(() => new T(), capacity);
 
-		protected override void OnDispose()
-		{
-			base.OnDispose();
-			Pool = null!;
-		}
-
-	}
-	public static class ConcurrentQueueObjectPoolSlim
-	{
-		public static ConcurrentQueueObjectPoolSlim<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
-			where T : class
-		{
-			return new ConcurrentQueueObjectPoolSlim<T>(factory, capacity);
-		}
-
-		public static ConcurrentQueueObjectPoolSlim<T> Create<T>(int capacity = Constants.DEFAULT_CAPACITY)
-			where T : class, new()
-		{
-			return Create(() => new T(), capacity);
-		}
-
-		public static ConcurrentQueueObjectPoolSlim<T> CreateAutoRecycle<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
-			 where T : class, IRecyclable
-		{
-			return new ConcurrentQueueObjectPoolSlim<T>(factory, Recycler.Recycle, null, capacity);
-		}
-
-		public static ConcurrentQueueObjectPoolSlim<T> CreateAutoRecycle<T>(int capacity = Constants.DEFAULT_CAPACITY)
-			where T : class, IRecyclable, new()
-		{
-			return CreateAutoRecycle(() => new T(), capacity);
-		}
-
-		public static ConcurrentQueueObjectPoolSlim<T> CreateAutoDisposal<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
-			where T : class, IDisposable
-		{
-			return new ConcurrentQueueObjectPoolSlim<T>(factory, null, d => d.Dispose(), capacity);
-		}
-
-		public static ConcurrentQueueObjectPoolSlim<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
-			where T : class, IDisposable, new()
-		{
-			return CreateAutoDisposal(() => new T(), capacity);
-		}
-
-	}
 }

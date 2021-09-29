@@ -1,7 +1,6 @@
-﻿namespace Open.Disposable
+﻿namespace Open.Disposable;
+
+internal static class Constants
 {
-	internal static class Constants
-	{
-		internal const int DEFAULT_CAPACITY = 64; // Should accomodate all object pools without decreasing their effectiveness.
-	}
+	internal const int DEFAULT_CAPACITY = 64; // Should accomodate all object pools without decreasing their effectiveness.
 }
