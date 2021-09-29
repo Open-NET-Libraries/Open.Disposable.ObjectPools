@@ -56,7 +56,7 @@ public static class HashSetPool<T>
 		=> new(() => new(), h => h.Clear(), null, capacity);
 }
 
-public static class StringBuilderPool<T>
+public static class StringBuilderPool
 {
 	/// <summary>
 	/// A shared object pool for use with StringBuilders.
@@ -71,6 +71,22 @@ public static class StringBuilderPool<T>
 	/// </summary>
 	public static SharedPool<StringBuilder> Create(int capacity = Constants.DEFAULT_CAPACITY)
 		=> new(() => new(), sb => sb.Clear(), null, capacity);
+
+	/// <summary>
+	/// Provides a StringBuilder to be used for processing and finalizes by calling .ToString() and returning the value.
+	/// </summary>
+	/// <exception cref="ArgumentNullException">If either the pool or action are null.</exception>
+	public static string RentToString(this IObjectPool<StringBuilder> pool, Action<StringBuilder> action)
+	{
+		if (pool is null) throw new ArgumentNullException(nameof(pool));
+		if (action is null) throw new ArgumentNullException(nameof(action));
+
+		var sb = pool.Take();
+		action(sb);
+		var result = sb.ToString();
+		pool.Give(sb);
+		return result;
+	}
 }
 
 public static class DictionaryPool<TKey, TValue>
