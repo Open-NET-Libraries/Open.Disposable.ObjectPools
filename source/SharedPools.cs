@@ -37,6 +37,14 @@ public static class ListPool<T>
 		h.Clear();
 		if (h.Capacity > 16) h.Capacity = 16;
 	}, null, capacity);
+
+	/// <summary>
+	/// Provides a disposable RecycleHelper that contains an item from the pool.<br/>
+	/// Will be returned to the pool once .Dispose() is called.
+	/// </summary>
+	/// <typeparam name="T">The generic type of the collection.</typeparam>
+	/// <returns>A RecycleHelper containing an item from the pool.</returns>
+	public static RecycleHelper<List<T>> Rent()	=> Shared.Rent();
 }
 
 public static class HashSetPool<T>
@@ -54,6 +62,9 @@ public static class HashSetPool<T>
 	/// </summary>
 	public static SharedPool<HashSet<T>> Create(int capacity = Constants.DEFAULT_CAPACITY)
 		=> new(() => new(), h => h.Clear(), null, capacity);
+
+	/// <inheritdoc cref="ListPool{T}.Rent"/>
+	public static RecycleHelper<HashSet<T>> Rent() => Shared.Rent();
 }
 
 public static class StringBuilderPool
@@ -87,6 +98,18 @@ public static class StringBuilderPool
 		pool.Give(sb);
 		return result;
 	}
+
+	/// <exception cref="ArgumentNullException">If the action is null.</exception>
+	/// <inheritdoc cref="RentToString(IObjectPool{StringBuilder}, Action{StringBuilder})" />
+	public static string RentToString(Action<StringBuilder> action)
+		=> Shared.RentToString(action);
+
+	/// <summary>
+	/// Provides a disposable RecycleHelper that contains a StringBuilder from the pool.<br/>
+	/// Will be returned to the pool once .Dispose() is called.
+	/// </summary>
+	/// <returns>A RecycleHelper containing a StringBuilder from the pool.</returns>
+	public static RecycleHelper<StringBuilder> Rent() => Shared.Rent();
 }
 
 public static class DictionaryPool<TKey, TValue>
@@ -104,5 +127,14 @@ public static class DictionaryPool<TKey, TValue>
 	/// </summary>
 	public static SharedPool<Dictionary<TKey, TValue>> Create(int capacity = Constants.DEFAULT_CAPACITY)
 		=> new(() => new Dictionary<TKey, TValue>(), h => h.Clear(), null, capacity);
+
+	/// <summary>
+	/// Provides a disposable RecycleHelper that contains an item from the pool.<br/>
+	/// Will be returned to the pool once .Dispose() is called.
+	/// </summary>
+	/// <typeparam name="TKey">The generic type of the dictionary keys.</typeparam>
+	/// <typeparam name="TValue">The generic type of the dictionary values.</typeparam>
+	/// <returns>A RecycleHelper containing a item from the pool.</returns>
+	public static RecycleHelper<Dictionary<TKey, TValue>> Rent() => Shared.Rent();
 
 }
