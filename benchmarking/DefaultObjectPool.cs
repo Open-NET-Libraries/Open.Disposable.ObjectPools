@@ -14,7 +14,7 @@ namespace Open.Disposable.ObjectPools
 		class Policy : IPooledObjectPolicy<T>
 		{
 			private readonly Func<T> factory;
-//			private readonly Action<T>? recycler;
+			//			private readonly Action<T>? recycler;
 
 			public Policy(Func<T> factory)//, Action<T>? recycler)
 			{
@@ -27,18 +27,13 @@ namespace Open.Disposable.ObjectPools
 			}
 			public T Create() => factory();
 
-			public bool Return(T obj)
-			{
+			public bool Return(T obj) =>
 				// recycler?.Invoke(obj);
-				return true;
-			}
+				true;
 		}
 
 		public DefaultObjectPool(Func<T> factory, int capacity = 64)
-			: base(new Policy(factory), capacity)
-		{
-			_factory = factory;
-		}
+			: base(new Policy(factory), capacity) => _factory = factory;
 
 		public int Capacity { get; }
 

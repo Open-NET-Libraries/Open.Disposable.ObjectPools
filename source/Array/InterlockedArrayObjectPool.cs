@@ -48,7 +48,7 @@ public class InterlockedArrayObjectPool<T>
 
 		for (var i = 0; i < len; i++)
 		{
-			if (!Store(elements!, item, i))	continue;
+			if (!Store(elements!, item, i)) continue;
 			var m = MaxStored;
 			if (i >= m) Interlocked.CompareExchange(ref MaxStored, m + MaxStoredIncrement, m);
 			return true;

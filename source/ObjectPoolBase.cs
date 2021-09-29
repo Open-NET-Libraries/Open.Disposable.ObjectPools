@@ -91,7 +91,7 @@ public abstract class ObjectPoolBase<T>
 
 	/// <inheritdoc />
 #if NETSTANDARD2_1_OR_GREATER
-		public bool TryTake([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out T? item)
+	public bool TryTake([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out T? item)
 #else
 	public bool TryTake(out T? item)
 #endif

@@ -22,7 +22,7 @@ public class OptimisticArrayObjectPool<T>
 	public OptimisticArrayObjectPool(
 		Func<T> factory,
 		int capacity = DEFAULT_CAPACITY)
-		: this(factory, null, capacity)	{ }
+		: this(factory, null, capacity) { }
 
 	// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
 

@@ -86,10 +86,7 @@ namespace Open.Disposable.ObjectPools
 			//});
 		}
 
-		public static TimedResult[] Results(uint size, uint repeat, Func<IObjectPool<T>> poolFactory)
-		{
-			return (new Benchmark<T>(size, repeat, poolFactory)).Result;
-		}
+		public static TimedResult[] Results(uint size, uint repeat, Func<IObjectPool<T>> poolFactory) => (new Benchmark<T>(size, repeat, poolFactory)).Result;
 
 	}
 }

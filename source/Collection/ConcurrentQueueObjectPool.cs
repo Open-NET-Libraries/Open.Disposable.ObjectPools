@@ -19,7 +19,7 @@ public class ConcurrentQueueObjectPool<T>
 	public ConcurrentQueueObjectPool(
 		Func<T> factory,
 		int capacity = DEFAULT_CAPACITY)
-		: this(factory, null, null, capacity) {	}
+		: this(factory, null, null, capacity) { }
 
 	/*
 	 * NOTE: ConcurrentQueue is very fast and will perform quite well without using the 'Pocket' feature.

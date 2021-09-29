@@ -16,9 +16,7 @@ public class SharedPool<T> : ConcurrentQueueObjectPoolSlimBase<T>
 
 	[Obsolete("Shared pools do not support disposal.")]
 	public new void Dispose()
-	{
-		throw new NotSupportedException("Shared pools cannot be disposed.");
-	}
+		=> throw new NotSupportedException("Shared pools cannot be disposed.");
 }
 
 public static class ListPool<T>

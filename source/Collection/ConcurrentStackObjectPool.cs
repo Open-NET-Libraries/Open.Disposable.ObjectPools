@@ -13,7 +13,7 @@ public sealed class ConcurrentStackObjectPool<T>
 		Action<T>? recycler,
 		Action<T>? disposer,
 		int capacity = DEFAULT_CAPACITY)
-		: base(new ConcurrentStack<T>(), factory, recycler, disposer, capacity)	{ }
+		: base(new ConcurrentStack<T>(), factory, recycler, disposer, capacity) { }
 
 	public ConcurrentStackObjectPool(Func<T> factory, int capacity = DEFAULT_CAPACITY)
 		: this(factory, null, null, capacity) { }
