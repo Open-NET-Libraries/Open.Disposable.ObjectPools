@@ -14,7 +14,6 @@ public abstract class TrimmableCollectionObjectPoolBase<T, TCollection>
 	where T : class
 	where TCollection : class, ICollection
 {
-
 	protected TrimmableCollectionObjectPoolBase(
 		TCollection pool,
 		Func<T> factory,
@@ -42,7 +41,6 @@ public abstract class TrimmableGenericCollectionObjectPoolBase<T, TCollection>
 	where T : class
 	where TCollection : class, ICollection<T>
 {
-
 	protected TrimmableGenericCollectionObjectPoolBase(
 		TCollection pool,
 		Func<T> factory,

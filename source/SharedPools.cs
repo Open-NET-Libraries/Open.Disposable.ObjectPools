@@ -44,7 +44,7 @@ public static class ListPool<T>
 	/// </summary>
 	/// <typeparam name="T">The generic type of the collection.</typeparam>
 	/// <returns>A RecycleHelper containing an item from the pool.</returns>
-	public static RecycleHelper<List<T>> Rent()	=> Shared.Rent();
+	public static RecycleHelper<List<T>> Rent() => Shared.Rent();
 }
 
 public static class HashSetPool<T>
@@ -136,5 +136,4 @@ public static class DictionaryPool<TKey, TValue>
 	/// <typeparam name="TValue">The generic type of the dictionary values.</typeparam>
 	/// <returns>A RecycleHelper containing a item from the pool.</returns>
 	public static RecycleHelper<Dictionary<TKey, TValue>> Rent() => Shared.Rent();
-
 }

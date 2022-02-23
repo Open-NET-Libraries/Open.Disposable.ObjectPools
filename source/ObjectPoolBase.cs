@@ -38,7 +38,6 @@ public abstract class ObjectPoolBase<T>
 	protected readonly Action<T>? Recycler; // Before entering the pool.
 	protected readonly Action<T>? OnDiscarded; // When not able to be used.
 
-
 	// Read-only because if Take() is called after disposal, this still facilitates returing an object.
 	// Allow the GC to do the final cleanup after dispose.
 	protected readonly Func<T> Factory;
@@ -69,7 +68,6 @@ public abstract class ObjectPoolBase<T>
 
 	protected virtual void OnReceived()
 	{
-
 	}
 
 	/// <inheritdoc />
@@ -79,9 +77,13 @@ public abstract class ObjectPoolBase<T>
 		if (PrepareToReceive(item)
 			&& (SaveToPocket(item)
 			|| Receive(item)))
+		{
 			OnReceived();
+		}
 		else
+		{
 			OnDiscarded?.Invoke(item);
+		}
 	}
 	#endregion
 

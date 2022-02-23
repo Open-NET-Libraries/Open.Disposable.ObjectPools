@@ -55,7 +55,6 @@ public class CollectionWrapperObjectPool<T, TCollection>
 
 		return item;
 	}
-
 }
 
 public class CollectionWrapperObjectPool<T>

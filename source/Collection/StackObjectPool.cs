@@ -7,7 +7,6 @@ public sealed class StackObjectPool<T>
 	: TrimmableCollectionObjectPoolBase<T, Stack<T>>
 	where T : class
 {
-
 	public StackObjectPool(
 		Func<T> factory,
 		Action<T>? recycler,
@@ -15,7 +14,8 @@ public sealed class StackObjectPool<T>
 		int capacity = DEFAULT_CAPACITY)
 		: base(
 			  new Stack<T>(Math.Min(DEFAULT_CAPACITY, capacity)) /* Very very slight speed improvment when capacity is set. */,
-			  factory, recycler, disposer, capacity, false) { }
+			  factory, recycler, disposer, capacity, false)
+	{ }
 
 	public StackObjectPool(
 		Func<T> factory,
@@ -52,7 +52,6 @@ public sealed class StackObjectPool<T>
 	}
 }
 
-
 public static class StackObjectPool
 {
 	public static StackObjectPool<T> Create<T>(Func<T> factory, int capacity = Constants.DEFAULT_CAPACITY)
@@ -72,5 +71,4 @@ public static class StackObjectPool
 
 	public static StackObjectPool<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
 		where T : class, IDisposable, new() => CreateAutoDisposal(() => new T(), capacity);
-
 }

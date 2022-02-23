@@ -46,5 +46,4 @@ public abstract class ConcurrentQueueObjectPoolSlimBase<T>
 		base.OnDispose();
 		Pool = null!;
 	}
-
 }

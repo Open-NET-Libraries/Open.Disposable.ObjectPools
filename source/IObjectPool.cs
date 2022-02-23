@@ -43,7 +43,6 @@ public interface IObjectPool<T>
 	/// <returns>The item to return if available.  Will be null if none avaialable.</returns>
 	T? TryTake();
 
-
 	/// <summary>
 	/// If the pool has an item currently avaialable, removes it from the pool and returns it.
 	/// If none is available, it generates one.

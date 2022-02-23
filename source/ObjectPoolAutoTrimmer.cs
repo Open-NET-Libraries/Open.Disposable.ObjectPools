@@ -5,7 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace Open.Disposable;
 
 [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Micro-optimization for retrieving this value as read-only is slightly slower")]
-public class ObjectPoolAutoTrimmer
+[SuppressMessage("Roslynator", "RCS1169:Make field read-only.")]
+class ObjectPoolAutoTrimmer
 	: DisposableBase
 {
 	ITrimmableObjectPool _pool;
@@ -30,8 +31,8 @@ public class ObjectPoolAutoTrimmer
 	/// <summary>
 	/// Constructs an auto-trimming ObjectPool helper.
 	/// </summary>
-	/// <param name="pool">The governable object pool to maintain.</param>
 	/// <param name="trimmedSize">The target size to limit to after a half second timeout.  Allowing the pool to still grow to the max size until the trim occurs.</param>
+	/// <param name="pool">The governable object pool to maintain.</param>
 	/// <param name="trimDelay">The amount of time to wait/defer trimming.</param>
 	public ObjectPoolAutoTrimmer(
 		ushort trimmedSize,

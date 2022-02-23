@@ -48,7 +48,7 @@ public struct ReferenceContainer<T> : IReferenceContainer<T>
 	/// <returns>true if the value was set; otherwise false.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public bool TrySave(T value)
-		=> _value is null && null == Interlocked.CompareExchange(ref _value, value, null);
+		=> _value is null && Interlocked.CompareExchange(ref _value, value, null) == null;
 
 	/// <summary>
 	/// Tries to atomically retrieve the value.

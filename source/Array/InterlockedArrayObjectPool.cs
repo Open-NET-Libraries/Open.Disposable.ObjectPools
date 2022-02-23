@@ -79,7 +79,6 @@ public class InterlockedArrayObjectPool<T>
 		Pool = null!;
 		MaxStored = 0;
 	}
-
 }
 
 public static class InterlockedArrayObjectPool
@@ -101,5 +100,4 @@ public static class InterlockedArrayObjectPool
 
 	public static InterlockedArrayObjectPool<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
 		where T : class, IDisposable, new() => CreateAutoDisposal(() => new T(), capacity);
-
 }

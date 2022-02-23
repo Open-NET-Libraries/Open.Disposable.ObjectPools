@@ -19,7 +19,6 @@ public struct RecycleHelper<T> : IDisposable
 	public RecycleHelper(IObjectPool<T> pool)
 		: this(pool ?? throw new ArgumentNullException(nameof(pool)), pool.Take())
 	{
-
 	}
 
 	private T? _item;

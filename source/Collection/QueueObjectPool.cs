@@ -46,12 +46,10 @@ public sealed class QueueObjectPool<T>
 				if (p.Count != 0)
 					return p.Dequeue();
 			}
-
 		}
 
 		return null;
 	}
-
 }
 
 public static class QueueObjectPool
@@ -73,5 +71,4 @@ public static class QueueObjectPool
 
 	public static QueueObjectPool<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
 		where T : class, IDisposable, new() => CreateAutoDisposal(() => new T(), capacity);
-
 }

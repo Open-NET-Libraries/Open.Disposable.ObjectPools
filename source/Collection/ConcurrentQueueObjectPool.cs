@@ -8,7 +8,6 @@ public class ConcurrentQueueObjectPool<T>
 	: TrimmableCollectionObjectPoolBase<T, ConcurrentQueue<T>>
 	where T : class
 {
-
 	public ConcurrentQueueObjectPool(
 		Func<T> factory,
 		Action<T>? recycler,
@@ -43,7 +42,6 @@ public class ConcurrentQueueObjectPool<T>
 		p.TryDequeue(out var item);
 		return item;
 	}
-
 }
 public static class ConcurrentQueueObjectPool
 {
@@ -64,5 +62,4 @@ public static class ConcurrentQueueObjectPool
 
 	public static ConcurrentQueueObjectPool<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
 		where T : class, IDisposable, new() => CreateAutoDisposal(() => new T(), capacity);
-
 }

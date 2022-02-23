@@ -38,5 +38,4 @@ public static class ConcurrentQueueObjectPoolSlim
 
 	public static ConcurrentQueueObjectPoolSlim<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
 		where T : class, IDisposable, new() => CreateAutoDisposal(() => new T(), capacity);
-
 }

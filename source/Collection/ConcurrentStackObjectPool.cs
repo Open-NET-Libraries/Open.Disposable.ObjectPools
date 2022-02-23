@@ -7,7 +7,6 @@ public sealed class ConcurrentStackObjectPool<T>
 	: TrimmableCollectionObjectPoolBase<T, ConcurrentStack<T>>
 	where T : class
 {
-
 	public ConcurrentStackObjectPool(
 		Func<T> factory,
 		Action<T>? recycler,
@@ -33,7 +32,6 @@ public sealed class ConcurrentStackObjectPool<T>
 		p.TryPop(out var item);
 		return item;
 	}
-
 }
 
 public static class ConcurrentStackObjectPool
@@ -55,5 +53,4 @@ public static class ConcurrentStackObjectPool
 
 	public static ConcurrentStackObjectPool<T> CreateAutoDisposal<T>(int capacity = Constants.DEFAULT_CAPACITY)
 		where T : class, IDisposable, new() => CreateAutoDisposal(() => new T(), capacity);
-
 }
