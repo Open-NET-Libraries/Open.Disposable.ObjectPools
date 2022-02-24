@@ -20,7 +20,7 @@ public abstract class TrimmableObjectPoolBase<T> : ObjectPoolBase<T>, ITrimmable
 	protected override bool CanReceive => CountInternal < MaxSize;
 
 	/// <summary>
-	/// Signal for when an item was taken (actually removed) from the pool. 
+	/// Signal for when an item was taken (actually removed) from the pool.
 	/// </summary>
 	public event ObjectPoolResizeEvent? Released;
 	protected void OnReleased(int newSize)
@@ -33,7 +33,7 @@ public abstract class TrimmableObjectPoolBase<T> : ObjectPoolBase<T>, ITrimmable
 	protected override void OnReleased() => OnReleased(_countTrackingEnabled ? Interlocked.Decrement(ref _count) : Count);
 
 	/// <summary>
-	/// Signal for when an item was given (actually accepted) to the pool. 
+	/// Signal for when an item was given (actually accepted) to the pool.
 	/// </summary>
 	public event ObjectPoolResizeEvent? Received;
 
