@@ -31,4 +31,6 @@ public struct RecycleHelper<T> : IDisposable
 		if (i is null) return;
 		_pool.Give(i);
 	}
+
+	public static implicit operator T(RecycleHelper<T> helper) => helper.Item;
 }

@@ -15,7 +15,6 @@ public abstract class CountTrackedObjectPoolBase<T>
 		int capacity = DEFAULT_CAPACITY)
 		: base(factory, recycler, disposer, capacity) { }
 
-
 	int _count;
 	/// <inheritdoc />
 	public override int Count => _count;

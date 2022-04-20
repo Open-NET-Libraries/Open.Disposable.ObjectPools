@@ -17,7 +17,7 @@ Part of the "Open" set of libraries.
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>objectpool;idisposable;thread safe</PackageTags>
-		<Version>2.8.2</Version>
+		<Version>2.9.0</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -41,8 +41,16 @@ Part of the "Open" set of libraries.
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Open.Disposable" Version="2.5.2" />
-		<PackageReference Include="Open.Threading.Tasks" Version="1.2.2" />
+		<PackageReference Include="ClrHeapAllocationAnalyzer" Version="3.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Open.Disposable" Version="2.6.*" />
+		<PackageReference Include="Open.Threading.Tasks" Version="1.2.*" />
 		<PackageReference Include="System.Threading.Channels" Version="6.0.0" />
 	</ItemGroup>
 

@@ -1,11 +1,11 @@
-﻿using Open.Disposable;
-using Open.Disposable.ObjectPools;
-using Open.Text.CSV;
+﻿using Open.Text.CSV;
 using System;
 using System.IO;
 using System.Text;
 
-class Program
+namespace Open.Disposable.ObjectPools.Benchmarks;
+
+static class Program
 {
 	static void Main()
 	{
@@ -70,5 +70,4 @@ class Program
 		Console.WriteLine("(press any key when finished)");
 		Console.ReadKey();
 	}
-
 }

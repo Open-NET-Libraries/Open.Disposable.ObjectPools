@@ -66,7 +66,11 @@ public static class Recycler
 		Action<T> recycleFunction)
 		where T : class => new(pool, recycleFunction, limit);
 
-	public static void Recycle(IRecyclable r) => (r ?? throw new ArgumentNullException(nameof(r))).Recycle();
+	private static Action<IRecyclable>? _recycleDelegate;
+	// A predefined delegate instead of a method to avoid additional allocations.
+	public static Action<IRecyclable> Recycle
+		=> _recycleDelegate ??= (IRecyclable r)
+			=> (r ?? throw new ArgumentNullException(nameof(r))).Recycle();
 
 	public static Recycler<T> CreateRecycler<T>(
 		this IObjectPool<T> pool,
