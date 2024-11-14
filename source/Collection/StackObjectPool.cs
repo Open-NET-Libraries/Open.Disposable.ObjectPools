@@ -29,7 +29,7 @@ public sealed class StackObjectPool<T>
 		{
 			// It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
 			// The lock operation should be quick enough to not pile up too many items.
-			lock (p) p.Push(item);
+			lock (SyncRoot) p.Push(item);
 			return true;
 		}
 
@@ -42,7 +42,7 @@ public sealed class StackObjectPool<T>
 		if (p is null || p.Count == 0)
 			return null;
 
-		lock (p)
+		lock (SyncRoot)
 		{
 			if (p.Count != 0)
 				return p.Pop();

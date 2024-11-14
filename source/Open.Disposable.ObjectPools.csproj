@@ -58,8 +58,8 @@
 		</PackageReference>
 		<PackageReference Include="Open.Disposable" Version="3.*" />
 		<PackageReference Include="Open.Threading.Tasks" Version="1.2.*" />
-		<PackageReference Include="System.Threading.Channels" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
-		<PackageReference Include="System.Threading.Channels" Version="6.0.0" Condition="'$(TargetFramework)' != 'net9.0'" />
+		<PackageReference Include="System.Threading.Channels" Version="9.*" Condition="'$(TargetFramework)' == 'net9.0'" />
+		<PackageReference Include="System.Threading.Channels" Version="8.*" Condition="'$(TargetFramework)' != 'net9.0'" />
 	</ItemGroup>
 
 </Project>

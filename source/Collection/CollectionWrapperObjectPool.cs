@@ -29,7 +29,7 @@ public class CollectionWrapperObjectPool<T, TCollection>
 	{
 		var p = Pool;
 		if (p is null) return false;
-		lock (p)
+		lock (SyncRoot)
 		{
 			// It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
 			// The lock operation should be quick enough to not pile up too many items.
@@ -50,7 +50,7 @@ public class CollectionWrapperObjectPool<T, TCollection>
 		 * This implementation is in place for reference more than practice.  Sub classes should override. */
 
 		bool wasRemoved;
-		lock (p!) wasRemoved = p.Remove(item);
+		lock (SyncRoot) wasRemoved = p!.Remove(item);
 		if (!wasRemoved) goto retry;
 
 		return item;

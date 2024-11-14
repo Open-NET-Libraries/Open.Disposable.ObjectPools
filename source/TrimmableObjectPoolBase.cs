@@ -12,6 +12,12 @@ public abstract class TrimmableObjectPoolBase<T> : ObjectPoolBase<T>, ITrimmable
 	protected TrimmableObjectPoolBase(Func<T> factory, Action<T>? recycler, Action<T>? disposer, int capacity, bool countTrackingEnabled = true)
 		: base(factory, recycler, disposer, capacity) => _countTrackingEnabled = countTrackingEnabled;
 
+#if NET9_0_OR_GREATER
+	protected readonly Lock SyncRoot = new();
+#else
+	protected readonly object SyncRoot = new();
+#endif
+
 	int _count;
 	readonly bool _countTrackingEnabled; // When true this enables tracking the number of entries entering and exiting the pool instead of calling '.Count'.  
 

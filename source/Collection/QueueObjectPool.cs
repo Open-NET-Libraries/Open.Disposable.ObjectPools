@@ -29,7 +29,7 @@ public sealed class QueueObjectPool<T>
 		{
 			// It's possible that the count could exceed MaxSize here, but the risk is negligble as a few over the limit won't hurt.
 			// The lock operation should be quick enough to not pile up too many items.
-			lock (p) p.Enqueue(item);
+			lock (SyncRoot) p.Enqueue(item);
 			return true;
 		}
 
@@ -41,7 +41,7 @@ public sealed class QueueObjectPool<T>
 		var p = Pool;
 		if (p is not null && p.Count != 0)
 		{
-			lock (p)
+			lock (SyncRoot)
 			{
 				if (p.Count != 0)
 					return p.Dequeue();
