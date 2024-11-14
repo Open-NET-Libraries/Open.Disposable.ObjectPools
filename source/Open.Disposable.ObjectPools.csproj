@@ -26,7 +26,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<NoWarn>IDE0290;CA1510;IDE0130;</NoWarn>
+		<NoWarn>IDE0290;CA1510;IDE0130;IDE0301;</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -56,6 +56,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="System.Memory" Version="4.5.*" Condition="'$(TargetFramework)' == 'netstandard2.0'"/>
 		<PackageReference Include="Open.Disposable" Version="3.*" />
 		<PackageReference Include="Open.Threading.Tasks" Version="1.2.*" />
 		<PackageReference Include="System.Threading.Channels" Version="9.*" Condition="'$(TargetFramework)' == 'net9.0'" />

@@ -1,7 +1,6 @@
 ﻿/* Based on Roslyn's ObjectPool */
 
 using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -10,7 +9,6 @@ namespace Open.Disposable;
 /// <summary>
 /// An extremely fast ObjectPool when the capacity is in the low 100s.
 /// </summary>
-/// <typeparam name="T"></typeparam>
 public class InterlockedArrayObjectPool<T>
 	: ObjectPoolBase<T>
 	where T : class
@@ -28,27 +26,38 @@ public class InterlockedArrayObjectPool<T>
 		int capacity = DEFAULT_CAPACITY)
 		: this(factory, null, null, capacity) { }
 
-	protected ReferenceContainer<T>[] Pool;
+	protected Memory<ReferenceContainer<T>> Pool;
 
 	// Sets a limit on what has been stored yet to prevent over searching the array unnecessarily.. 
 	protected int MaxStored;
 	protected const int MaxStoredIncrement = 5; // Instead of every one.
 
 	public override int Count
-		=> Pool.Count(e => e.Value is not null) + PocketCount;
+	{
+		get
+		{
+			var p = Pool.Span;
+			int count = PocketCount;
+			foreach(var e in p)
+				if (e.Value is not null) count++;
+
+			return count;
+		}
+	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected virtual bool Store(ReferenceContainer<T>[] p, T item, int index)
+	protected virtual bool Store(ReadOnlySpan<ReferenceContainer<T>> p, T item, int index)
 		=> p[index].TrySave(item);
 
 	protected override bool Receive(T item)
 	{
 		var elements = Pool;
-		var len = elements?.Length ?? 0;
+		var len = elements.Length;
+		var span = elements.Span;
 
 		for (var i = 0; i < len; i++)
 		{
-			if (!Store(elements!, item, i)) continue;
+			if (!Store(span, item, i)) continue;
 			var m = MaxStored;
 			if (i >= m) Interlocked.CompareExchange(ref MaxStored, m + MaxStoredIncrement, m);
 			return true;
@@ -60,11 +69,10 @@ public class InterlockedArrayObjectPool<T>
 	protected override T? TryRelease()
 	{
 		// We missed getting the first item or it wasn't there.
-		var elements = Pool;
-		if (elements is null) return null;
-
+		var elements = Pool.Span;
 		var len = elements.Length;
-		for (var i = 0; i < MaxStored && i < len; i++)
+
+		for (var i = 0; i < len && i < MaxStored; i++)
 		{
 			var item = elements[i].TryRetrieve();
 			if (item is not null) return item;
@@ -76,7 +84,7 @@ public class InterlockedArrayObjectPool<T>
 	protected override void OnDispose()
 	{
 		base.OnDispose();
-		Pool = null!;
+		Pool = Array.Empty<ReferenceContainer<T>>();
 		MaxStored = 0;
 	}
 }

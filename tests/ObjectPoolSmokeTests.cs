@@ -30,7 +30,7 @@ public class ObjectPoolSmokeTests
 		Assert.AreEqual(0, list.Count);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-		Assert.ThrowsException<NotSupportedException>(() => pool.Dispose());
+		Assert.ThrowsException<NotSupportedException>(pool.Dispose);
 #pragma warning restore CS0618 // Type or member is obsolete
 	}
 }

@@ -4,12 +4,11 @@ using System.Text;
 
 namespace Open.Disposable;
 
-public class SharedPool<T>(
+public sealed class SharedPool<T>(
 	Func<T> factory,
 	Action<T>? recycler,
-	Action<T>? disposer,
 	int capacity)
-	: ConcurrentQueueObjectPoolSlimBase<T>(factory, recycler, disposer, capacity)
+	: OptimisticArrayObjectPool<T>(factory, recycler, capacity)
 	where T : class
 {
 	[Obsolete("Shared pools do not support disposal.")]
@@ -34,7 +33,7 @@ public static class ListPool<T>
 	{
 		h.Clear();
 		if (h.Capacity > 16) h.Capacity = 16;
-	}, null, capacity);
+	}, capacity);
 
 	/// <summary>
 	/// Provides a disposable RecycleHelper that contains an item from the pool.<br/>
@@ -58,7 +57,7 @@ public static class HashSetPool<T>
 	/// The hash-set is cleared after being returned.
 	/// </summary>
 	public static SharedPool<HashSet<T>> Create(int capacity = Constants.DEFAULT_CAPACITY)
-		=> new(() => [], h => h.Clear(), null, capacity);
+		=> new(() => [], h => h.Clear(), capacity);
 
 	/// <inheritdoc cref="ListPool{T}.Rent"/>
 	public static RecycleHelper<HashSet<T>> Rent() => Shared.Rent();
@@ -78,7 +77,7 @@ public static class StringBuilderPool
 	/// The StringBuilder is cleared after being returned.
 	/// </summary>
 	public static SharedPool<StringBuilder> Create(int capacity = Constants.DEFAULT_CAPACITY)
-		=> new(() => new(), sb => sb.Clear(), null, capacity);
+		=> new(() => new(), sb => sb.Clear(), capacity);
 
 	/// <summary>
 	/// Provides a StringBuilder to be used for processing and finalizes by calling .ToString() and returning the value.
@@ -124,7 +123,7 @@ public static class DictionaryPool<TKey, TValue>
 	/// The dictionary is cleared after being returned.
 	/// </summary>
 	public static SharedPool<Dictionary<TKey, TValue>> Create(int capacity = Constants.DEFAULT_CAPACITY)
-		=> new(() => [], h => h.Clear(), null, capacity);
+		=> new(() => [], h => h.Clear(), capacity);
 
 	/// <summary>
 	/// Provides a disposable RecycleHelper that contains an item from the pool.<br/>

@@ -8,7 +8,6 @@ namespace Open.Disposable;
 /// <summary>
 /// An extremely fast ObjectPool when the capacity is in the low 100s.
 /// </summary>
-/// <typeparam name="T"></typeparam>
 public class OptimisticArrayObjectPool<T>
 	: InterlockedArrayObjectPool<T>
 	where T : class
@@ -33,7 +32,7 @@ public class OptimisticArrayObjectPool<T>
 	// As suggested by Roslyn's implementation, don't worry about interlocking here.  It's okay if a few get loose.
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override bool Store(ReferenceContainer<T>[] p, T item, int index)
+	protected override bool Store(ReadOnlySpan<ReferenceContainer<T>> p, T item, int index)
 		=> p[index].SetIfNull(item);
 }
 
