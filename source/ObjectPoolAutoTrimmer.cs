@@ -68,7 +68,7 @@ class ObjectPoolAutoTrimmer
 			_trimmer?.Cancel();
 	}
 
-	void Pool_BeforeDispose(object sender, EventArgs e) => Dispose();
+	void Pool_BeforeDispose(object? sender, EventArgs e) => Dispose();
 
 	protected virtual void TrimInternal()
 	{

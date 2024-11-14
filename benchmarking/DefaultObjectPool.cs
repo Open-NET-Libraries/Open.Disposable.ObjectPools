@@ -6,34 +6,20 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Open.Disposable.ObjectPools;
 
-public class DefaultObjectPool<T>
-	: Microsoft.Extensions.ObjectPool.DefaultObjectPool<T>, IObjectPool<T>
+public class DefaultObjectPool<T>(Func<T> factory, int capacity = 64)
+	: Microsoft.Extensions.ObjectPool.DefaultObjectPool<T>(new Policy(factory), capacity), IObjectPool<T>
 	where T : class
 {
-	private readonly Func<T> _factory;
-
-	class Policy : IPooledObjectPolicy<T>
+	class Policy(Func<T> factory) : IPooledObjectPolicy<T>
 	{
-		private readonly Func<T> factory;
-		//			private readonly Action<T>? recycler;
+		private readonly Func<T> _factory = factory ?? throw new ArgumentNullException(nameof(factory));
 
-		public Policy(Func<T> factory)//, Action<T>? recycler)
-		{
-			if (factory is null)
-				throw new ArgumentNullException(nameof(factory));
-
-			this.factory = factory;
-			//this.recycler = recycler;
-		}
-		public T Create() => factory();
+		public T Create() => _factory();
 
 		public bool Return(T obj) =>
 			// recycler?.Invoke(obj);
 			true;
 	}
-
-	public DefaultObjectPool(Func<T> factory, int capacity = 64)
-		: base(new Policy(factory), capacity) => _factory = factory;
 
 	public int Capacity { get; }
 
@@ -44,7 +30,7 @@ public class DefaultObjectPool<T>
 	{
 	}
 
-	public T Generate() => _factory();
+	public T Generate() => factory();
 
 	public void Give(T item) => Return(item);
 

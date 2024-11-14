@@ -1,38 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net9.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<RootNamespace>Open.Disposable</RootNamespace>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>electricessence</Authors>
-		<Description>A set of variations on ObjectPool implementations with differing underlying collections.
+		<Description>
+			A set of variations on ObjectPool implementations with differing underlying collections.
 
-Part of the "Open" set of libraries.
-</Description>
+			Part of the "Open" set of libraries.
+		</Description>
 		<Copyright>© electricessence (Oren F.) All rights reserved.</Copyright>
 		<PackageProjectUrl>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.Disposable.ObjectPools/</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>objectpool;idisposable;thread safe</PackageTags>
-		<Version>2.9.0</Version>
+		<Version>3.0.0</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageIcon>logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<NoWarn>IDE0290;CA1510;IDE0130;</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<Compile Remove="Channels\**" />
 		<EmbeddedResource Remove="Channels\**" />
 		<None Remove="Channels\**" />
-		<None Include="logo.png">
+		<None Include="..\README.md">
 		  <Pack>True</Pack>
-		  <PackagePath></PackagePath>
+		  <PackagePath>\</PackagePath>
+		</None>
+		<None Include="logo.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
 		</None>
 	</ItemGroup>
 
@@ -41,17 +48,18 @@ Part of the "Open" set of libraries.
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ClrHeapAllocationAnalyzer" Version="3.0.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		<PackageReference Include="ClrHeapAllocationAnalyzer" Version="3.*">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.*">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Open.Disposable" Version="3.*" />
 		<PackageReference Include="Open.Threading.Tasks" Version="1.2.*" />
-		<PackageReference Include="System.Threading.Channels" Version="9.0.0" />
+		<PackageReference Include="System.Threading.Channels" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
+		<PackageReference Include="System.Threading.Channels" Version="6.0.0" Condition="'$(TargetFramework)' != 'net9.0'" />
 	</ItemGroup>
 
 </Project>

@@ -17,7 +17,7 @@ public interface IReferenceContainer<T>
 public struct ReferenceContainer<T> : IReferenceContainer<T>
 	where T : class
 {
-	public int Capacity => 1;
+	public readonly int Capacity => 1;
 
 	T? _value;
 
@@ -26,7 +26,7 @@ public struct ReferenceContainer<T> : IReferenceContainer<T>
 	/// </summary>
 	public T? Value
 	{
-		get => _value;
+		readonly get => _value;
 		set => _value = value;
 	}
 

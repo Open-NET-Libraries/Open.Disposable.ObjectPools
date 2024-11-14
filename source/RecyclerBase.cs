@@ -28,7 +28,7 @@ public abstract class RecyclerBase<T> : DisposableBase, IRecycler<T>
 		// Could possibly dispose before this line somewhere... But that's just nasty. :P 
 	}
 
-	void Pool_BeforeDispose(object sender, EventArgs e) => Dispose();
+	void Pool_BeforeDispose(object? sender, EventArgs e) => Dispose();
 
 	public abstract bool Recycle(T item);
 

@@ -24,8 +24,7 @@ public class Benchmark<T> : BenchmarkBase<Func<IObjectPool<T>>>
 
 	protected override IEnumerable<TimedResult> TestOnceInternal()
 	{
-		using var pool = Param();
-		if (pool is null) throw new NullReferenceException();
+		using var pool = Param() ?? throw new NullReferenceException();
 		//yield return TimedResult.Measure("Take From Empty (In Parallel)", () =>
 		//{
 		//	Parallel.For(0, TestSize, i => _items[i] = pool.Take());

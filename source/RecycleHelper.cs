@@ -22,7 +22,8 @@ public struct RecycleHelper<T> : IDisposable
 	}
 
 	private T? _item;
-	public T Item => _item ?? throw new ObjectDisposedException(GetType().ToString());
+	public readonly T Item
+		=> _item ?? throw new ObjectDisposedException(GetType().ToString());
 
 	public void Dispose()
 	{

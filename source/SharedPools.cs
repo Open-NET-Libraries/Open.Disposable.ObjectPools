@@ -58,7 +58,7 @@ public static class HashSetPool<T>
 	/// The hash-set is cleared after being returned.
 	/// </summary>
 	public static SharedPool<HashSet<T>> Create(int capacity = Constants.DEFAULT_CAPACITY)
-		=> new(() => new(), h => h.Clear(), null, capacity);
+		=> new(() => [], h => h.Clear(), null, capacity);
 
 	/// <inheritdoc cref="ListPool{T}.Rent"/>
 	public static RecycleHelper<HashSet<T>> Rent() => Shared.Rent();
@@ -110,6 +110,7 @@ public static class StringBuilderPool
 }
 
 public static class DictionaryPool<TKey, TValue>
+	where TKey : notnull
 {
 	/// <summary>
 	/// A shared object pool for use with dictionaries.
@@ -123,14 +124,12 @@ public static class DictionaryPool<TKey, TValue>
 	/// The dictionary is cleared after being returned.
 	/// </summary>
 	public static SharedPool<Dictionary<TKey, TValue>> Create(int capacity = Constants.DEFAULT_CAPACITY)
-		=> new(() => new Dictionary<TKey, TValue>(), h => h.Clear(), null, capacity);
+		=> new(() => [], h => h.Clear(), null, capacity);
 
 	/// <summary>
 	/// Provides a disposable RecycleHelper that contains an item from the pool.<br/>
 	/// Will be returned to the pool once .Dispose() is called.
 	/// </summary>
-	/// <typeparam name="TKey">The generic type of the dictionary keys.</typeparam>
-	/// <typeparam name="TValue">The generic type of the dictionary values.</typeparam>
 	/// <returns>A RecycleHelper containing a item from the pool.</returns>
 	public static RecycleHelper<Dictionary<TKey, TValue>> Rent() => Shared.Rent();
 }
