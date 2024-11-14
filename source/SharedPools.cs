@@ -4,16 +4,14 @@ using System.Text;
 
 namespace Open.Disposable;
 
-public class SharedPool<T> : ConcurrentQueueObjectPoolSlimBase<T>
+public class SharedPool<T>(
+	Func<T> factory,
+	Action<T>? recycler,
+	Action<T>? disposer,
+	int capacity)
+	: ConcurrentQueueObjectPoolSlimBase<T>(factory, recycler, disposer, capacity)
 	where T : class
 {
-	public SharedPool(
-		Func<T> factory,
-		Action<T>? recycler,
-		Action<T>? disposer,
-		int capacity)
-		: base(factory, recycler, disposer, capacity) { }
-
 	[Obsolete("Shared pools do not support disposal.")]
 	public new void Dispose()
 		=> throw new NotSupportedException("Shared pools cannot be disposed.");
@@ -32,7 +30,7 @@ public static class ListPool<T>
 	/// Creates an object pool for use with lists.
 	/// The list is cleared after being returned.
 	/// </summary>
-	public static SharedPool<List<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => new(), h =>
+	public static SharedPool<List<T>> Create(int capacity = Constants.DEFAULT_CAPACITY) => new(() => [], h =>
 	{
 		h.Clear();
 		if (h.Capacity > 16) h.Capacity = 16;
@@ -42,7 +40,6 @@ public static class ListPool<T>
 	/// Provides a disposable RecycleHelper that contains an item from the pool.<br/>
 	/// Will be returned to the pool once .Dispose() is called.
 	/// </summary>
-	/// <typeparam name="T">The generic type of the collection.</typeparam>
 	/// <returns>A RecycleHelper containing an item from the pool.</returns>
 	public static RecycleHelper<List<T>> Rent() => Shared.Rent();
 }
