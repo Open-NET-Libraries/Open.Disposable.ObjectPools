@@ -56,8 +56,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Memory" Version="4.5.*" Condition="'$(TargetFramework)' == 'netstandard2.0'"/>
-		<PackageReference Include="Open.Disposable" Version="3.*" />
+		<PackageReference Include="System.Memory" Version="4.*" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+		<PackageReference Include="Open.Disposable" Version="3.0.1" />
 		<PackageReference Include="Open.Threading.Tasks" Version="1.2.*" />
 		<PackageReference Include="System.Threading.Channels" Version="9.*" Condition="'$(TargetFramework)' == 'net9.0'" />
 		<PackageReference Include="System.Threading.Channels" Version="8.*" Condition="'$(TargetFramework)' != 'net9.0'" />
