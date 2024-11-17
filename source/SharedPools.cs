@@ -14,6 +14,9 @@ public sealed class SharedPool<T>(
 	[Obsolete("Shared pools do not support disposal.")]
 	public new void Dispose()
 		=> throw new NotSupportedException("Shared pools cannot be disposed.");
+
+	protected override void OnDispose()
+		=> throw new NotSupportedException("Shared pools cannot be disposed.");
 }
 
 public static class ListPool<T>

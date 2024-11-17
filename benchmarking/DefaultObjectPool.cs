@@ -16,9 +16,9 @@ public class DefaultObjectPool<T>(Func<T> factory, int capacity = 64)
 
 		public T Create() => _factory();
 
-		public bool Return(T obj) =>
+		public bool Return(T obj)
 			// recycler?.Invoke(obj);
-			true;
+			=> true;
 	}
 
 	public int Capacity { get; }

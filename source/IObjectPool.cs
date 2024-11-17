@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 namespace Open.Disposable;
 
 public interface IObjectPool<T>
-	: IDisposable
 	where T : class
 {
 	/// <summary>
